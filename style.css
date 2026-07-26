@@ -410,159 +410,74 @@ border-radius:20px;
 }
 
 
+/* Premium Trading Calculator */
+
 .calculator-box{
 
-background:rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.10);
 
-backdrop-filter:blur(10px);
+backdrop-filter:blur(18px);
 
-padding:25px;
+-webkit-backdrop-filter:blur(18px);
 
-border-radius:20px;
-
-border:1px solid #38bdf8;
-
-margin:25px 0;
-
-text-align:center;
-
-}
-
-
-.calculator-box h2{
-
-color:#38bdf8;
-
-margin-bottom:20px;
-
-}
-
-
-.calculator-box input,
-.calculator-box select{
-
-width:90%;
-
-padding:12px;
-
-margin:8px;
-
-border-radius:10px;
-
-border:none;
-
-background:#f1f5f9;
-
-color:#111;
-
-}
-
-
-.calculator-box button{
-
-padding:12px 30px;
-
-border:none;
-
-border-radius:10px;
-
-background:#00e5ff;
-
-font-weight:bold;
-
-cursor:pointer;
-
-margin-top:10px;
-
-}
-
-
-.calc-result{
-
-margin-top:20px;
-
-font-size:18px;
-
-color:white;
-
-}
-
-              .calculator-box{
-
-background:
-linear-gradient(145deg,#ffffff,#e8f1ff);
-
-color:#111;
-
-padding:30px;
+border:1px solid rgba(255,255,255,0.25);
 
 border-radius:25px;
 
+padding:30px;
+
 margin:30px 0;
 
-border:1px solid #38bdf8;
-
 box-shadow:
-0 15px 40px rgba(0,0,0,.25);
-
-text-align:center;
+0 15px 45px rgba(0,0,0,0.35);
 
 }
 
 
-
 .calculator-box h2{
+
+text-align:center;
 
 font-size:28px;
 
-color:#0369a1;
+color:#ffffff;
 
 margin-bottom:25px;
-
-text-transform:uppercase;
 
 letter-spacing:1px;
 
 }
 
 
+/* Inputs */
 
-.calculator-box select,
-.calculator-box input{
+.calculator-box input,
+.calculator-box select{
 
 width:90%;
 
 padding:14px;
 
-margin:10px 0;
+margin:8px auto;
+
+display:block;
 
 border-radius:15px;
 
-border:1px solid #cbd5e1;
-
-font-size:16px;
-
-background:white;
-
-color:#111;
+border:none;
 
 outline:none;
 
-}
+background:rgba(255,255,255,0.85);
 
+color:#111827;
 
-
-.calculator-box select:focus,
-.calculator-box input:focus{
-
-border-color:#00e5ff;
-
-box-shadow:
-0 0 12px rgba(0,229,255,.5);
+font-size:16px;
 
 }
 
 
+/* Button */
 
 .calculator-box button{
 
@@ -570,14 +485,15 @@ width:90%;
 
 padding:15px;
 
-margin-top:15px;
+margin:15px auto;
+
+display:block;
 
 border:none;
 
 border-radius:15px;
 
-background:
-linear-gradient(135deg,#00e5ff,#2563eb);
+background:linear-gradient(135deg,#00e5ff,#2563eb);
 
 color:white;
 
@@ -587,47 +503,37 @@ font-weight:bold;
 
 cursor:pointer;
 
-box-shadow:
-0 8px 20px rgba(37,99,235,.4);
+box-shadow:0 8px 25px rgba(0,229,255,0.35);
 
 }
 
 
-
-.calculator-box button:hover{
-
-transform:scale(1.03);
-
-}
-
-
+/* Result Box */
 
 .calc-result{
 
 margin-top:25px;
 
-background:#0f172a;
-
 padding:20px;
 
-border-radius:18px;
+border-radius:20px;
+
+background:rgba(15,23,42,0.75);
+
+border:1px solid rgba(255,255,255,0.2);
 
 color:white;
 
-border:1px solid #334155;
-
 }
-
 
 
 .calc-result p{
 
-margin:12px;
-
 font-size:18px;
 
-}
+margin:12px 0;
 
+}
 
 
 #profit{
@@ -657,6 +563,7 @@ font-weight:bold;
 }
 
 
+/* Mobile */
 
 @media(max-width:600px){
 
@@ -672,87 +579,5 @@ padding:20px;
 font-size:22px;
 
 }
-
-}
-
-
-.calculator-box{
-
-background:rgba(255,255,255,0.12);
-
-backdrop-filter:blur(15px);
-
--webkit-backdrop-filter:blur(15px);
-
-border:1px solid rgba(255,255,255,0.25);
-
-padding:30px;
-
-border-radius:25px;
-
-margin:30px 0;
-
-box-shadow:
-0 20px 40px rgba(0,0,0,0.35);
-
-}
-
-
-.calculator-box h2{
-
-color:#e5e7eb;
-
-font-size:28px;
-
-text-align:center;
-
-letter-spacing:1px;
-
-}
-
-
-
-.calculator-box input,
-.calculator-box select{
-
-background:rgba(255,255,255,0.9);
-
-color:#111827;
-
-border-radius:14px;
-
-border:1px solid #94a3b8;
-
-}
-
-
-
-.calculator-box button{
-
-background:
-linear-gradient(135deg,#38bdf8,#2563eb);
-
-color:white;
-
-border-radius:15px;
-
-box-shadow:
-0 8px 25px rgba(37,99,235,.4);
-
-}
-
-
-
-.calc-result{
-
-background:rgba(15,23,42,0.75);
-
-border:1px solid rgba(255,255,255,.15);
-
-backdrop-filter:blur(10px);
-
-border-radius:18px;
-
-padding:20px;
 
 }
