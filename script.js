@@ -546,10 +546,4 @@ accuracy.toFixed(1)+"%";
 }
 
 
-// Demo data
-totalSignals = 25;
-wins = 18;
-losses = 7;
-
-
 updatePerformance();
