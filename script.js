@@ -667,3 +667,112 @@ savePerformance();
 
 // Load dashboard
 updateDashboard();
+// ==========================
+// LIVE TP SL CHECKER
+// ==========================
+
+async function checkTradeResults(){
+
+let trades = JSON.parse(localStorage.getItem("activeTrades")) || [];
+
+
+for(let i = 0; i < trades.length; i++){
+
+let trade = trades[i];
+
+if(trade.status !== "OPEN") continue;
+
+
+try{
+
+let response = await fetch(
+"https://api.binance.com/api/v3/ticker/price?symbol="+trade.coin+"USDT"
+);
+
+
+let data = await response.json();
+
+let currentPrice = Number(data.price);
+
+
+
+if(trade.signal === "LONG"){
+
+
+if(currentPrice >= trade.tp){
+
+performance.wins++;
+
+trade.status="WIN";
+
+}
+
+
+else if(currentPrice <= trade.sl){
+
+performance.losses++;
+
+trade.status="LOSS";
+
+}
+
+
+
+}
+
+
+
+if(trade.signal === "SHORT"){
+
+
+if(currentPrice <= trade.tp){
+
+performance.wins++;
+
+trade.status="WIN";
+
+}
+
+
+else if(currentPrice >= trade.sl){
+
+performance.losses++;
+
+trade.status="LOSS";
+
+}
+
+
+}
+
+
+
+localStorage.setItem(
+"activeTrades",
+JSON.stringify(trades)
+);
+
+
+localStorage.setItem(
+"performance",
+JSON.stringify(performance)
+);
+
+
+updatePerformanceDashboard();
+
+
+}catch(error){
+
+console.log(error);
+
+}
+
+
+}
+
+
+}
+
+
+setInterval(checkTradeResults,10000);
