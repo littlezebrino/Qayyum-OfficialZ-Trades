@@ -1,11 +1,13 @@
 const coins = [
-{symbol:"BTCUSDT", id:"btc"},
-{symbol:"ETHUSDT", id:"eth"},
-{symbol:"SOLUSDT", id:"sol"},
-{symbol:"XRPUSDT", id:"xrp"},
-{symbol:"LINKUSDT", id:"link"}
+{symbol:"BTCUSDT",name:"BTC"},
+{symbol:"ETHUSDT",name:"ETH"},
+{symbol:"SOLUSDT",name:"SOL"},
+{symbol:"XRPUSDT",name:"XRP"},
+{symbol:"LINKUSDT",name:"LINK"}
 ];
 
+
+// PRICE
 
 async function loadPrice(symbol,id){
 
@@ -20,10 +22,10 @@ let data = await res.json();
 document.getElementById(id+"-price").innerHTML =
 "$"+Number(data.price).toLocaleString();
 
-}
-catch(error){
 
-console.log(error);
+}catch(e){
+
+console.log(e);
 
 }
 
@@ -33,11 +35,11 @@ console.log(error);
 
 function updatePrices(){
 
-coins.forEach(coin=>{
-
-loadPrice(coin.symbol,coin.id);
-
-});
+loadPrice("BTCUSDT","btc");
+loadPrice("ETHUSDT","eth");
+loadPrice("SOLUSDT","sol");
+loadPrice("XRPUSDT","xrp");
+loadPrice("LINKUSDT","link");
 
 }
 
@@ -48,6 +50,9 @@ setInterval(updatePrices,5000);
 
 
 
+
+
+// EMA
 
 function EMA(data,period){
 
@@ -68,6 +73,8 @@ return ema;
 
 
 
+// RSI
+
 function RSI(data,period=14){
 
 let gain=0;
@@ -76,16 +83,16 @@ let loss=0;
 
 for(let i=data.length-period;i<data.length;i++){
 
-let change=data[i]-data[i-1];
+let diff=data[i]-data[i-1];
 
 
-if(change>0){
+if(diff>0){
 
-gain+=change;
+gain+=diff;
 
 }else{
 
-loss-=change;
+loss-=diff;
 
 }
 
@@ -104,33 +111,40 @@ let rs=gain/loss;
 return 100-(100/(1+rs));
 
 }
-// SIGNAL SYSTEM
+
+
+
+
+
+// SIGNAL
 
 async function generateSignal(coin){
+
 
 try{
 
 
-let res = await fetch(
+let res=await fetch(
+
 "https://api.binance.com/api/v3/klines?symbol="+coin.symbol+"&interval=15m&limit=100"
+
 );
 
 
-let candles = await res.json();
+let candles=await res.json();
 
 
-let closes = candles.map(c=>Number(c[4]));
+let closes=candles.map(c=>Number(c[4]));
 
 
-let price = closes[closes.length-1];
+let price=closes[closes.length-1];
 
 
-let rsi = RSI(closes);
+let rsi=RSI(closes);
 
+let ema20=EMA(closes,20);
 
-let ema20 = EMA(closes,20);
-
-let ema50 = EMA(closes,50);
+let ema50=EMA(closes,50);
 
 
 
@@ -143,35 +157,20 @@ let confidence=50;
 
 
 
-// LONG
-
-if(
-price > ema20 &&
-rsi > 50
-){
+if(price>ema20 && rsi>50){
 
 signal="LONG";
-
 bias="Bullish";
-
 confidence=75;
 
 }
 
 
 
-
-// SHORT
-
-else if(
-price < ema20 &&
-rsi < 50
-){
+else if(price<ema20 && rsi<50){
 
 signal="SHORT";
-
 bias="Bearish";
-
 confidence=75;
 
 }
@@ -181,98 +180,125 @@ confidence=75;
 
 
 let sl="--";
-
 let tp1="--";
-
 let tp2="--";
-
 let tp3="--";
 
 
 
 
-
-// LONG TP/SL
+// REALISTIC TARGETS
 
 if(signal==="LONG"){
 
-sl="$"+(price*0.97).toFixed(4);
+sl="$"+(price*0.99).toFixed(4);
 
-tp1="$"+(price*1.03).toFixed(4);
+tp1="$"+(price*1.01).toFixed(4);
 
-tp2="$"+(price*1.06).toFixed(4);
+tp2="$"+(price*1.02).toFixed(4);
 
-tp3="$"+(price*1.10).toFixed(4);
+tp3="$"+(price*1.03).toFixed(4);
 
 }
 
 
-
-
-
-// SHORT TP/SL
 
 if(signal==="SHORT"){
 
-sl="$"+(price*1.03).toFixed(4);
+sl="$"+(price*1.01).toFixed(4);
 
-tp1="$"+(price*0.97).toFixed(4);
+tp1="$"+(price*0.99).toFixed(4);
 
-tp2="$"+(price*0.94).toFixed(4);
+tp2="$"+(price*0.98).toFixed(4);
 
-tp3="$"+(price*0.90).toFixed(4);
+tp3="$"+(price*0.97).toFixed(4);
+
+}
+
+
+
+
+
+// SHOW SIGNAL
+
+document.getElementById("coin-name").innerHTML=coin.name;
+
+document.getElementById("signal").innerHTML=signal;
+
+document.getElementById("bias").innerHTML=bias;
+
+document.getElementById("confidence").innerHTML=confidence+"%";
+
+document.getElementById("entry").innerHTML="$"+price.toFixed(4);
+
+document.getElementById("stoploss").innerHTML=sl;
+
+document.getElementById("tp1").innerHTML=tp1;
+
+document.getElementById("tp2").innerHTML=tp2;
+
+document.getElementById("tp3").innerHTML=tp3;
+
+document.getElementById("rsi").innerHTML=rsi.toFixed(2);
+
+document.getElementById("trend").innerHTML=
+ema20>ema50 ? "Uptrend" : "Downtrend";
+
+
+
+
+
+// AI ANALYSIS
+
+document.getElementById("analysis").innerHTML=
+
+coin.name+" Analysis: "+bias+
+" trend detected. RSI "+rsi.toFixed(2)+
+". Signal strength "+confidence+"%";
+
+
+
+
+
+// HISTORY
+
+if(signal!=="WAIT"){
+
+let old=localStorage.getItem("trades") || "";
+
+let trade=
+
+coin.name+" | "+signal+
+" | Entry: $"+price.toFixed(4)+
+" | SL: "+sl+
+" | TP1: "+tp1+
+"<br>";
+
+localStorage.setItem("trades",trade+old);
+
+
+document.getElementById("history").innerHTML=
+localStorage.getItem("trades");
 
 }
 
 
-
-
-
-let id=coin.id;
-
-
-
-document.getElementById(id+"-signal").innerHTML=signal;
-
-document.getElementById(id+"-bias").innerHTML=bias;
-
-document.getElementById(id+"-confidence").innerHTML=
-confidence+"%";
-
-document.getElementById(id+"-rsi").innerHTML=
-rsi.toFixed(2);
-
-document.getElementById(id+"-trend").innerHTML=
-ema20 > ema50 ? "UPTREND" : "DOWNTREND";
-
-document.getElementById(id+"-entry").innerHTML=
-"$"+price.toFixed(4);
-
-document.getElementById(id+"-sl").innerHTML=sl;
-
-document.getElementById(id+"-tp1").innerHTML=tp1;
-
-document.getElementById(id+"-tp2").innerHTML=tp2;
-
-document.getElementById(id+"-tp3").innerHTML=tp3;
-
-
-
 }
+
 
 catch(error){
 
-console.log("ERROR",coin.symbol,error);
+console.log(error);
 
 }
 
+
 }
 
 
 
 
-
-// START ALL COINS
+// RUN ALL COINS
 
 coins.forEach(coin=>{
 
@@ -281,9 +307,6 @@ generateSignal(coin);
 });
 
 
-
-
-// AUTO UPDATE
 
 setInterval(()=>{
 
