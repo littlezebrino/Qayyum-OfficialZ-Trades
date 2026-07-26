@@ -14,6 +14,20 @@ const coins = [
 // PERFORMANCE STORAGE
 // ==========================
 
+let appVersion = "2";
+
+let savedVersion = localStorage.getItem("appVersion");
+
+if(savedVersion !== appVersion){
+
+localStorage.removeItem("performance");
+localStorage.removeItem("activeTrades");
+
+localStorage.setItem("appVersion", appVersion);
+
+}
+
+
 let performance = JSON.parse(localStorage.getItem("performance")) || {
   totalSignals: 0,
   wins: 0,
