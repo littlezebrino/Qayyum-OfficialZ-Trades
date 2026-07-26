@@ -1,1 +1,91 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
+body{
+background:#0b0f19;
+color:#ffffff;
+padding:20px;
+}
+
+.header{
+text-align:center;
+padding:25px;
+margin-bottom:20px;
+background:#111827;
+border-radius:15px;
+border:1px solid #2a3446;
+}
+
+.header h1{
+color:#00e5ff;
+font-size:30px;
+margin-bottom:10px;
+}
+
+.header p{
+color:#a0aec0;
+}
+
+.coins{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.coin-card{
+background:#111827;
+padding:15px;
+border-radius:12px;
+text-align:center;
+border:1px solid #2a3446;
+transition:.3s;
+}
+
+.coin-card:hover{
+transform:translateY(-5px);
+border-color:#00e5ff;
+}
+
+.coin-card h2{
+color:#ffd54f;
+margin-bottom:10px;
+}
+
+.signal-box{
+background:#111827;
+padding:20px;
+border-radius:15px;
+border:1px solid #2a3446;
+margin-bottom:20px;
+}
+
+.signal-box h2{
+color:#00ff88;
+margin-bottom:15px;
+}
+
+.signal p{
+margin:8px 0;
+}
+
+.analysis{
+background:#111827;
+padding:20px;
+border-radius:15px;
+border:1px solid #2a3446;
+}
+
+.analysis h2{
+color:#ff9800;
+margin-bottom:10px;
+}
+
+#analysis{
+color:#d1d5db;
+line-height:1.6;
+}
