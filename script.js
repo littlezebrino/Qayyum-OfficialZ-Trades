@@ -16,8 +16,6 @@ document.getElementById("btc-price").innerHTML="API Error";
 
 }
 
-loadBTC();
-
 async function loadPrice(symbol,id){
 
 try{
