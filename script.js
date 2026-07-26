@@ -479,3 +479,43 @@ rr.toFixed(2)+"R";
 
 
 }
+
+// Performance Dashboard
+
+let totalSignals = 0;
+let wins = 0;
+let losses = 0;
+
+
+function updatePerformance(){
+
+document.getElementById("total-signals").innerHTML = totalSignals;
+
+document.getElementById("wins").innerHTML = wins;
+
+document.getElementById("losses").innerHTML = losses;
+
+
+let accuracy = 0;
+
+if(totalSignals > 0){
+
+accuracy = (wins / totalSignals) * 100;
+
+}
+
+
+document.getElementById("accuracy").innerHTML =
+accuracy.toFixed(1)+"%";
+
+
+}
+
+
+// Demo data
+totalSignals = 25;
+wins = 18;
+losses = 7;
+
+
+updatePerformance();
