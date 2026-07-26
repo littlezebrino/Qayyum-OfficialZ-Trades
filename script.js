@@ -204,3 +204,71 @@ setInterval(function(){
 getSignal("BTCUSDT");
 
 },60000);
+getSignal("BTCUSDT");
+async function getSignal(symbol){
+
+try{
+
+const response = await fetch(
+"https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval=15m&limit=50"
+);
+
+const candles = await response.json();
+
+let closes = candles.map(c => Number(c[4]));
+
+let current = closes[closes.length - 1];
+let previous = closes[closes.length - 2];
+
+let signal = "WAIT";
+let bias = "Neutral";
+let confidence = 50;
+
+
+if(current > previous){
+
+signal = "LONG";
+bias = "Bullish";
+confidence = 65;
+
+}
+
+else if(current < previous){
+
+signal = "SHORT";
+bias = "Bearish";
+confidence = 65;
+
+}
+
+
+document.getElementById("signal").innerHTML = signal;
+document.getElementById("bias").innerHTML = bias;
+document.getElementById("confidence").innerHTML = confidence+"%";
+document.getElementById("entry").innerHTML = "$"+current.toFixed(2);
+
+
+let sl = current * 0.97;
+let tp1 = current * 1.03;
+let tp2 = current * 1.06;
+let tp3 = current * 1.10;
+
+
+document.getElementById("stoploss").innerHTML="$"+sl.toFixed(2);
+document.getElementById("tp1").innerHTML="$"+tp1.toFixed(2);
+document.getElementById("tp2").innerHTML="$"+tp2.toFixed(2);
+document.getElementById("tp3").innerHTML="$"+tp3.toFixed(2);
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+}
+
+
+getSignal("BTCUSDT");
