@@ -43,3 +43,49 @@ updatePrices();
 
 // Har 5 second baad automatic update
 setInterval(updatePrices, 5000);
+
+async function loadChange(symbol,id){
+
+try{
+
+const response = await fetch(
+"https://api.binance.com/api/v3/ticker/24hr?symbol="+symbol
+);
+
+const data = await response.json();
+
+let change = Number(data.priceChangePercent).toFixed(2);
+
+let element = document.getElementById(id);
+
+if(change >= 0){
+element.innerHTML = "+"+change+"%";
+element.style.color="green";
+}else{
+element.innerHTML = change+"%";
+element.style.color="red";
+}
+
+}catch{
+
+document.getElementById(id).innerHTML="Error";
+
+}
+
+}
+
+
+function updateChanges(){
+
+loadChange("BTCUSDT","btc-change");
+loadChange("ETHUSDT","eth-change");
+loadChange("SOLUSDT","sol-change");
+loadChange("XRPUSDT","xrp-change");
+loadChange("LINKUSDT","link-change");
+
+}
+
+
+updateChanges();
+
+setInterval(updateChanges,5000);
