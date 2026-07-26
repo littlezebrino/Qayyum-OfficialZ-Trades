@@ -1,15 +1,3 @@
-let tradeHistory = JSON.parse(localStorage.getItem("tradeHistory")) || [];
-
-function saveTrade(trade){
-
-tradeHistory.push(trade);
-
-localStorage.setItem(
-"tradeHistory",
-JSON.stringify(tradeHistory)
-);
-
-}
 
 const coins = [
 {symbol:"BTCUSDT", id:"btc"},
