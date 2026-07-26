@@ -1,42 +1,126 @@
-async function loadPrice(symbol, id){
+<!DOCTYPE html>
+<html lang="en">
 
-try{
+<head>
 
-const response = await fetch(
-"https://api.binance.com/api/v3/ticker/price?symbol="+symbol
-);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const data = await response.json();
+<title>Qayyum OfficialZ Trades</title>
 
-document.getElementById(id).innerHTML =
-"$"+Number(data.price).toLocaleString();
+<link rel="stylesheet" href="style.css">
 
-
-}catch(error){
-
-document.getElementById(id).innerHTML="API Error";
-
-}
-
-}
+</head>
 
 
-
-function updatePrices(){
-
-loadPrice("BTCUSDT","btc-price");
-
-loadPrice("ETHUSDT","eth-price");
-
-loadPrice("SOLUSDT","sol-price");
-
-loadPrice("XRPUSDT","xrp-price");
-
-loadPrice("LINKUSDT","link-price");
-
-}
+<body>
 
 
-updatePrices();
+<header class="header">
 
-setInterval(updatePrices,5000);
+<h1>Qayyum OfficialZ Trades</h1>
+
+<p>Professional AI Crypto Signals</p>
+
+</header>
+
+
+
+<section class="coins">
+
+
+<div class="coin-card">
+<h2>BTCUSDT</h2>
+<p id="btc-price">Loading...</p>
+</div>
+
+
+
+<div class="coin-card">
+<h2>ETHUSDT</h2>
+<p id="eth-price">Loading...</p>
+</div>
+
+
+
+<div class="coin-card">
+<h2>SOLUSDT</h2>
+<p id="sol-price">Loading...</p>
+</div>
+
+
+
+<div class="coin-card">
+<h2>XRPUSDT</h2>
+<p id="xrp-price">Loading...</p>
+</div>
+
+
+
+<div class="coin-card">
+<h2>LINKUSDT</h2>
+<p id="link-price">Loading...</p>
+</div>
+
+
+
+</section>
+
+
+
+
+<section class="signal-box">
+
+<h2>AI Signal</h2>
+
+
+<div class="signal">
+
+<p><strong>Signal:</strong> Waiting...</p>
+
+<p><strong>Bias:</strong> Neutral</p>
+
+<p><strong>Confidence:</strong> --%</p>
+
+<p><strong>Entry:</strong> --</p>
+
+<p><strong>Stop Loss:</strong> --</p>
+
+<p><strong>TP1:</strong> --</p>
+
+<p><strong>TP2:</strong> --</p>
+
+<p><strong>TP3:</strong> --</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section class="analysis">
+
+
+<h2>AI Analysis</h2>
+
+
+<p id="analysis">
+Waiting for market analysis...
+</p>
+
+
+</section>
+
+
+
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
