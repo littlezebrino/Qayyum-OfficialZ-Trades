@@ -229,7 +229,24 @@ async function generateSignal(coin) {
             ema20 > ema50 ? "UPTREND" : "DOWNTREND";
 
         document.getElementById(id + "-analysis").textContent =
-            `${coin.symbol}: ${bias} | RSI ${rsi.toFixed(2)} | Confidence ${confidence}%`;
+`${coin.symbol}: ${bias} | RSI ${rsi.toFixed(2)} | Confidence ${confidence}%`;
+
+
+// Performance Dashboard Count
+
+if(signal !== "WAIT"){
+
+performance.totalSignals++;
+
+localStorage.setItem(
+"performance",
+JSON.stringify(performance)
+);
+
+updatePerformanceDashboard();
+
+}
+
 
     }
 
