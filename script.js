@@ -22,6 +22,23 @@ let performance = JSON.parse(localStorage.getItem("performance")) || {
 };
 
 // ==========================
+// ACTIVE TRADES STORAGE
+// ==========================
+
+let activeTrades = JSON.parse(localStorage.getItem("activeTrades")) || [];
+
+function saveActiveTrade(trade){
+
+  activeTrades.push(trade);
+
+  localStorage.setItem(
+    "activeTrades",
+    JSON.stringify(activeTrades)
+  );
+
+}
+
+// ==========================
 // UPDATE DASHBOARD
 // ==========================
 
