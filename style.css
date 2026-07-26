@@ -2,90 +2,397 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:'Segoe UI',Arial,sans-serif;
 }
+
 
 body{
-background:#0b0f19;
-color:#ffffff;
+
+background:
+linear-gradient(135deg,#050816,#0b1224,#111827);
+
+color:white;
 padding:20px;
+min-height:100vh;
+
 }
+
+
+
 
 .header{
+
 text-align:center;
-padding:25px;
-margin-bottom:20px;
-background:#111827;
-border-radius:15px;
-border:1px solid #2a3446;
+padding:30px;
+
+background:
+rgba(17,24,39,0.8);
+
+backdrop-filter:blur(10px);
+
+border-radius:20px;
+
+margin-bottom:25px;
+
+border:1px solid rgba(0,229,255,0.3);
+
+box-shadow:
+0 0 25px rgba(0,229,255,0.15);
+
 }
+
+
 
 .header h1{
+
 color:#00e5ff;
-font-size:30px;
+
+font-size:34px;
+
+letter-spacing:1px;
+
+text-shadow:
+0 0 15px #00e5ff;
+
 margin-bottom:10px;
+
 }
+
+
 
 .header p{
-color:#a0aec0;
+
+color:#b7c3d4;
+
+font-size:16px;
+
 }
+
+
+
+
+/* COINS */
 
 .coins{
+
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:15px;
-margin-bottom:20px;
+
+grid-template-columns:
+repeat(auto-fit,minmax(170px,1fr));
+
+gap:18px;
+
+margin-bottom:30px;
+
 }
+
+
 
 .coin-card{
-background:#111827;
-padding:15px;
-border-radius:12px;
+
+background:
+linear-gradient(145deg,#111827,#0f172a);
+
+padding:20px;
+
+border-radius:18px;
+
 text-align:center;
-border:1px solid #2a3446;
+
+border:1px solid #263449;
+
 transition:.3s;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,.3);
+
 }
+
+
 
 .coin-card:hover{
-transform:translateY(-5px);
+
+transform:translateY(-8px);
+
 border-color:#00e5ff;
+
+box-shadow:
+0 0 25px rgba(0,229,255,.25);
+
 }
+
+
 
 .coin-card h2{
+
 color:#ffd54f;
-margin-bottom:10px;
+
+font-size:20px;
+
+margin-bottom:12px;
+
 }
+
+
+
+.coin-card p{
+
+font-size:22px;
+
+font-weight:bold;
+
+color:#ffffff;
+
+}
+
+
+
+
+/* SIGNAL CARDS */
+
+
+.signals{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(280px,1fr));
+
+gap:20px;
+
+}
+
+
+
 
 .signal-box{
-background:#111827;
-padding:20px;
-border-radius:15px;
-border:1px solid #2a3446;
+
+background:
+
+linear-gradient(145deg,#111827,#0b1220);
+
+padding:22px;
+
+border-radius:20px;
+
+border:1px solid #263449;
+
 margin-bottom:20px;
+
+box-shadow:
+
+0 15px 35px rgba(0,0,0,.35);
+
+transition:.3s;
+
 }
+
+
+
+.signal-box:hover{
+
+transform:translateY(-5px);
+
+border-color:#00ff88;
+
+}
+
+
+
+
 
 .signal-box h2{
+
 color:#00ff88;
-margin-bottom:15px;
+
+margin-bottom:18px;
+
+font-size:22px;
+
 }
 
-.signal p{
-margin:8px 0;
+
+
+
+
+.signal-box p{
+
+margin:10px 0;
+
+color:#cbd5e1;
+
+font-size:15px;
+
 }
+
+
+
+.signal-box span{
+
+color:#ffffff;
+
+font-weight:bold;
+
+}
+
+
+
+
+/* ANALYSIS */
+
 
 .analysis{
-background:#111827;
-padding:20px;
-border-radius:15px;
-border:1px solid #2a3446;
+
+background:
+
+linear-gradient(145deg,#1a1f35,#111827);
+
+padding:25px;
+
+border-radius:20px;
+
+border:1px solid #ff9800;
+
+box-shadow:
+
+0 0 25px rgba(255,152,0,.15);
+
+margin-top:20px;
+
 }
+
+
 
 .analysis h2{
+
 color:#ff9800;
-margin-bottom:10px;
+
+margin-bottom:15px;
+
+font-size:25px;
+
 }
 
+
+
 #analysis{
-color:#d1d5db;
-line-height:1.6;
+
+color:#e5e7eb;
+
+line-height:1.8;
+
+}
+
+
+
+
+
+/* HISTORY */
+
+
+.history{
+
+background:#111827;
+
+padding:25px;
+
+border-radius:20px;
+
+border:1px solid #334155;
+
+margin-top:20px;
+
+}
+
+
+
+.history h2{
+
+color:#00e5ff;
+
+margin-bottom:15px;
+
+}
+
+
+
+
+
+/* FEAR GREED */
+
+
+.fear-greed{
+
+background:#111827;
+
+padding:25px;
+
+border-radius:20px;
+
+border:1px solid #7c3aed;
+
+margin-top:20px;
+
+text-align:center;
+
+}
+
+
+
+.fear-greed h2{
+
+color:#a78bfa;
+
+}
+
+
+
+#fear-value{
+
+font-size:45px;
+
+margin:15px;
+
+text-shadow:
+
+0 0 15px #a78bfa;
+
+}
+
+
+
+
+
+/* MOBILE */
+
+
+@media(max-width:600px){
+
+body{
+
+padding:12px;
+
+}
+
+
+.header h1{
+
+font-size:26px;
+
+}
+
+
+.coin-card p{
+
+font-size:18px;
+
+}
+
+
+.signal-box{
+
+padding:18px;
+
+}
+
 }
