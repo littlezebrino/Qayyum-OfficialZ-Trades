@@ -8,25 +8,24 @@ const coins = [
 
 
 
-// LIVE PRICES
+// LIVE PRICE
 
 async function loadPrice(symbol,id){
 
 try{
 
-let response = await fetch(
+let res = await fetch(
 "https://api.binance.com/api/v3/ticker/price?symbol="+symbol
 );
 
-let data = await response.json();
+let data = await res.json();
 
 document.getElementById(id+"-price").innerHTML =
 "$"+Number(data.price).toLocaleString();
 
+}catch(e){
 
-}catch(error){
-
-console.log(error);
+console.log(e);
 
 }
 
@@ -36,9 +35,9 @@ console.log(error);
 
 function updatePrices(){
 
-coins.forEach(coin=>{
+coins.forEach(c=>{
 
-loadPrice(coin.symbol,coin.id);
+loadPrice(c.symbol,c.id);
 
 });
 
@@ -57,17 +56,15 @@ setInterval(updatePrices,5000);
 
 function EMA(data,period){
 
-let multiplier=2/(period+1);
+let k=2/(period+1);
 
 let ema=data[0];
 
-
 for(let i=1;i<data.length;i++){
 
-ema=(data[i]-ema)*multiplier+ema;
+ema=(data[i]-ema)*k+ema;
 
 }
-
 
 return ema;
 
@@ -88,27 +85,23 @@ let loss=0;
 
 for(let i=data.length-period;i<data.length;i++){
 
-let change=data[i]-data[i-1];
+let diff=data[i]-data[i-1];
 
 
-if(change>0){
+if(diff>0){
 
-gain+=change;
+gain+=diff;
 
 }else{
 
-loss-=change;
+loss-=diff;
 
 }
 
 }
 
 
-if(loss===0){
-
-return 100;
-
-}
+if(loss===0) return 100;
 
 
 let rs=gain/loss;
@@ -123,22 +116,22 @@ return 100-(100/(1+rs));
 
 
 
-// GENERATE SIGNAL
+
+// SIGNAL ENGINE
 
 async function generateSignal(coin){
-
 
 try{
 
 
-let response = await fetch(
+let res=await fetch(
 
 "https://api.binance.com/api/v3/klines?symbol="+coin.symbol+"&interval=15m&limit=100"
 
 );
 
 
-let candles = await response.json();
+let candles=await res.json();
 
 
 let closes=candles.map(c=>Number(c[4]));
@@ -165,44 +158,40 @@ let confidence=50;
 
 
 
-if(price>ema20 && rsi>50){
+if(price>ema20 && ema20>ema50 && rsi>50){
 
 signal="LONG";
 
 bias="Bullish";
 
-confidence=75;
+confidence=80;
 
 }
 
 
-
-else if(price<ema20 && rsi<50){
+else if(price<ema20 && ema20<ema50 && rsi<50){
 
 signal="SHORT";
 
 bias="Bearish";
 
-confidence=75;
+confidence=80;
 
 }
 
 
 
 
+
 let sl="--";
-
 let tp1="--";
-
 let tp2="--";
-
 let tp3="--";
 
 
 
-
-
 // REALISTIC TP SL
+
 
 if(signal==="LONG"){
 
@@ -233,6 +222,7 @@ tp3="$"+(price*0.97).toFixed(4);
 
 
 
+
 let id=coin.id;
 
 
@@ -244,10 +234,8 @@ document.getElementById(id+"-bias").innerHTML=bias;
 document.getElementById(id+"-confidence").innerHTML=
 confidence+"%";
 
-
 document.getElementById(id+"-entry").innerHTML=
 "$"+price.toFixed(4);
-
 
 document.getElementById(id+"-sl").innerHTML=sl;
 
@@ -256,7 +244,6 @@ document.getElementById(id+"-tp1").innerHTML=tp1;
 document.getElementById(id+"-tp2").innerHTML=tp2;
 
 document.getElementById(id+"-tp3").innerHTML=tp3;
-
 
 document.getElementById(id+"-rsi").innerHTML=
 rsi.toFixed(2);
@@ -268,96 +255,87 @@ ema20>ema50 ? "UPTREND" : "DOWNTREND";
 
 
 
+// EACH COIN ANALYSIS
 
-// AI ANALYSIS
+document.getElementById(id+"-analysis").innerHTML=
 
-document.getElementById("analysis").innerHTML=
-
-"Market checked: "+coin.symbol+
-" | Signal: "+signal+
-" | RSI: "+rsi.toFixed(2)+
-" | Trend: "+(ema20>ema50?"Bullish":"Bearish");
-
+coin.symbol+
+": "+bias+
+" trend | RSI "+rsi.toFixed(2)+
+" | Confidence "+confidence+"%";
 
 
 
 
-// HISTORY SAVE
+// HISTORY
 
 if(signal!=="WAIT"){
 
+let old=
+localStorage.getItem("history") || "";
 
-let history =
-localStorage.getItem("tradeHistory") || "";
 
-
-let newTrade=
+let trade=
 
 coin.symbol+
-" - "+
-signal+
-" | Entry: $"+
-price.toFixed(4)+
-" | SL: "+
-sl+
-" | TP1: "+
-tp1+
+" "+signal+
+" Entry $"+price.toFixed(2)+
+" SL "+sl+
+" TP1 "+tp1+
 "<br>";
 
 
 localStorage.setItem(
-"tradeHistory",
-newTrade+history
+"history",
+trade+old
 );
 
 
 document.getElementById("history").innerHTML=
-localStorage.getItem("tradeHistory");
-
-
-}
-
+localStorage.getItem("history");
 
 }
 
+
+}
 
 
 catch(error){
 
 console.log(
-"Signal error:",
 coin.symbol,
 error
 );
 
 }
 
-
 }
 
 
 
 
-// START
 
-coins.forEach(coin=>{
 
-generateSignal(coin);
+// RUN ALL COINS TOGETHER
+
+coins.forEach(c=>{
+
+generateSignal(c);
 
 });
 
 
 
-// UPDATE EVERY 1 MINUTE
+
+
+// UPDATE EVERY MINUTE
 
 setInterval(()=>{
 
+coins.forEach(c=>{
 
-coins.forEach(coin=>{
-
-generateSignal(coin);
+generateSignal(c);
 
 });
-
 
 },60000);
