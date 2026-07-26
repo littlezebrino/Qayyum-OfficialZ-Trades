@@ -1,28 +1,11 @@
 const coins = [
-{
-symbol:"BTCUSDT",
-id:"btc"
-},
-{
-symbol:"ETHUSDT",
-id:"eth"
-},
-{
-symbol:"SOLUSDT",
-id:"sol"
-},
-{
-symbol:"XRPUSDT",
-id:"xrp"
-},
-{
-symbol:"LINKUSDT",
-id:"link"
-}
+{symbol:"BTCUSDT", id:"btc"},
+{symbol:"ETHUSDT", id:"eth"},
+{symbol:"SOLUSDT", id:"sol"},
+{symbol:"XRPUSDT", id:"xrp"},
+{symbol:"LINKUSDT", id:"link"}
 ];
 
-
-// LIVE PRICE
 
 async function loadPrice(symbol,id){
 
@@ -47,6 +30,7 @@ console.log(error);
 }
 
 
+
 function updatePrices(){
 
 coins.forEach(coin=>{
@@ -64,7 +48,6 @@ setInterval(updatePrices,5000);
 
 
 
-// EMA
 
 function EMA(data,period){
 
@@ -83,16 +66,18 @@ return ema;
 }
 
 
-// RSI
+
 
 function RSI(data,period=14){
 
 let gain=0;
 let loss=0;
 
+
 for(let i=data.length-period;i<data.length;i++){
 
 let change=data[i]-data[i-1];
+
 
 if(change>0){
 
@@ -106,7 +91,13 @@ loss-=change;
 
 }
 
-if(loss===0) return 100;
+
+if(loss===0){
+
+return 100;
+
+}
+
 
 let rs=gain/loss;
 
@@ -118,6 +109,7 @@ return 100-(100/(1+rs));
 async function generateSignal(coin){
 
 try{
+
 
 let res = await fetch(
 "https://api.binance.com/api/v3/klines?symbol="+coin.symbol+"&interval=15m&limit=100"
@@ -143,8 +135,11 @@ let ema50 = EMA(closes,50);
 
 
 let signal="WAIT";
+
 let bias="Neutral";
+
 let confidence=50;
+
 
 
 
@@ -152,30 +147,31 @@ let confidence=50;
 
 if(
 price > ema20 &&
-ema20 > ema50 &&
 rsi > 50
 ){
 
 signal="LONG";
+
 bias="Bullish";
+
 confidence=75;
 
 }
 
 
 
+
 // SHORT
 
 else if(
-
 price < ema20 &&
-ema20 < ema50 &&
 rsi < 50
-
 ){
 
 signal="SHORT";
+
 bias="Bearish";
+
 confidence=75;
 
 }
@@ -185,11 +181,18 @@ confidence=75;
 
 
 let sl="--";
+
 let tp1="--";
+
 let tp2="--";
+
 let tp3="--";
 
 
+
+
+
+// LONG TP/SL
 
 if(signal==="LONG"){
 
@@ -204,6 +207,10 @@ tp3="$"+(price*1.10).toFixed(4);
 }
 
 
+
+
+
+// SHORT TP/SL
 
 if(signal==="SHORT"){
 
@@ -220,6 +227,7 @@ tp3="$"+(price*0.90).toFixed(4);
 
 
 
+
 let id=coin.id;
 
 
@@ -228,9 +236,11 @@ document.getElementById(id+"-signal").innerHTML=signal;
 
 document.getElementById(id+"-bias").innerHTML=bias;
 
-document.getElementById(id+"-confidence").innerHTML=confidence+"%";
+document.getElementById(id+"-confidence").innerHTML=
+confidence+"%";
 
-document.getElementById(id+"-rsi").innerHTML=rsi.toFixed(2);
+document.getElementById(id+"-rsi").innerHTML=
+rsi.toFixed(2);
 
 document.getElementById(id+"-trend").innerHTML=
 ema20 > ema50 ? "UPTREND" : "DOWNTREND";
@@ -252,18 +262,17 @@ document.getElementById(id+"-tp3").innerHTML=tp3;
 
 catch(error){
 
-console.log(error);
+console.log("ERROR",coin.symbol,error);
 
-document.getElementById(coin.id+"-signal").innerHTML="ERROR";
+}
 
 }
 
 
-}
 
 
 
-// Start all coins
+// START ALL COINS
 
 coins.forEach(coin=>{
 
@@ -272,7 +281,9 @@ generateSignal(coin);
 });
 
 
-// Auto update every minute
+
+
+// AUTO UPDATE
 
 setInterval(()=>{
 
