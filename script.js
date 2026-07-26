@@ -253,9 +253,23 @@ async function generateSignal(coin) {
 
 if(signal !== "WAIT"){
 
+
+let alreadyOpen = activeTrades.some(trade =>
+
+trade.coin === coin.symbol &&
+trade.signal === signal &&
+trade.status === "OPEN"
+
+);
+
+
+if(!alreadyOpen){
+
+
 performance.totalSignals++;
 
-  saveActiveTrade({
+
+saveActiveTrade({
 
 coin: coin.symbol,
 
@@ -270,17 +284,21 @@ sl: sl,
 status:"OPEN"
 
 });
-  
+
 
 localStorage.setItem(
 "performance",
 JSON.stringify(performance)
 );
 
+
 updatePerformanceDashboard();
+
 
 }
 
+
+}
 
     }
 
