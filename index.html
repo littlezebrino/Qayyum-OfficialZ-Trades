@@ -168,6 +168,53 @@
 
 </div>
 
+  <section class="calculator-box">
+
+<h2>Trading Calculator</h2>
+
+<select id="trade-type">
+<option value="long">LONG</option>
+<option value="short">SHORT</option>
+</select>
+
+
+<select id="coin-name">
+<option>BTCUSDT</option>
+<option>ETHUSDT</option>
+<option>SOLUSDT</option>
+<option>XRPUSDT</option>
+<option>LINKUSDT</option>
+</select>
+
+
+<input id="entry-price" placeholder="Entry Price">
+
+<input id="exit-price" placeholder="Exit Price">
+
+<input id="amount" placeholder="Investment Amount (USDT)">
+
+
+
+<button onclick="calculateTrade()">
+Calculate
+</button>
+
+
+<div class="calc-result">
+
+<p>Profit/Loss: <span id="profit">--</span></p>
+
+<p>Percentage: <span id="percentage">--</span></p>
+
+<p>Risk Reward: <span id="rr">--</span></p>
+
+
+</div>
+
+
+  </section>
+
+
 
   <section class="footer-banner">
 
