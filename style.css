@@ -674,3 +674,10 @@ font-size:22px;
 }
 
 }
+
+
+.calculator-box{
+background:red !important;
+padding:50px !important;
+border-radius:30px !important;
+}
