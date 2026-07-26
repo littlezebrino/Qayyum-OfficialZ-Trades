@@ -527,3 +527,92 @@ window.addEventListener("unhandledrejection", (e) => {
     console.log("Promise Error:", e.reason);
 
 });
+
+
+// ===== LIVE PERFORMANCE TRACKER =====
+
+let performanceData = JSON.parse(localStorage.getItem("performanceData")) || {
+    total:0,
+    wins:0,
+    losses:0
+};
+
+
+function updateDashboard(){
+
+    document.getElementById("total-signals").innerHTML =
+    performanceData.total;
+
+    document.getElementById("wins").innerHTML =
+    performanceData.wins;
+
+    document.getElementById("losses").innerHTML =
+    performanceData.losses;
+
+
+    let accuracy = 0;
+
+    if(performanceData.total > 0){
+
+        accuracy =
+        (performanceData.wins / performanceData.total) * 100;
+
+    }
+
+
+    document.getElementById("accuracy").innerHTML =
+    accuracy.toFixed(1)+"%";
+
+
+}
+
+
+
+function savePerformance(){
+
+localStorage.setItem(
+"performanceData",
+JSON.stringify(performanceData)
+);
+
+updateDashboard();
+
+}
+
+
+
+// Jab naya signal aaye
+function addNewSignal(){
+
+performanceData.total++;
+
+savePerformance();
+
+}
+
+
+
+// TP hit
+function signalWin(){
+
+performanceData.wins++;
+
+savePerformance();
+
+}
+
+
+
+// SL hit
+function signalLoss(){
+
+performanceData.losses++;
+
+savePerformance();
+
+}
+
+
+
+// Load dashboard
+updateDashboard();
