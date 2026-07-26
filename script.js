@@ -1,51 +1,45 @@
-async function loadBTC(){
+async function loadPrice(symbol, id) {
 
-try{
+    try {
 
-const response = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+        const response = await fetch(
+            "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol
+        );
 
-const data = await response.json();
+        const data = await response.json();
 
-document.getElementById("btc-price").innerHTML="$"+Number(data.price).toLocaleString();
+        document.getElementById(id).innerHTML =
+            "$" + Number(data.price).toLocaleString();
 
-}catch(error){
+    } catch (error) {
 
-document.getElementById("btc-price").innerHTML="API Error";
+        document.getElementById(id).innerHTML = "API Error";
 
-}
-
-}
-
-async function loadPrice(symbol,id){
-
-try{
-
-const response=await fetch("https://api.binance.com/api/v3/ticker/price?symbol="+symbol);
-
-const data=await response.json();
-
-document.getElementById(id).innerHTML="$"+Number(data.price).toLocaleString();
-
-}catch{
-
-document.getElementById(id).innerHTML="Error";
+    }
 
 }
 
+
+
+function updatePrices() {
+
+    loadPrice("BTCUSDT", "btc-price");
+
+    loadPrice("ETHUSDT", "eth-price");
+
+    loadPrice("SOLUSDT", "sol-price");
+
+    loadPrice("XRPUSDT", "xrp-price");
+
+    loadPrice("LINKUSDT", "link-price");
+
 }
 
-loadPrice("BTCUSDT","btc-price");
-loadPrice("ETHUSDT","eth-price");
-loadPrice("SOLUSDT","sol-price");
-loadPrice("XRPUSDT","xrp-price");
-loadPrice("LINKUSDT","link-price");
 
-setInterval(function(){
 
-loadPrice("BTCUSDT","btc-price");
-loadPrice("ETHUSDT","eth-price");
-loadPrice("SOLUSDT","sol-price");
-loadPrice("XRPUSDT","xrp-price");
-loadPrice("LINKUSDT","link-price");
+// Website open hote hi prices load
+updatePrices();
 
-},5000);
+
+// Har 5 second baad automatic update
+setInterval(updatePrices, 5000);
