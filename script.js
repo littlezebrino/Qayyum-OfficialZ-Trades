@@ -747,6 +747,7 @@ trade.status="LOSS";
 
 
 
+
 localStorage.setItem(
 "activeTrades",
 JSON.stringify(trades)
@@ -776,3 +777,79 @@ console.log(error);
 
 
 setInterval(checkTradeResults,10000);
+
+// TRADE HISTORY VIEW
+
+function showTradeHistory(){
+
+let box = document.getElementById("trade-history");
+
+
+if(box.style.display === "none"){
+
+box.style.display="block";
+
+loadTradeHistory();
+
+}
+else{
+
+box.style.display="none";
+
+}
+
+
+}
+
+
+
+function loadTradeHistory(){
+
+let trades = JSON.parse(localStorage.getItem("activeTrades")) || [];
+
+
+let html="";
+
+
+if(trades.length===0){
+
+html="No trades yet";
+
+}
+
+else{
+
+
+trades.slice(-5).reverse().forEach(trade=>{
+
+
+html += `
+
+<div class="trade-item">
+
+<b>${trade.coin}</b><br>
+
+Type: ${trade.signal}<br>
+
+Entry: ${trade.entry}<br>
+
+TP: ${trade.tp}<br>
+
+SL: ${trade.sl}<br>
+
+Status: ${trade.status}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+document.getElementById("history-list").innerHTML=html;
+
+
+}
