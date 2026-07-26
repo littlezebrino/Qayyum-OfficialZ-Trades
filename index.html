@@ -12,9 +12,7 @@
 
 </head>
 
-
 <body>
-
 
 <header class="header">
 
@@ -24,7 +22,9 @@
 
 </header>
 
-
+<!-- =========================
+     LIVE COIN PRICES
+========================= -->
 
 <section class="coins">
 
@@ -55,15 +55,13 @@
 
 </section>
 
-
-
-
-<h2>AI Trading Signals</h2>
-
+<h2 style="margin:25px 0 15px;color:#00e5ff;">
+AI Trading Signals
+</h2>
 
 <section class="signals">
 
-
+<!-- BTC -->
 
 <div class="signal-box">
 
@@ -84,8 +82,7 @@
 
 </div>
 
-
-
+<!-- ETH -->
 
 <div class="signal-box">
 
@@ -104,10 +101,9 @@
 
 <p id="eth-analysis">Analyzing...</p>
 
-</div>
+  </div>
 
-
-
+  <!-- SOL -->
 
 <div class="signal-box">
 
@@ -127,7 +123,10 @@
 <p id="sol-analysis">Analyzing...</p>
 
 </div>
-  <div class="signal-box">
+
+<!-- XRP -->
+
+<div class="signal-box">
 
 <h2>XRPUSDT</h2>
 
@@ -146,10 +145,9 @@
 
 </div>
 
+<!-- LINK -->
 
-
-
-<section class="calculator-box">
+<div class="signal-box">
 
 <h2>LINKUSDT</h2>
 
@@ -166,9 +164,15 @@
 
 <p id="link-analysis">Analyzing...</p>
 
+</div>
+
 </section>
 
-  <section class="calculator-box">
+  <!-- =========================
+     TRADING CALCULATOR
+========================= -->
+
+<section class="calculator-box">
 
 <h2>Trading Calculator</h2>
 
@@ -176,7 +180,6 @@
 <option value="long">LONG</option>
 <option value="short">SHORT</option>
 </select>
-
 
 <select id="coin-name">
 <option>BTCUSDT</option>
@@ -186,58 +189,73 @@
 <option>LINKUSDT</option>
 </select>
 
+<input
+type="number"
+id="entry-price"
+placeholder="Entry Price">
 
-<input id="entry-price" placeholder="Entry Price">
+<input
+type="number"
+id="exit-price"
+placeholder="Exit Price">
 
-<input id="exit-price" placeholder="Exit Price">
-
-<input id="amount" placeholder="Investment Amount (USDT)">
-
-
+<input
+type="number"
+id="amount"
+placeholder="Investment Amount (USDT)">
 
 <button onclick="calculateTrade()">
 Calculate
 </button>
 
-
 <div class="calc-result">
 
-<p>Profit/Loss: <span id="profit">--</span></p>
+<p>
+Profit/Loss:
+<span id="profit">--</span>
+</p>
 
-<p>Percentage: <span id="percentage">--</span></p>
+<p>
+Percentage:
+<span id="percentage">--</span>
+</p>
 
-<p>Risk Reward: <span id="rr">--</span></p>
-
+<p>
+Risk Reward:
+<span id="rr">--</span>
+</p>
 
 </div>
 
+</section>
 
-  </section>
+<!-- =========================
+     FOOTER
+========================= -->
 
+<section class="footer-banner">
 
-
-  <section class="footer-banner">
-
-<img src="banner.png" alt="Qayyum OfficialZ Banner">
+<img
+src="banner.png"
+alt="Qayyum OfficialZ Banner">
 
 <h2>Meet Founder Qayyum OfficialZ</h2>
 
 <p>
-A boy from Pakistan build a High-Frequency Trading Web Platform powered by APIs, Bitnodes, Indicators, and Smart Strategies
+A boy from Pakistan built a High-Frequency Trading Web Platform powered by APIs, Indicators, Smart Strategies and AI.
 </p>
 
 <p>
-"Inspired by financial innovators like Jane Street, Renaissance Technologies, and Bloomberg — Qayyum OfficialZ Trades brings professional Signals and market analysis tools, worth $10 to hundreds of dollars elsewhere, free for everyone."
+Inspired by professional trading platforms, Qayyum OfficialZ Trades provides free crypto signals, analysis and trading tools for everyone.
 </p>
 
 <p>
-Trade With Data. Trade With Discipline.
+<b>Trade With Data. Trade With Discipline.</b>
 </p>
 
-  </section>
+</section>
 
 <script src="script.js"></script>
-
 
 </body>
 
