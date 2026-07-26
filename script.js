@@ -412,3 +412,70 @@ document.getElementById(id+"-analysis").innerHTML=text;
 setInterval(updateAIAnalysis,2000);
 
 updateAIAnalysis();
+
+function calculateTrade(){
+
+let type=document.getElementById("trade-type").value;
+
+let entry=Number(document.getElementById("entry-price").value);
+
+let exit=Number(document.getElementById("exit-price").value);
+
+let amount=Number(document.getElementById("amount").value);
+
+
+if(!entry || !exit || !amount){
+
+alert("Fill all fields");
+
+return;
+
+}
+
+
+let change;
+
+
+if(type=="long"){
+
+change=(exit-entry)/entry;
+
+}
+
+else{
+
+change=(entry-exit)/entry;
+
+}
+
+
+
+let profit=amount*change;
+
+
+let percent=change*100;
+
+
+
+document.getElementById("profit").innerHTML=
+profit.toFixed(2)+" USDT";
+
+
+document.getElementById("percentage").innerHTML=
+percent.toFixed(2)+"%";
+
+
+
+let risk=Math.abs(entry-exit);
+
+let reward=Math.abs(exit-entry);
+
+
+let rr=reward/risk;
+
+
+document.getElementById("rr").innerHTML=
+rr.toFixed(2)+"R";
+
+
+}
