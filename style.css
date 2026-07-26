@@ -411,3 +411,26 @@ display:block;
 margin:auto;
 
 }
+@media(max-width:600px){
+
+.footer-banner img{
+
+width:90%;
+
+max-width:350px;
+
+}
+
+.footer-banner h2{
+
+font-size:22px;
+
+}
+
+.footer-banner p{
+
+font-size:14px;
+
+}
+
+}
