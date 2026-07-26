@@ -238,6 +238,23 @@ if(signal !== "WAIT"){
 
 performance.totalSignals++;
 
+  saveActiveTrade({
+
+coin: coin.symbol,
+
+signal: signal,
+
+entry: price,
+
+tp: tp1,
+
+sl: sl,
+
+status:"OPEN"
+
+});
+  
+
 localStorage.setItem(
 "performance",
 JSON.stringify(performance)
