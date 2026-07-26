@@ -1,88 +1,42 @@
-async function loadPrice(symbol, id) {
+async function loadPrice(symbol, id){
 
-    try {
+try{
 
-        const response = await fetch(
-            "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol
-        );
+const response = await fetch(
+"https://api.binance.com/api/v3/ticker/price?symbol="+symbol
+);
 
-        const data = await response.json();
+const data = await response.json();
 
-        document.getElementById(id).innerHTML =
-            "$" + Number(data.price).toLocaleString();
+document.getElementById(id).innerHTML =
+"$"+Number(data.price).toLocaleString();
 
-    } catch (error) {
 
-        document.getElementById(id).innerHTML = "API Error";
+}catch(error){
 
-    }
+document.getElementById(id).innerHTML="API Error";
+
+}
 
 }
 
 
 
-async function loadChange(symbol, id) {
+function updatePrices(){
 
-    try {
+loadPrice("BTCUSDT","btc-price");
 
-        const response = await fetch(
-            "https://api.binance.com/api/v3/ticker/24hr?symbol=" + symbol
-        );
+loadPrice("ETHUSDT","eth-price");
 
-        const data = await response.json();
+loadPrice("SOLUSDT","sol-price");
 
-        let change = Number(data.priceChangePercent).toFixed(2);
+loadPrice("XRPUSDT","xrp-price");
 
-        let element = document.getElementById(id);
-
-
-        if (change >= 0) {
-
-            element.innerHTML = "+" + change + "%";
-            element.style.color = "green";
-
-        } else {
-
-            element.innerHTML = change + "%";
-            element.style.color = "red";
-
-        }
-
-
-    } catch (error) {
-
-        document.getElementById(id).innerHTML = "Error";
-
-    }
+loadPrice("LINKUSDT","link-price");
 
 }
 
 
-
-
-function updatePrices() {
-
-    loadPrice("BTCUSDT", "btc-price");
-    loadPrice("ETHUSDT", "eth-price");
-    loadPrice("SOLUSDT", "sol-price");
-    loadPrice("XRPUSDT", "xrp-price");
-    loadPrice("LINKUSDT", "link-price");
-
-
-    loadChange("BTCUSDT", "btc-change");
-    loadChange("ETHUSDT", "eth-change");
-    loadChange("SOLUSDT", "sol-change");
-    loadChange("XRPUSDT", "xrp-change");
-    loadChange("LINKUSDT", "link-change");
-
-}
-
-
-
-
-// First load
 updatePrices();
 
-
-// Auto update every 5 seconds
-setInterval(updatePrices, 5000);
+setInterval(updatePrices,5000);
