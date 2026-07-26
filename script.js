@@ -339,3 +339,75 @@ generateSignal(c);
 });
 
 },60000);
+
+// AI ANALYSIS AUTO UPDATE
+
+function updateAIAnalysis(){
+
+let boxes = [
+"btc",
+"eth",
+"sol",
+"xrp",
+"link"
+];
+
+
+boxes.forEach(id=>{
+
+
+let signal = document.getElementById(id+"-signal").innerHTML;
+
+let bias = document.getElementById(id+"-bias").innerHTML;
+
+let rsi = document.getElementById(id+"-rsi").innerHTML;
+
+let confidence = document.getElementById(id+"-confidence").innerHTML;
+
+
+
+let text = "";
+
+
+if(signal=="LONG"){
+
+text =
+"AI Analysis: Bullish momentum detected. RSI "+rsi+
+". Trend is positive. Confidence "+confidence+
+". Risk management required.";
+
+}
+
+
+else if(signal=="SHORT"){
+
+text =
+"AI Analysis: Bearish momentum detected. RSI "+rsi+
+". Downside pressure visible. Confidence "+confidence+
+". Manage risk carefully.";
+
+}
+
+
+else{
+
+text =
+"AI Analysis: Market is neutral. Waiting for stronger confirmation.";
+
+}
+
+
+
+document.getElementById(id+"-analysis").innerHTML=text;
+
+
+});
+
+
+}
+
+
+
+setInterval(updateAIAnalysis,2000);
+
+updateAIAnalysis();
