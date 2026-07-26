@@ -486,3 +486,191 @@ font-size:18px;
 color:white;
 
 }
+
+              .calculator-box{
+
+background:
+linear-gradient(145deg,#ffffff,#e8f1ff);
+
+color:#111;
+
+padding:30px;
+
+border-radius:25px;
+
+margin:30px 0;
+
+border:1px solid #38bdf8;
+
+box-shadow:
+0 15px 40px rgba(0,0,0,.25);
+
+text-align:center;
+
+}
+
+
+
+.calculator-box h2{
+
+font-size:28px;
+
+color:#0369a1;
+
+margin-bottom:25px;
+
+text-transform:uppercase;
+
+letter-spacing:1px;
+
+}
+
+
+
+.calculator-box select,
+.calculator-box input{
+
+width:90%;
+
+padding:14px;
+
+margin:10px 0;
+
+border-radius:15px;
+
+border:1px solid #cbd5e1;
+
+font-size:16px;
+
+background:white;
+
+color:#111;
+
+outline:none;
+
+}
+
+
+
+.calculator-box select:focus,
+.calculator-box input:focus{
+
+border-color:#00e5ff;
+
+box-shadow:
+0 0 12px rgba(0,229,255,.5);
+
+}
+
+
+
+.calculator-box button{
+
+width:90%;
+
+padding:15px;
+
+margin-top:15px;
+
+border:none;
+
+border-radius:15px;
+
+background:
+linear-gradient(135deg,#00e5ff,#2563eb);
+
+color:white;
+
+font-size:18px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+box-shadow:
+0 8px 20px rgba(37,99,235,.4);
+
+}
+
+
+
+.calculator-box button:hover{
+
+transform:scale(1.03);
+
+}
+
+
+
+.calc-result{
+
+margin-top:25px;
+
+background:#0f172a;
+
+padding:20px;
+
+border-radius:18px;
+
+color:white;
+
+border:1px solid #334155;
+
+}
+
+
+
+.calc-result p{
+
+margin:12px;
+
+font-size:18px;
+
+}
+
+
+
+#profit{
+
+color:#00ff88;
+
+font-weight:bold;
+
+}
+
+
+#percentage{
+
+color:#38bdf8;
+
+font-weight:bold;
+
+}
+
+
+#rr{
+
+color:#ffd54f;
+
+font-weight:bold;
+
+}
+
+
+
+@media(max-width:600px){
+
+.calculator-box{
+
+padding:20px;
+
+}
+
+
+.calculator-box h2{
+
+font-size:22px;
+
+}
+
+}
