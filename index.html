@@ -22,44 +22,65 @@
 
 </header>
 
+
 <!-- =========================
      LIVE COIN PRICES
 ========================= -->
 
 <section class="coins">
 
+
 <div class="coin-card">
 <h2>BTCUSDT</h2>
 <p id="btc-price">Loading...</p>
 </div>
+
 
 <div class="coin-card">
 <h2>ETHUSDT</h2>
 <p id="eth-price">Loading...</p>
 </div>
 
+
 <div class="coin-card">
 <h2>SOLUSDT</h2>
 <p id="sol-price">Loading...</p>
 </div>
+
 
 <div class="coin-card">
 <h2>XRPUSDT</h2>
 <p id="xrp-price">Loading...</p>
 </div>
 
+
 <div class="coin-card">
 <h2>LINKUSDT</h2>
 <p id="link-price">Loading...</p>
 </div>
 
+
+<!-- LTC ADDED -->
+
+<div class="coin-card">
+<h2>LTCUSDT</h2>
+<p id="ltc-price">Loading...</p>
+</div>
+
+
 </section>
+
+
 
 <h2 style="margin:25px 0 15px;color:#00e5ff;">
 Futures Signals
 </h2>
 
+
+
 <section class="signals">
+
+
 
 <!-- BTC -->
 
@@ -82,6 +103,8 @@ Futures Signals
 
 </div>
 
+
+
 <!-- ETH -->
 
 <div class="signal-box">
@@ -102,7 +125,10 @@ Futures Signals
 <p id="eth-analysis">Analyzing...</p>
 
 </div>
-     <!-- SOL -->
+
+
+
+<!-- SOL -->
 
 <div class="signal-box">
 
@@ -123,7 +149,8 @@ Futures Signals
 
 </div>
 
-<!-- XRP -->
+
+     <!-- XRP -->
 
 <div class="signal-box">
 
@@ -143,6 +170,8 @@ Futures Signals
 <p id="xrp-analysis">Analyzing...</p>
 
 </div>
+
+
 
 <!-- LINK -->
 
@@ -165,69 +194,126 @@ Futures Signals
 
 </div>
 
-     </section>
-     <!-- =========================
+
+
+<!-- LTC ADDED -->
+
+<div class="signal-box">
+
+<h2>LTCUSDT</h2>
+
+<p>Signal: <span id="ltc-signal">WAIT</span></p>
+<p>Bias: <span id="ltc-bias">Neutral</span></p>
+<p>Confidence: <span id="ltc-confidence">--</span></p>
+<p>Entry: <span id="ltc-entry">--</span></p>
+<p>SL: <span id="ltc-sl">--</span></p>
+<p>TP1: <span id="ltc-tp1">--</span></p>
+<p>TP2: <span id="ltc-tp2">--</span></p>
+<p>TP3: <span id="ltc-tp3">--</span></p>
+<p>RSI: <span id="ltc-rsi">--</span></p>
+<p>Trend: <span id="ltc-trend">--</span></p>
+
+<p id="ltc-analysis">Analyzing...</p>
+
+</div>
+
+
+</section>
+
+
+
+<!-- =========================
      TRADING CALCULATOR
 ========================= -->
 
+
 <section class="calculator-box">
+
 
 <h2>Trading Calculator</h2>
 
+
 <select id="trade-type">
+
 <option value="long">LONG</option>
+
 <option value="short">SHORT</option>
+
 </select>
 
+
+
 <select id="coin-name">
+
 <option value="BTCUSDT">BTCUSDT</option>
+
 <option value="ETHUSDT">ETHUSDT</option>
+
 <option value="SOLUSDT">SOLUSDT</option>
+
 <option value="XRPUSDT">XRPUSDT</option>
+
 <option value="LINKUSDT">LINKUSDT</option>
+
+<option value="LTCUSDT">LTCUSDT</option>
+
 </select>
+
+
 
 <input
 type="number"
 id="entry-price"
 placeholder="Entry Price">
 
+
 <input
 type="number"
 id="exit-price"
 placeholder="Exit Price">
+
 
 <input
 type="number"
 id="amount"
 placeholder="Investment Amount (USDT)">
 
+
 <button onclick="calculateTrade()">
+
 Calculate
+
 </button>
 
+
+
 <div class="calc-result">
+
 
 <p>
 Profit / Loss :
 <span id="profit">--</span>
 </p>
 
+
 <p>
 Percentage :
 <span id="percentage">--</span>
 </p>
+
 
 <p>
 Risk Reward :
 <span id="rr">--</span>
 </p>
 
+
 </div>
+
 
 </section>
 
-<!-- =========================
+     <!-- =========================
      PERFORMANCE DASHBOARD
 ========================= -->
 
@@ -235,76 +321,135 @@ Risk Reward :
 
 <h2>Performance Dashboard</h2>
 
+
 <div class="stats">
 
+
 <div class="stat-card">
+
 <h3>Total Signals</h3>
+
 <p id="total-signals">0</p>
+
 </div>
 
+
+
 <div class="stat-card">
+
 <h3>Wins</h3>
+
 <p id="wins">0</p>
+
 </div>
 
+
+
 <div class="stat-card">
+
 <h3>Losses</h3>
+
 <p id="losses">0</p>
+
 </div>
+
+
 
 <div class="stat-card">
+
 <h3>Accuracy</h3>
+
 <p id="accuracy">0%</p>
-</div>
 
 </div>
+
+
+</div>
+
 
 </section>
 
 
-     <button id="history-btn" onclick="showTradeHistory()">
+
+
+
+<button id="history-btn" onclick="showTradeHistory()">
+
 View Trade History
+
 </button>
+
+
 
 
 <div id="trade-history" class="history-box" style="display:none;">
 
+
 <h2>Trade History</h2>
 
+
 <div id="history-list">
+
 No trades yet
-</div>
 
 </div>
 
 
-     
+</div>
+
+
+
+
+
 
 <!-- =========================
      FOOTER
 ========================= -->
 
+
 <section class="footer-banner">
+
 
 <img src="banner.png" alt="Qayyum OfficialZ Banner">
 
+
+
 <h2>Meet Founder Qayyum OfficialZ</h2>
 
+
+
 <p>
+
 A boy from Pakistan build a High-Frequency Trading Web Platform powered by APIs, Bitnodes, Indicators, and Smart Money Concept Strategies.
+
 </p>
 
+
+
 <p>
+
 "Inspired by financial innovators like Jane Street, Renaissance Technologies, and Bloomberg — Qayyum OfficialZ Trades brings professional Signals and market analysis tools, worth $10 to hundreds of dollars elsewhere, free for everyone."
+
 </p>
 
+
+
 <p>
+
 <b>Trade With Data. Trade With Discipline.</b>
+
 </p>
+
+
 
 </section>
 
+
+
+
+
 <script src="script.js"></script>
+
 
 </body>
 
