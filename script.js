@@ -2,7 +2,6 @@
 // COINS
 // ==========================
 
-
 const coins = [
 
 {
@@ -44,8 +43,7 @@ id:"ltc"
 // APP STORAGE
 // ==========================
 
-
-let appVersion = "4";
+let appVersion = "5";
 
 
 let savedVersion =
@@ -54,7 +52,6 @@ localStorage.getItem("appVersion");
 
 
 if(savedVersion !== appVersion){
-
 
 localStorage.removeItem("performance");
 
@@ -65,7 +62,6 @@ localStorage.setItem(
 "appVersion",
 appVersion
 );
-
 
 }
 
@@ -94,6 +90,7 @@ losses:0
 
 
 
+
 let activeTrades =
 JSON.parse(
 localStorage.getItem("activeTrades")
@@ -109,22 +106,16 @@ localStorage.getItem("activeTrades")
 
 
 // ==========================
-// SAVE FUNCTIONS
+// SAVE SYSTEM
 // ==========================
-
 
 
 function savePerformance(){
 
-
 localStorage.setItem(
-
 "performance",
-
 JSON.stringify(performance)
-
 );
-
 
 }
 
@@ -133,17 +124,13 @@ JSON.stringify(performance)
 
 function saveTrades(){
 
-
 localStorage.setItem(
-
 "activeTrades",
-
 JSON.stringify(activeTrades)
-
 );
 
-
 }
+
 
 
 
@@ -155,29 +142,21 @@ JSON.stringify(activeTrades)
 // ==========================
 
 
-
 function updatePerformanceDashboard(){
 
 
-
 document.getElementById("total-signals").textContent =
-
 performance.totalSignals;
 
 
 
-
 document.getElementById("wins").textContent =
-
 performance.wins;
 
 
 
-
 document.getElementById("losses").textContent =
-
 performance.losses;
-
 
 
 
@@ -188,11 +167,8 @@ let accuracy = 0;
 
 if(performance.totalSignals > 0){
 
-
 accuracy =
-
 (performance.wins / performance.totalSignals) * 100;
-
 
 }
 
@@ -200,14 +176,11 @@ accuracy =
 
 
 document.getElementById("accuracy").textContent =
-
 accuracy.toFixed(1)+"%";
 
 
 
-
 savePerformance();
-
 
 
 }
@@ -222,10 +195,10 @@ updatePerformanceDashboard();
 
 
 
+
 // ==========================
 // LIVE PRICE SYSTEM
 // ==========================
-
 
 
 async function loadPrice(symbol,id){
@@ -234,12 +207,9 @@ async function loadPrice(symbol,id){
 try{
 
 
-
 const response = await fetch(
 
-
 `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`
-
 
 );
 
@@ -249,12 +219,9 @@ const data = await response.json();
 
 
 
-
 document.getElementById(id+"-price").textContent =
 
-
 "$" + Number(data.price).toLocaleString();
-
 
 
 
@@ -262,16 +229,12 @@ document.getElementById(id+"-price").textContent =
 
 catch(error){
 
-
 console.log(error);
 
-
 }
 
 
-
 }
-
 
 
 
@@ -282,22 +245,16 @@ console.log(error);
 function updatePrices(){
 
 
-
 coins.forEach(coin=>{
 
 
 loadPrice(
-
 coin.symbol,
-
 coin.id
-
 );
 
 
-
 });
-
 
 
 }
@@ -309,13 +266,9 @@ updatePrices();
 
 
 
-
 setInterval(
-
 updatePrices,
-
 5000
-
 );
 
 
@@ -324,57 +277,42 @@ updatePrices,
 
 
 
-
 // ==========================
-// EMA INDICATOR
+// EMA
 // ==========================
-
 
 
 function EMA(prices,period){
 
 
-
 let multiplier =
-
 2/(period+1);
 
 
 
-
-let ema = prices[0];
-
-
+let ema =
+prices[0];
 
 
 
 for(let i=1;i<prices.length;i++){
 
 
-
 ema =
-
 (prices[i]-ema)
-
 *
-
 multiplier
-
 +
-
 ema;
 
 
-
 }
-
 
 
 
 return ema;
 
 
-
 }
 
 
@@ -383,16 +321,12 @@ return ema;
 
 
 
-
-
 // ==========================
-// RSI INDICATOR
+// RSI
 // ==========================
-
 
 
 function RSI(prices,period=14){
-
 
 
 let gains = 0;
@@ -401,67 +335,49 @@ let losses = 0;
 
 
 
-
 for(
-
 let i = prices.length-period;
-
 i < prices.length;
-
 i++
-
 ){
 
 
-
 let change =
-
 prices[i]-prices[i-1];
-
 
 
 
 if(change > 0){
 
-
 gains += change;
-
 
 }
 
 else{
 
-
 losses += Math.abs(change);
 
+}
+
 
 }
 
 
 
-}
-
-
-
-
-
-if(losses===0)
+if(losses===0){
 
 return 100;
 
-
+}
 
 
 
 let rs =
-
 gains/losses;
 
 
 
-
 return 100-(100/(1+rs));
-
 
 
 }
@@ -478,30 +394,22 @@ return 100-(100/(1+rs));
 // ==========================
 
 
-
 function MACD(prices){
 
 
-
 let ema12 =
-
 EMA(prices,12);
 
 
-
 let ema26 =
-
 EMA(prices,26);
-
 
 
 
 return ema12-ema26;
 
 
-
 }
-
 
 
 
@@ -514,35 +422,33 @@ return ema12-ema26;
 // ==========================
 
 
-
 function ATR(candles){
-
 
 
 let total = 0;
 
 
 
-
 for(let i=1;i<candles.length;i++){
 
 
-
 let high =
-
 Number(candles[i][2]);
 
 
-
 let low =
-
 Number(candles[i][3]);
-
 
 
 
 total += high-low;
 
+
+}
+
+
+
+return total/(candles.length-1);
 
 
 }
@@ -550,8 +456,170 @@ total += high-low;
 
 
 
-return total/(candles.length-1);
 
+
+
+
+// ==========================
+// VOLUME CHECK
+// ==========================
+
+
+function volumeCheck(candles){
+
+
+let volumes =
+candles.map(c=>Number(c[5]));
+
+
+
+let current =
+volumes[volumes.length-1];
+
+
+
+let average =
+volumes.reduce((a,b)=>a+b,0)
+/
+volumes.length;
+
+
+
+return current > average
+?
+"HIGH"
+:
+"LOW";
+
+
+}
+
+
+
+
+
+
+
+// ==========================
+// GOLDEN CROSS
+// ==========================
+
+
+function goldenCross(prices){
+
+
+let ema50 =
+EMA(prices,50);
+
+
+
+let ema200 =
+EMA(prices,200);
+
+
+
+if(ema50 > ema200){
+
+return "BULLISH";
+
+}
+
+else{
+
+return "BEARISH";
+
+}
+
+
+}
+
+
+
+
+
+
+
+// ==========================
+// ADX SIMPLE
+// ==========================
+
+
+function ADX(prices){
+
+
+let current =
+prices[prices.length-1];
+
+
+let old =
+prices[prices.length-14];
+
+
+
+if(current > old){
+
+return 30;
+
+}
+
+else{
+
+return 20;
+
+}
+
+
+}
+
+
+
+
+
+
+
+// ==========================
+// VWAP
+// ==========================
+
+
+function VWAP(candles){
+
+
+let totalPV = 0;
+
+let totalVolume = 0;
+
+
+
+candles.forEach(c=>{
+
+
+let price =
+(
+Number(c[2])+
+Number(c[3])+
+Number(c[4])
+)/3;
+
+
+
+let volume =
+Number(c[5]);
+
+
+
+totalPV += price*volume;
+
+
+totalVolume += volume;
+
+
+
+});
+
+
+
+return totalPV/totalVolume;
 
 
 }
@@ -576,17 +644,27 @@ const response = await fetch(
 
 
 
-const candles = await response.json();
+const candles =
+await response.json();
 
 
 
-const closes = candles.map(c=>Number(c[4]));
+
+
+const closes =
+candles.map(c=>Number(c[4]));
+
 
 
 
 const price =
 closes[closes.length-1];
 
+
+
+
+
+// INDICATORS
 
 
 const ema20 =
@@ -597,35 +675,28 @@ const ema50 =
 EMA(closes,50);
 
 
-
 const rsi =
 RSI(closes);
-
 
 
 const macd =
 MACD(closes);
 
 
-
 const atr =
 ATR(candles);
-
 
 
 const adx =
 ADX(closes);
 
 
-
 const vwap =
 VWAP(candles);
 
 
-
 const volume =
 volumeCheck(candles);
-
 
 
 const golden =
@@ -636,24 +707,28 @@ goldenCross(closes);
 
 
 
-let signal="WAIT";
-
-let bias="Neutral";
-
-let confidence=50;
 
 
+let signal = "WAIT";
+
+let bias = "Neutral";
+
+let confidence = 50;
 
 
 
-// ===============================
-// CONFIRMATION SCORE
-// ===============================
 
 
-let bullishScore=0;
 
-let bearishScore=0;
+// ==========================
+// SCORE SYSTEM
+// ==========================
+
+
+let bullishScore = 0;
+
+let bearishScore = 0;
+
 
 
 
@@ -675,6 +750,7 @@ bearishScore++;
 
 
 
+
 if(rsi > 55){
 
 bullishScore++;
@@ -688,6 +764,8 @@ if(rsi < 45){
 bearishScore++;
 
 }
+
+
 
 
 
@@ -709,7 +787,10 @@ bearishScore++;
 
 
 
-if(golden==="BULLISH"){
+
+
+
+if(golden === "BULLISH"){
 
 bullishScore++;
 
@@ -717,18 +798,7 @@ bullishScore++;
 
 
 
-if(golden==="BEARISH"){
-
-bearishScore++;
-
-}
-
-
-
-
-if(volume==="HIGH"){
-
-bullishScore++;
+if(golden === "BEARISH"){
 
 bearishScore++;
 
@@ -738,28 +808,14 @@ bearishScore++;
 
 
 
-if(bullishScore>=4){
 
 
-signal="LONG";
-
-bias="Bullish";
-
-confidence=80+(bullishScore*2);
+if(volume === "HIGH"){
 
 
-}
+bullishScore++;
 
-
-
-else if(bearishScore>=4){
-
-
-signal="SHORT";
-
-bias="Bearish";
-
-confidence=80+(bearishScore*2);
+bearishScore++;
 
 
 }
@@ -769,36 +825,18 @@ confidence=80+(bearishScore*2);
 
 
 
-// ===============================
-// TP SL CALCULATION
-// ===============================
-
-
-let sl="--";
-
-let tp1="--";
-
-let tp2="--";
-
-let tp3="--";
 
 
 
+if(bullishScore >= 4){
 
 
-if(signal==="LONG"){
+signal = "LONG";
 
+bias = "Bullish";
 
-sl=(price*0.99).toFixed(4);
-
-
-tp1=(price*1.008).toFixed(4);
-
-
-tp2=(price*1.016).toFixed(4);
-
-
-tp3=(price*1.025).toFixed(4);
+confidence =
+80 + bullishScore*2;
 
 
 }
@@ -806,20 +844,15 @@ tp3=(price*1.025).toFixed(4);
 
 
 
-
-if(signal==="SHORT"){
-
-
-sl=(price*1.01).toFixed(4);
+else if(bearishScore >= 4){
 
 
-tp1=(price*0.992).toFixed(4);
+signal = "SHORT";
 
+bias = "Bearish";
 
-tp2=(price*0.984).toFixed(4);
-
-
-tp3=(price*0.975).toFixed(4);
+confidence =
+80 + bearishScore*2;
 
 
 }
@@ -829,23 +862,112 @@ tp3=(price*0.975).toFixed(4);
 
 
 
-const id = coin.id;
+
+
+
+// ==========================
+// TP SL SYSTEM
+// ==========================
+
+
+let sl = "--";
+
+let tp1 = "--";
+
+let tp2 = "--";
+
+let tp3 = "--";
 
 
 
 
 
-// ===============================
-// HTML UPDATE
-// ===============================
+
+
+if(signal === "LONG"){
+
+
+sl =
+(price*0.99).toFixed(4);
+
+
+
+tp1 =
+(price*1.008).toFixed(4);
+
+
+
+tp2 =
+(price*1.016).toFixed(4);
+
+
+
+tp3 =
+(price*1.025).toFixed(4);
+
+
+}
+
+
+
+
+
+
+if(signal === "SHORT"){
+
+
+sl =
+(price*1.01).toFixed(4);
+
+
+
+tp1 =
+(price*0.992).toFixed(4);
+
+
+
+tp2 =
+(price*0.984).toFixed(4);
+
+
+
+tp3 =
+(price*0.975).toFixed(4);
+
+
+}
+
+
+
+
+
+
+
+const id =
+coin.id;
+
+
+
+
+
+
+
+
+
+// ==========================
+// UPDATE HTML VALUES
+// ==========================
+
 
 
 document.getElementById(id+"-signal").textContent =
 signal;
 
 
+
 document.getElementById(id+"-bias").textContent =
 bias;
+
 
 
 
@@ -854,8 +976,11 @@ confidence+"%";
 
 
 
+
+
 document.getElementById(id+"-entry").textContent =
 "$"+price.toFixed(4);
+
 
 
 
@@ -864,8 +989,10 @@ document.getElementById(id+"-sl").textContent =
 
 
 
+
 document.getElementById(id+"-tp1").textContent =
 "$"+tp1;
+
 
 
 
@@ -874,8 +1001,10 @@ document.getElementById(id+"-tp2").textContent =
 
 
 
+
 document.getElementById(id+"-tp3").textContent =
 "$"+tp3;
+
 
 
 
@@ -888,16 +1017,25 @@ rsi.toFixed(2);
 
 
 
-let emaElement =
+
+
+let emaBox =
 document.getElementById(id+"-ema");
 
 
-if(emaElement){
+if(emaBox){
 
-emaElement.textContent =
-ema20>ema50 ? "Bullish" : "Bearish";
+emaBox.textContent =
+ema20 > ema50
+?
+"Bullish"
+:
+"Bearish";
 
 }
+
+
+
 
 
 
@@ -908,8 +1046,19 @@ bias;
 
 
 
+
+
 document.getElementById(id+"-macd").textContent =
-macd>0 ? "Positive" : "Negative";
+
+macd > 0
+?
+"Positive"
+:
+"Negative";
+
+
+
+
 
 
 
@@ -918,8 +1067,19 @@ adx;
 
 
 
+
+
+
 document.getElementById(id+"-vwap").textContent =
-price>vwap ? "Above" : "Below";
+
+price > vwap
+?
+"Above"
+:
+"Below";
+
+
+
 
 
 
@@ -928,8 +1088,14 @@ atr.toFixed(4);
 
 
 
+
+
+
 document.getElementById(id+"-volume").textContent =
 volume;
+
+
+
 
 
 
@@ -940,12 +1106,21 @@ golden;
 
 
 
+
+
+
+
+// ==========================
+// MARKET ANALYSIS
+// ==========================
+
+
 if(signal==="WAIT"){
 
 
 document.getElementById(id+"-analysis").textContent =
 
-"Market is neutral. Waiting for setup confirmation.";
+"Market neutral. Waiting for confirmation.";
 
 
 }
@@ -954,6 +1129,7 @@ else{
 
 
 document.getElementById(id+"-analysis").textContent =
+
 
 `${bias} setup confirmed | RSI ${rsi.toFixed(2)} | MACD ${macd>0?"Positive":"Negative"} | ADX ${adx} | Volume ${volume} | Golden Cross ${golden}`;
 
@@ -965,21 +1141,28 @@ document.getElementById(id+"-analysis").textContent =
 
 
 
-// ===============================
-// SAVE ACTIVE TRADE
-// ===============================
-
-
-if(signal!=="WAIT"){
 
 
 
-let exists = activeTrades.some(t=>
 
-t.coin===coin.symbol &&
-t.status==="OPEN"
+// ==========================
+// SAVE TRADE
+// ==========================
+
+
+if(signal !== "WAIT"){
+
+
+
+let exists =
+activeTrades.some(t=>
+
+t.coin === coin.symbol &&
+t.status === "OPEN"
 
 );
+
+
 
 
 
@@ -987,6 +1170,8 @@ if(!exists){
 
 
 performance.totalSignals++;
+
+
 
 
 
@@ -1010,6 +1195,8 @@ status:"OPEN"
 
 
 
+
+
 saveTrades();
 
 savePerformance();
@@ -1021,7 +1208,9 @@ updatePerformanceDashboard();
 
 
 
+
 }
+
 
 
 
@@ -1031,47 +1220,63 @@ updatePerformanceDashboard();
 
 catch(error){
 
+
 console.log(error);
+
 
 }
 
 
 
-    }
+}
 
 
-// =====================================
-// RUN SIGNAL SYSTEM
-// =====================================
+
+
+
+
+
+// ==========================
+// RUN SIGNALS
+// ==========================
 
 
 function updateSignals(){
 
-    coins.forEach(coin=>{
 
-        generateSignal(coin);
+coins.forEach(coin=>{
 
-    });
+
+generateSignal(coin);
+
+
+});
+
 
 }
+
+
+
 
 
 updateSignals();
 
 
 
+
+
 setInterval(
-    updateSignals,
-    60000
+
+updateSignals,
+
+60000
+
 );
 
 
-
-
-
-// =====================================
-// TP SL LIVE CHECKER
-// =====================================
+// ==========================
+// TP / SL LIVE CHECKER
+// ==========================
 
 
 async function checkTradeResults(){
@@ -1080,12 +1285,14 @@ async function checkTradeResults(){
 for(let i=0;i<activeTrades.length;i++){
 
 
-let trade = activeTrades[i];
+let trade =
+activeTrades[i];
 
 
 
 if(trade.status !== "OPEN")
 continue;
+
 
 
 
@@ -1101,12 +1308,16 @@ const response = await fetch(
 
 
 
-const data = await response.json();
+
+const data =
+await response.json();
+
 
 
 
 const currentPrice =
 Number(data.price);
+
 
 
 
@@ -1126,6 +1337,8 @@ performance.wins++;
 
 
 }
+
+
 
 
 
@@ -1149,6 +1362,8 @@ performance.losses++;
 
 
 
+
+
 if(trade.signal==="SHORT"){
 
 
@@ -1162,6 +1377,8 @@ performance.wins++;
 
 
 }
+
+
 
 
 
@@ -1182,37 +1399,52 @@ performance.losses++;
 
 
 
+
+
+
 saveTrades();
 
 savePerformance();
 
 
 
+
+
 }
-
-
 
 catch(error){
 
+
 console.log(error);
 
+
 }
 
 
+
 }
+
+
 
 
 
 updatePerformanceDashboard();
 
 
+
 }
 
 
 
+
+
+
 setInterval(
+
 checkTradeResults,
+
 10000
+
 );
 
 
@@ -1221,12 +1453,15 @@ checkTradeResults,
 
 
 
-// =====================================
+
+// ==========================
 // TRADE HISTORY
-// =====================================
+// ==========================
+
 
 
 function showTradeHistory(){
+
 
 
 let box =
@@ -1234,7 +1469,9 @@ document.getElementById("trade-history");
 
 
 
+
 if(box.style.display==="none"){
+
 
 
 box.style.display="block";
@@ -1243,8 +1480,8 @@ box.style.display="block";
 loadTradeHistory();
 
 
-}
 
+}
 
 else{
 
@@ -1263,15 +1500,17 @@ box.style.display="none";
 
 
 
+
 function loadTradeHistory(){
 
 
 
-let html="";
+let html = "";
 
 
 
 let trades =
+
 activeTrades
 .slice(-6)
 .reverse();
@@ -1280,13 +1519,16 @@ activeTrades
 
 
 
+
 if(trades.length===0){
 
 
-html="No trades yet";
+html =
+"No trades yet";
 
 
 }
+
 
 
 else{
@@ -1294,6 +1536,7 @@ else{
 
 
 trades.forEach(trade=>{
+
 
 
 html += `
@@ -1326,6 +1569,7 @@ Status: ${trade.status}
 `;
 
 
+
 });
 
 
@@ -1334,8 +1578,12 @@ Status: ${trade.status}
 
 
 
+
+
+
 document.getElementById("history-list").innerHTML =
 html;
+
 
 
 }
@@ -1346,9 +1594,12 @@ html;
 
 
 
-// =====================================
+
+
+// ==========================
 // TRADING CALCULATOR
-// =====================================
+// ==========================
+
 
 
 function calculateTrade(){
@@ -1361,17 +1612,26 @@ document.getElementById("trade-type").value;
 
 
 const entry =
-Number(document.getElementById("entry-price").value);
+Number(
+document.getElementById("entry-price").value
+);
+
 
 
 
 const exit =
-Number(document.getElementById("exit-price").value);
+Number(
+document.getElementById("exit-price").value
+);
+
 
 
 
 const amount =
-Number(document.getElementById("amount").value);
+Number(
+document.getElementById("amount").value
+);
+
 
 
 
@@ -1380,12 +1640,21 @@ Number(document.getElementById("amount").value);
 if(!entry || !exit || !amount){
 
 
-alert("Please fill all fields correctly.");
+
+alert(
+"Please fill all fields correctly."
+);
+
+
 
 return;
 
 
+
 }
+
+
+
 
 
 
@@ -1394,30 +1663,45 @@ let change;
 
 
 
+
+
+
 if(type==="long"){
+
 
 
 change =
 (exit-entry)/entry;
 
 
+
 }
 
+
+
 else{
+
 
 
 change =
 (entry-exit)/entry;
 
 
+
 }
 
 
 
 
 
+
+
+
 let profit =
-amount*change;
+amount * change;
+
+
+
 
 
 
@@ -1425,6 +1709,7 @@ amount*change;
 document.getElementById("profit").textContent =
 
 profit.toFixed(2)+" USDT";
+
 
 
 
@@ -1440,7 +1725,12 @@ document.getElementById("percentage").textContent =
 
 
 let rr =
-Math.abs(exit-entry)/(entry*0.01);
+
+Math.abs(exit-entry)
+/ 
+(entry*0.01);
+
+
 
 
 
@@ -1448,6 +1738,8 @@ Math.abs(exit-entry)/(entry*0.01);
 document.getElementById("rr").textContent =
 
 rr.toFixed(2)+" R";
+
+
 
 
 
@@ -1459,13 +1751,17 @@ rr.toFixed(2)+" R";
 
 
 
-// =====================================
+
+
+// ==========================
 // STARTUP
-// =====================================
+// ==========================
 
 
 document.addEventListener(
+
 "DOMContentLoaded",
+
 ()=>{
 
 
@@ -1479,4 +1775,6 @@ updatePerformanceDashboard();
 
 
 
-});
+}
+
+);
