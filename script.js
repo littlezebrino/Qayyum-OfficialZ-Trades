@@ -13,22 +13,26 @@ const coins = [
 
 
 // ==========================
-// PERFORMANCE STORAGE
+// APP STORAGE
 // ==========================
 
-const appVersion = "3";
+let appVersion = "3";
 
 let savedVersion = localStorage.getItem("appVersion");
+
 
 if(savedVersion !== appVersion){
 
     localStorage.removeItem("performance");
     localStorage.removeItem("activeTrades");
-    localStorage.removeItem("tradeHistory");
 
-    localStorage.setItem("appVersion",appVersion);
+    localStorage.setItem(
+        "appVersion",
+        appVersion
+    );
 
 }
+
 
 
 let performance = JSON.parse(
@@ -49,14 +53,10 @@ let activeTrades = JSON.parse(
 
 
 
-let tradeHistory = JSON.parse(
-    localStorage.getItem("tradeHistory")
-) || [];
-
 
 
 // ==========================
-// SAVE FUNCTIONS
+// SAVE DATA
 // ==========================
 
 
@@ -71,6 +71,7 @@ function savePerformance(){
 
 
 
+
 function saveTrades(){
 
     localStorage.setItem(
@@ -82,19 +83,9 @@ function saveTrades(){
 
 
 
-function saveHistory(){
-
-    localStorage.setItem(
-        "tradeHistory",
-        JSON.stringify(tradeHistory)
-    );
-
-}
-
-
 
 // ==========================
-// DASHBOARD
+// DASHBOARD UPDATE
 // ==========================
 
 
@@ -127,11 +118,14 @@ function updatePerformanceDashboard(){
     }
 
 
+
     document.getElementById("accuracy").textContent =
     accuracy.toFixed(1)+"%";
 
 
+
     savePerformance();
+
 
 }
 
@@ -141,8 +135,10 @@ updatePerformanceDashboard();
 
 
 
+
+
 // ==========================
-// LIVE PRICE
+// LIVE PRICE SYSTEM
 // ==========================
 
 
@@ -152,28 +148,20 @@ async function loadPrice(symbol,id){
     try{
 
 
-        const response = await fetch(
+        const res = await fetch(
 
         `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`
 
         );
 
 
-        const data = await response.json();
+        const data = await res.json();
 
 
 
-        const element =
-        document.getElementById(id+"-price");
+        document.getElementById(id+"-price").textContent =
 
-
-
-        if(element){
-
-            element.textContent =
-            "$"+Number(data.price).toLocaleString("en-GB");
-
-        }
+        "$" + Number(data.price).toLocaleString();
 
 
 
@@ -196,10 +184,12 @@ function updatePrices(){
 
     coins.forEach(coin=>{
 
+
         loadPrice(
             coin.symbol,
             coin.id
         );
+
 
     });
 
@@ -212,14 +202,16 @@ updatePrices();
 
 
 setInterval(
-updatePrices,
-5000
+    updatePrices,
+    5000
 );
 
 
 
+
+
 // ==========================
-// EMA
+// EMA INDICATOR
 // ==========================
 
 
@@ -230,8 +222,8 @@ function EMA(prices,period){
     2/(period+1);
 
 
-    let ema =
-    prices[0];
+
+    let ema = prices[0];
 
 
 
@@ -239,10 +231,13 @@ function EMA(prices,period){
 
 
         ema =
-        (prices[i]-ema)*multiplier+ema;
+        (prices[i]-ema)
+        * multiplier
+        + ema;
 
 
     }
+
 
 
     return ema;
@@ -252,8 +247,10 @@ function EMA(prices,period){
 
 
 
+
+
 // ==========================
-// RSI
+// RSI INDICATOR
 // ==========================
 
 
@@ -267,26 +264,26 @@ function RSI(prices,period=14){
 
 
     for(
-    let i=prices.length-period;
-    i<prices.length;
-    i++
+        let i=prices.length-period;
+        i<prices.length;
+        i++
     ){
 
 
-        let diff =
+        let change =
         prices[i]-prices[i-1];
 
 
 
-        if(diff>0){
+        if(change>0){
 
-            gains+=diff;
+            gains += change;
 
         }
 
         else{
 
-            losses+=Math.abs(diff);
+            losses += Math.abs(change);
 
         }
 
@@ -308,199 +305,98 @@ function RSI(prices,period=14){
     return 100-(100/(1+rs));
 
 
-          }
+}
+
+
+
 
 
 // ==========================
-// MACD
+// MACD BASIC
 // ==========================
+
 
 function MACD(prices){
 
-    let ema12 = EMA(prices,12);
 
-    let ema26 = EMA(prices,26);
-
-    let macd = ema12 - ema26;
+    let ema12 =
+    EMA(prices,12);
 
 
-    return macd;
+    let ema26 =
+    EMA(prices,26);
+
+
+
+    return ema12-ema26;
+
 
 }
 
 
 
+
+
 // ==========================
-// ATR
+// ATR BASIC
 // ==========================
 
-function ATR(candles,period=14){
 
-    let trs=[];
+function ATR(candles){
+
+
+    let total=0;
 
 
     for(let i=1;i<candles.length;i++){
 
+
         let high =
         Number(candles[i][2]);
+
 
         let low =
         Number(candles[i][3]);
 
-        let previousClose =
-        Number(candles[i-1][4]);
 
+        total += high-low;
 
-        let tr = Math.max(
-
-            high-low,
-
-            Math.abs(high-previousClose),
-
-            Math.abs(low-previousClose)
-
-        );
-
-
-        trs.push(tr);
 
     }
 
 
-    let sum =
-    trs.slice(-period)
-    .reduce((a,b)=>a+b,0);
-
-
-    return sum/period;
-
-}
-
-
-
-// ==========================
-// VWAP
-// ==========================
-
-function VWAP(candles){
-
-
-    let totalVolume=0;
-
-    let totalPriceVolume=0;
-
-
-
-    candles.forEach(c=>{
-
-
-        let high =
-        Number(c[2]);
-
-        let low =
-        Number(c[3]);
-
-        let close =
-        Number(c[4]);
-
-        let volume =
-        Number(c[5]);
-
-
-        let typical =
-        (high+low+close)/3;
-
-
-
-        totalPriceVolume +=
-        typical*volume;
-
-
-        totalVolume +=
-        volume;
-
-
-    });
-
-
-
-    return totalPriceVolume/totalVolume;
+    return total/(candles.length-1);
 
 
 }
 
+// =====================================
+// EXTRA INDICATORS
+// =====================================
 
 
-// ==========================
-// VOLUME ANALYSIS
-// ==========================
+// VOLUME CHECK
 
-function volumeAnalysis(candles){
+function volumeCheck(candles){
 
-
-    let volumes =
-    candles.map(c=>Number(c[5]));
-
-
+    let volumes = candles.map(c=>Number(c[5]));
 
     let current =
     volumes[volumes.length-1];
-
 
     let average =
     volumes.reduce((a,b)=>a+b,0)
     /volumes.length;
 
 
-
-    return current > average;
-
-}
-
-
-
-// ==========================
-// ADX SIMPLE TREND STRENGTH
-// ==========================
-
-function ADX(candles){
-
-
-    let movement=0;
-
-
-    for(let i=1;i<candles.length;i++){
-
-
-        let current =
-        Number(candles[i][4]);
-
-
-        let previous =
-        Number(candles[i-1][4]);
-
-
-        movement +=
-        Math.abs(current-previous);
-
-
-    }
-
-
-    let average =
-    movement/candles.length;
-
-
-
-    return average;
+    return current > average ? "HIGH" : "LOW";
 
 }
 
 
 
-// ==========================
+
 // GOLDEN CROSS
-// ==========================
 
 function goldenCross(prices){
 
@@ -513,84 +409,98 @@ function goldenCross(prices){
     EMA(prices,200);
 
 
+    if(ema50 > ema200){
 
-    return ema50 > ema200;
+        return "BULLISH";
 
-}
+    }
 
+    else{
 
+        return "BEARISH";
 
-// ==========================
-// BOLLINGER BANDS
-// ==========================
-
-function bollinger(prices,period=20){
-
-
-    let slice =
-    prices.slice(-period);
-
-
-
-    let average =
-    slice.reduce((a,b)=>a+b,0)
-    /period;
-
-
-
-    let variance =
-    slice.reduce(
-        (a,b)=>a+Math.pow(b-average,2),
-        0
-    )/period;
-
-
-
-    let deviation =
-    Math.sqrt(variance);
-
-
-
-    return {
-
-        upper:average+(2*deviation),
-
-        lower:average-(2*deviation),
-
-        middle:average
-
-    };
-
+    }
 
 }
 
 
 
-// ==========================
-// SUPERTREND STYLE
-// ==========================
 
-function supertrend(prices){
+// ADX SIMPLE
 
-
-    let fast =
-    EMA(prices,10);
+function ADX(prices){
 
 
-    let slow =
-    EMA(prices,30);
+    let change =
+    prices[prices.length-1]
+    -
+    prices[prices.length-14];
 
 
+    if(change > 0){
 
-    return fast > slow;
+        return 30;
+
+    }
+
+    else{
+
+        return 20;
+
+    }
 
 }
 
 
 
-// ==========================
+
+
+// VWAP SIMPLE
+
+function VWAP(candles){
+
+
+    let totalPV=0;
+
+    let totalVolume=0;
+
+
+
+    candles.forEach(c=>{
+
+
+        let price =
+        (Number(c[2])+
+        Number(c[3])+
+        Number(c[4]))/3;
+
+
+        let volume =
+        Number(c[5]);
+
+
+
+        totalPV += price*volume;
+
+        totalVolume += volume;
+
+
+    });
+
+
+
+    return totalPV/totalVolume;
+
+
+}
+
+
+
+
+
+// =====================================
 // SIGNAL ENGINE
-// ==========================
+// =====================================
 
 
 async function generateSignal(coin){
@@ -601,7 +511,7 @@ try{
 
 const response = await fetch(
 
-`https://api.binance.com/api/v3/klines?symbol=${coin.symbol}&interval=15m&limit=250`
+`https://api.binance.com/api/v3/klines?symbol=${coin.symbol}&interval=15m&limit=200`
 
 );
 
@@ -626,10 +536,8 @@ const ema20 =
 EMA(closes,20);
 
 
-
 const ema50 =
 EMA(closes,50);
-
 
 
 const rsi =
@@ -642,118 +550,28 @@ MACD(closes);
 
 
 
-const vwap =
-VWAP(candles);
-
-
-
 const atr =
 ATR(candles);
 
 
 
 const adx =
-ADX(candles);
+ADX(closes);
+
+
+
+const vwap =
+VWAP(candles);
 
 
 
 const volume =
-volumeAnalysis(candles);
+volumeCheck(candles);
 
 
 
 const golden =
 goldenCross(closes);
-
-
-
-const boll =
-bollinger(closes);
-
-
-
-const trend =
-supertrend(closes);
-
-
-
-
-// ==========================
-// CONFIRMATION SCORE
-// ==========================
-
-
-let bullish=0;
-
-let bearish=0;
-
-
-
-if(price>ema20)
-bullish++;
-
-else
-bearish++;
-
-
-
-if(ema20>ema50)
-bullish++;
-
-else
-bearish++;
-
-
-
-if(rsi>55)
-bullish++;
-
-else if(rsi<45)
-bearish++;
-
-
-
-if(macd>0)
-bullish++;
-
-else
-bearish++;
-
-
-
-if(price>vwap)
-bullish++;
-
-else
-bearish++;
-
-
-
-if(golden)
-bullish++;
-
-
-
-if(trend)
-bullish++;
-
-
-
-if(volume)
-bullish++;
-
-
-
-if(price>boll.middle)
-bullish++;
-
-else
-bearish++;
-
-
-
-if(adx>0)
-bullish++;
 
 
 
@@ -763,41 +581,127 @@ let signal="WAIT";
 
 let bias="Neutral";
 
-
-let confidence =
-50;
+let confidence=50;
 
 
 
-if(bullish>=6 && bullish>bearish){
+// ===============================
+// CONFIRMATION SYSTEM
+// ===============================
+
+
+let bullishScore=0;
+
+let bearishScore=0;
+
+
+
+if(price>ema20 && ema20>ema50){
+
+bullishScore++;
+
+}
+
+
+
+if(price<ema20 && ema20<ema50){
+
+bearishScore++;
+
+}
+
+
+
+if(rsi>55){
+
+bullishScore++;
+
+}
+
+
+if(rsi<45){
+
+bearishScore++;
+
+}
+
+
+
+if(macd>0){
+
+bullishScore++;
+
+}
+
+
+if(macd<0){
+
+bearishScore++;
+
+}
+
+
+
+if(golden==="BULLISH"){
+
+bullishScore++;
+
+}
+
+
+if(golden==="BEARISH"){
+
+bearishScore++;
+
+}
+
+
+
+if(volume==="HIGH"){
+
+bullishScore++;
+
+bearishScore++;
+
+}
+
+
+
+
+if(bullishScore>=4){
 
 
 signal="LONG";
 
 bias="Bullish";
 
-confidence =
-Math.min(95,60+(bullish*4));
+confidence=80+(bullishScore*2);
 
 
 }
 
 
 
-else if(bearish>=6 && bearish>bullish){
+else if(bearishScore>=4){
 
 
 signal="SHORT";
 
 bias="Bearish";
 
-confidence =
-Math.min(95,60+(bearish*4));
+confidence=80+(bearishScore*2);
 
 
 }
 
 
+
+
+
+
+// ===============================
+// TP SL SYSTEM
+// ===============================
 
 
 let sl="--";
@@ -817,19 +721,24 @@ sl =
 (price*0.99).toFixed(4);
 
 
+
 tp1 =
 (price*1.008).toFixed(4);
+
 
 
 tp2 =
 (price*1.016).toFixed(4);
 
 
+
 tp3 =
 (price*1.025).toFixed(4);
 
 
+
 }
+
 
 
 
@@ -840,154 +749,152 @@ sl =
 (price*1.01).toFixed(4);
 
 
+
 tp1 =
 (price*0.992).toFixed(4);
+
 
 
 tp2 =
 (price*0.984).toFixed(4);
 
 
+
 tp3 =
 (price*0.975).toFixed(4);
 
 
-}
-
-
-
-updateSignalUI(
-coin,
-{
-signal,
-bias,
-confidence,
-price,
-sl,
-tp1,
-tp2,
-tp3,
-rsi,
-ema20,
-macd,
-adx,
-vwap,
-atr,
-volume,
-golden
-}
-);
-
-
-
-trackNewSignal(
-coin,
-signal,
-price,
-tp1,
-sl
-);
-
-
-
-}
-
-catch(error){
-
-console.log(error);
 
 }
 
 
-               }
 
 
-// ==========================
-// UPDATE SIGNAL UI
-// ==========================
 
-function updateSignalUI(coin,data){
+const id =
+coin.id;
 
 
-const id = coin.id;
+
+
+// ===============================
+// UPDATE HTML
+// ===============================
 
 
 document.getElementById(id+"-signal").textContent =
-data.signal;
+signal;
 
 
 document.getElementById(id+"-bias").textContent =
-data.bias;
+bias;
 
 
 document.getElementById(id+"-confidence").textContent =
-data.confidence+"%";
+confidence+"%";
 
 
 document.getElementById(id+"-entry").textContent =
-"$"+data.price.toFixed(4);
+"$"+price.toFixed(4);
 
 
 document.getElementById(id+"-sl").textContent =
-"$"+data.sl;
+"$"+sl;
 
 
 document.getElementById(id+"-tp1").textContent =
-"$"+data.tp1;
+"$"+tp1;
 
 
 document.getElementById(id+"-tp2").textContent =
-"$"+data.tp2;
+"$"+tp2;
 
 
 document.getElementById(id+"-tp3").textContent =
-"$"+data.tp3;
+"$"+tp3;
+
 
 
 document.getElementById(id+"-rsi").textContent =
-data.rsi.toFixed(2);
+rsi.toFixed(2);
+
+
+
+document.getElementById(id+"-ema").textContent =
+ema20>ema50 ? "Bullish" : "Bearish";
+
+
+
+document.getElementById(id+"-macd").textContent =
+macd>0 ? "Positive" : "Negative";
+
+
+
+document.getElementById(id+"-adx").textContent =
+adx;
+
+
+
+document.getElementById(id+"-vwap").textContent =
+price>vwap ? "Above" : "Below";
+
+
+
+document.getElementById(id+"-atr").textContent =
+atr.toFixed(4);
+
+
+
+document.getElementById(id+"-volume").textContent =
+volume;
+
+
+
+document.getElementById(id+"-golden").textContent =
+golden;
 
 
 
 document.getElementById(id+"-trend").textContent =
-data.ema20 > data.ema50 ?
-"UPTREND" :
-"DOWNTREND";
+bias;
 
+
+
+if(signal==="WAIT"){
 
 
 document.getElementById(id+"-analysis").textContent =
 
-`${coin.symbol}: ${data.bias} | RSI ${data.rsi.toFixed(2)} | MACD ${data.macd.toFixed(4)} | VWAP ${data.vwap.toFixed(4)} | ATR ${data.atr.toFixed(4)} | Confidence ${data.confidence}%`;
+"Market is neutral. Waiting for setup confirmation.";
+
+
+
+}
+
+else{
+
+
+document.getElementById(id+"-analysis").textContent =
+
+`${bias} setup confirmed | RSI ${rsi.toFixed(2)} | MACD ${macd>0?"Positive":"Negative"} | ADX ${adx} | Volume ${volume} | Golden Cross ${golden}`;
 
 }
 
 
 
-// ==========================
-// TRACK NEW SIGNAL
-// ==========================
-
-function trackNewSignal(
-coin,
-signal,
-entry,
-tp,
-sl
-){
 
 
-if(signal==="WAIT") return;
+// ===============================
+// SAVE NEW TRADE
+// ===============================
 
 
-
-let trades =
-JSON.parse(localStorage.getItem("activeTrades")) || [];
+if(signal!=="WAIT"){
 
 
 
 let exists =
-trades.some(t=>
+activeTrades.some(t=>
 
 t.coin===coin.symbol &&
 t.status==="OPEN"
@@ -996,154 +903,43 @@ t.status==="OPEN"
 
 
 
-if(exists) return;
-
-
-
-trades.push({
-
-coin:coin.symbol,
-
-signal:signal,
-
-entry:entry,
-
-tp:Number(tp),
-
-sl:Number(sl),
-
-status:"OPEN",
-
-time:new Date().toLocaleString()
-
-});
-
+if(!exists){
 
 
 performance.totalSignals++;
 
 
 
-localStorage.setItem(
-"activeTrades",
-JSON.stringify(trades)
-);
+activeTrades.push({
+
+
+coin:coin.symbol,
+
+signal:signal,
+
+entry:price,
+
+tp:Number(tp1),
+
+sl:Number(sl),
+
+status:"OPEN"
+
+
+});
 
 
 
-localStorage.setItem(
-"performance",
-JSON.stringify(performance)
-);
+saveTrades();
 
-
+savePerformance();
 
 updatePerformanceDashboard();
 
 
-}
-
-
-
-// ==========================
-// LIVE TP SL CHECKER
-// ==========================
-
-
-async function checkTradeResults(){
-
-
-let trades =
-JSON.parse(localStorage.getItem("activeTrades")) || [];
-
-
-
-for(let trade of trades){
-
-
-
-if(trade.status!=="OPEN")
-continue;
-
-
-
-try{
-
-
-let res =
-await fetch(
-
-`https://api.binance.com/api/v3/ticker/price?symbol=${trade.coin}`
-
-);
-
-
-
-let data =
-await res.json();
-
-
-
-let price =
-Number(data.price);
-
-
-
-if(trade.signal==="LONG"){
-
-
-if(price>=trade.tp){
-
-
-trade.status="WIN";
-
-performance.wins++;
-
 
 }
 
-
-
-else if(price<=trade.sl){
-
-
-trade.status="LOSS";
-
-performance.losses++;
-
-
-}
-
-
-}
-
-
-
-if(trade.signal==="SHORT"){
-
-
-
-if(price<=trade.tp){
-
-
-trade.status="WIN";
-
-performance.wins++;
-
-
-}
-
-
-
-else if(price>=trade.sl){
-
-
-trade.status="LOSS";
-
-performance.losses++;
-
-
-}
 
 
 }
@@ -1151,7 +947,6 @@ performance.losses++;
 
 
 }
-
 
 
 catch(error){
@@ -1162,110 +957,192 @@ console.log(error);
 
 
 
+        }
+
+
+// =====================================
+// RUN SIGNAL SYSTEM
+// =====================================
+
+function updateSignals(){
+
+    coins.forEach(coin=>{
+
+        generateSignal(coin);
+
+    });
+
 }
 
 
+updateSignals();
 
-localStorage.setItem(
-"activeTrades",
-JSON.stringify(trades)
+
+setInterval(
+    updateSignals,
+    60000
 );
 
 
 
-localStorage.setItem(
-"performance",
-JSON.stringify(performance)
+
+// =====================================
+// TP SL LIVE CHECKER
+// =====================================
+
+
+async function checkTradeResults(){
+
+
+    for(let i=0;i<activeTrades.length;i++){
+
+
+        let trade = activeTrades[i];
+
+
+        if(trade.status !== "OPEN")
+        continue;
+
+
+
+        try{
+
+
+            const response = await fetch(
+
+            `https://api.binance.com/api/v3/ticker/price?symbol=${trade.coin}`
+
+            );
+
+
+            const data = await response.json();
+
+
+            const currentPrice =
+            Number(data.price);
+
+
+
+
+
+            if(trade.signal==="LONG"){
+
+
+
+                if(currentPrice >= trade.tp){
+
+
+                    trade.status="WIN";
+
+                    performance.wins++;
+
+                    saveTrades();
+
+                    savePerformance();
+
+                }
+
+
+
+                else if(currentPrice <= trade.sl){
+
+
+                    trade.status="LOSS";
+
+                    performance.losses++;
+
+                    saveTrades();
+
+                    savePerformance();
+
+                }
+
+
+
+            }
+
+
+
+
+
+
+            if(trade.signal==="SHORT"){
+
+
+
+                if(currentPrice <= trade.tp){
+
+
+                    trade.status="WIN";
+
+                    performance.wins++;
+
+                    saveTrades();
+
+                    savePerformance();
+
+                }
+
+
+
+                else if(currentPrice >= trade.sl){
+
+
+                    trade.status="LOSS";
+
+                    performance.losses++;
+
+                    saveTrades();
+
+                    savePerformance();
+
+                }
+
+
+
+            }
+
+
+
+        }
+
+
+        catch(error){
+
+            console.log(error);
+
+        }
+
+
+    }
+
+
+
+    updatePerformanceDashboard();
+
+
+}
+
+
+
+setInterval(
+    checkTradeResults,
+    10000
 );
 
 
 
-updatePerformanceDashboard();
 
-
-
-}
-
-
-
-setInterval(checkTradeResults,10000);
-
-
-
-// ==========================
-// DASHBOARD UPDATE
-// ==========================
-
-
-function updatePerformanceDashboard(){
-
-
-document.getElementById(
-"total-signals"
-).textContent =
-performance.totalSignals;
-
-
-
-document.getElementById(
-"wins"
-).textContent =
-performance.wins;
-
-
-
-document.getElementById(
-"losses"
-).textContent =
-performance.losses;
-
-
-
-let accuracy=0;
-
-
-
-if(performance.totalSignals>0){
-
-
-accuracy =
-(performance.wins/performance.totalSignals)*100;
-
-
-}
-
-
-
-document.getElementById(
-"accuracy"
-).textContent =
-accuracy.toFixed(1)+"%";
-
-
-
-localStorage.setItem(
-"performance",
-JSON.stringify(performance)
-);
-
-
-
-}
-
-
-
-// ==========================
+// =====================================
 // TRADE HISTORY
-// ==========================
+// =====================================
 
 
 function showTradeHistory(){
 
 
 let box =
-document.getElementById(
-"trade-history"
-);
+document.getElementById("trade-history");
 
 
 
@@ -1293,15 +1170,21 @@ box.style.display="none";
 
 
 
+
+
 function loadTradeHistory(){
-
-
-let trades =
-JSON.parse(localStorage.getItem("activeTrades")) || [];
 
 
 
 let html="";
+
+
+
+let trades =
+activeTrades
+.slice(-6)
+.reverse();
+
 
 
 
@@ -1316,41 +1199,27 @@ html="No trades yet";
 else{
 
 
-trades
-.slice(-6)
-.reverse()
-.forEach(trade=>{
+
+trades.forEach(trade=>{
 
 
 html += `
 
-
 <div class="trade-item">
-
 
 <b>${trade.coin}</b><br>
 
-
 Type: ${trade.signal}<br>
-
 
 Entry: ${trade.entry}<br>
 
-
 TP: ${trade.tp}<br>
-
 
 SL: ${trade.sl}<br>
 
-
-Status: ${trade.status}<br>
-
-
-Time: ${trade.time}
-
+Status: ${trade.status}
 
 </div>
-
 
 `;
 
@@ -1363,64 +1232,52 @@ Time: ${trade.time}
 
 
 
-document.getElementById(
-"history-list"
-).innerHTML=html;
+document.getElementById("history-list").innerHTML =
+html;
 
 
 }
 
 
 
-// ==========================
+
+
+// =====================================
 // TRADING CALCULATOR
-// ==========================
+// =====================================
 
 
 function calculateTrade(){
 
 
-let type =
-document.getElementById(
-"trade-type"
-).value;
+const type =
+document.getElementById("trade-type").value;
 
 
 
-let entry =
-Number(
-document.getElementById(
-"entry-price"
-).value
-);
+const entry =
+Number(document.getElementById("entry-price").value);
 
 
 
-let exit =
-Number(
-document.getElementById(
-"exit-price"
-).value
-);
+const exit =
+Number(document.getElementById("exit-price").value);
 
 
 
-let amount =
-Number(
-document.getElementById(
-"amount"
-).value
-);
+const amount =
+Number(document.getElementById("amount").value);
+
 
 
 
 if(!entry || !exit || !amount){
 
-alert(
-"Please fill all fields correctly."
-);
+
+alert("Please fill all fields correctly.");
 
 return;
+
 
 }
 
@@ -1450,50 +1307,56 @@ change =
 
 
 
+
 let profit =
 amount*change;
 
 
 
-document.getElementById(
-"profit"
-).textContent =
+document.getElementById("profit").textContent =
+
 profit.toFixed(2)+" USDT";
 
 
 
-document.getElementById(
-"percentage"
-).textContent =
+document.getElementById("percentage").textContent =
+
 (change*100).toFixed(2)+"%";
 
 
 
-document.getElementById(
-"rr"
-).textContent =
-(Math.abs(change)/0.01)
-.toFixed(2)+" R";
+let rr =
+Math.abs(exit-entry)/(entry*0.01);
+
+
+
+document.getElementById("rr").textContent =
+
+rr.toFixed(2)+" R";
+
 
 
 }
 
 
 
-// ==========================
-// START APP
-// ==========================
+
+// =====================================
+// STARTUP
+// =====================================
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
 
 
 updatePrices();
 
 updateSignals();
 
-
-setInterval(updatePrices,5000);
-
-
-setInterval(updateSignals,60000);
-
-
 updatePerformanceDashboard();
+
+
+}
+);
