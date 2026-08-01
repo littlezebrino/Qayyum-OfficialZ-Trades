@@ -3,17 +3,16 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        BTC Smart Money Radar AI
-    </title>
+<title>
+BTC Smart Money Radar AI
+</title>
 
 
-    <link rel="stylesheet" href="style.css">
-
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -21,716 +20,534 @@
 <body>
 
 
-<div class="app">
+<div class="container">
 
 
-    <!-- TOP HEADER -->
+<header>
 
-    <header class="header">
 
+<div>
 
-        <div class="brand">
+<h1>
+⚡ BTC Smart Money Radar AI
+</h1>
 
+<p>
+BTCUSDT • 15 Minute AI Market Scanner
+</p>
 
-            <h1>
-                ⚡ BTC Smart Money Radar AI
-            </h1>
+</div>
 
 
-            <p>
-                Binance BTCUSDT • 15 Minute Market Intelligence
-            </p>
+<div class="status">
 
+<span id="connection">
+Connecting...
+</span>
 
-        </div>
+<br>
 
+<span id="lastUpdate">
+Waiting Data
+</span>
 
+</div>
 
-        <div class="connection">
 
+</header>
 
-            <div id="binanceStatus">
 
-                ● Connecting Binance
 
-            </div>
 
 
-            <div id="scanTime">
+<section class="main-card">
 
-                Last Scan: Waiting
 
-            </div>
+<div class="signal-box">
 
 
-        </div>
+<h3>
+CURRENT SIGNAL
+</h3>
 
 
-    </header>
+<h2 id="signal">
+WAITING
+</h2>
 
 
 
+<div class="confidence">
 
 
-    <!-- MAIN ACTION PANEL -->
+Confidence:
 
+<strong id="confidence">
+0%
+</strong>
 
-    <section class="hero-panel">
 
+<div class="bar">
 
-        <div class="main-signal">
+<div id="confidenceBar">
 
+</div>
 
-            <span>
-                CURRENT MARKET SIGNAL
-            </span>
+</div>
 
 
-            <h2 id="signal">
+</div>
 
-                WAITING
 
-            </h2>
+</div>
 
 
 
-            <div class="confidence-box">
 
 
-                <p>
+<div class="scan-box">
 
-                    Confidence
 
-                    <strong id="confidence">
+<button id="scanBtn">
 
-                        0%
+🚀 SCAN NOW
 
-                    </strong>
+</button>
 
 
-                </p>
+<h3 id="timer">
 
+Ready
 
+</h3>
 
-                <div class="confidence-track">
 
+<p id="scanStatus">
 
-                    <div id="confidenceFill">
+Press button to start 60 second scan
 
-                    </div>
+</p>
 
 
-                </div>
+</div>
 
 
-            </div>
+</section>
 
 
-        </div>
 
 
 
 
 
-        <div class="scan-control">
 
+<section class="cards">
 
-            <button id="scanButton">
 
-                🚀 SCAN NOW
+<div class="card">
 
-            </button>
+<h3>
+BTC Price
+</h3>
 
 
-            <div id="analysisStatus">
+<h2 id="price">
+Loading...
+</h2>
 
-                Ready for analysis
 
-            </div>
+</div>
 
 
-        </div>
 
 
-    </section>
+<div class="card">
 
+<h3>
+24H Change
+</h3>
 
 
+<h2 id="change">
+--
 
+</h2>
 
 
+</div>
 
 
-    <!-- BTC LIVE DATA -->
 
 
-    <section class="market-grid">
+<div class="card">
 
+<h3>
+Market Regime
+</h3>
 
-        <div class="card">
 
+<h2 id="regime">
+--
 
-            <h3>
-                BTC Price
-            </h3>
+</h2>
 
 
-            <div id="btcPrice">
+</div>
 
-                Loading...
 
-            </div>
 
+</section>
 
-        </div>
 
 
 
 
-        <div class="card">
 
 
-            <h3>
-                24H Change
-            </h3>
 
+<section class="chart-card">
 
-            <div id="change">
 
-                --
+<h2>
+📊 BTC 15M Chart
+</h2>
 
-            </div>
 
+<div class="chart-area">
 
-        </div>
+<canvas id="btcChart"></canvas>
 
+</div>
 
 
+</section>
 
-        <div class="card">
 
+    <section class="scanner-section">
 
-            <h3>
-                Market Regime
-            </h3>
 
+<h2>
+🧠 AI Market Analysis
+</h2>
 
-            <div id="regime">
 
-                Scanning
 
-            </div>
+<div class="scanner-grid">
 
 
-        </div>
 
+<div class="scanner-card">
 
-    </section>
 
+<h3>
+🚀 Momentum Radar
+</h3>
 
 
+<div id="momentum">
+0%
+</div>
 
 
+<p id="momentumText">
+Waiting...
+</p>
 
 
+</div>
 
-    <!-- AI SCANNERS -->
 
 
-    <section class="scanner-grid">
 
 
 
-        <div class="scanner-card">
 
+<div class="scanner-card">
 
-            <h3>
-                🚀 Momentum Radar
-            </h3>
 
+<h3>
+💰 Smart Money Concept
+</h3>
 
-            <div class="score" id="momentum">
 
-                0%
+<div id="smartMoney">
+0%
+</div>
 
-            </div>
 
+<p id="smartText">
+Waiting...
+</p>
 
-            <p id="momentumText">
 
-                Waiting
+</div>
 
-            </p>
 
 
-        </div>
 
 
 
 
+<div class="scanner-card">
 
 
-        <div class="scanner-card">
+<h3>
+💥 Volatility Scanner
+</h3>
 
 
-            <h3>
-                🧠 Smart Money Concept
-            </h3>
+<div id="volatility">
+0%
+</div>
 
 
-            <div class="score" id="smartMoney">
+<p id="volatilityText">
+Waiting...
+</p>
 
-                0%
 
-            </div>
+</div>
 
 
-            <p id="smartMoneyText">
 
-                Waiting
 
-            </p>
+</div>
 
 
-        </div>
+</section>
 
 
 
 
 
 
-        <div class="scanner-card">
 
 
-            <h3>
-                💥 Volatility Explosion
-            </h3>
 
+<section class="trade-card">
 
-            <div class="score" id="volatility">
 
-                0%
+<h2>
+📌 Trade Setup
+</h2>
 
-            </div>
 
+<div class="trade-grid">
 
-            <p id="volatilityText">
 
-                Stable
+<div>
 
-            </p>
+Entry
 
+<strong id="entry">
+--
+</strong>
 
-        </div>
+</div>
 
 
 
+<div>
 
-    </section>
+Stop Loss
 
+<strong id="stop">
+--
+</strong>
 
+</div>
 
-    <!-- LIVE CHART SECTION -->
 
 
-    <section class="chart-section">
+<div>
 
+Target
 
-        <div class="section-title">
+<strong id="target">
+--
+</strong>
 
-            <h2>
-                📊 BTCUSDT 15M Live Analysis Chart
-            </h2>
+</div>
 
 
-            <span id="chartStatus">
+</div>
 
-                Waiting Data
 
-            </span>
 
+</section>
 
-        </div>
 
 
 
-        <div class="chart-box">
 
 
-            <canvas id="btcChart"></canvas>
 
 
-        </div>
 
+<section class="analysis-card">
 
-    </section>
 
+<h2>
+🔎 Smart Money Details
+</h2>
 
 
 
+<div class="details">
 
 
+<p>
 
+Trend:
 
+<strong id="trend">
+--
+</strong>
 
-    <!-- ANALYSIS ENGINE -->
+</p>
 
 
-    <section class="analysis-section">
 
+<p>
 
-        <h2>
+Liquidity:
 
-            🧠 AI Decision Engine
+<strong id="liquidity">
+--
+</strong>
 
-        </h2>
+</p>
 
 
 
-        <div class="analysis-grid">
+<p>
 
+Structure:
 
+<strong id="structure">
+--
+</strong>
 
-            <div class="analysis-card">
+</p>
 
 
-                <h3>
-                    Market Structure
-                </h3>
 
+<p>
 
-                <p>
+Order Flow:
 
-                    Trend:
+<strong id="orderFlow">
+--
+</strong>
 
-                    <strong id="trend">
+</p>
 
-                        --
 
-                    </strong>
 
-                </p>
+</div>
 
 
-                <p>
 
-                    Structure:
+</section>
 
-                    <strong id="structure">
 
-                        --
 
-                    </strong>
 
-                </p>
 
 
-                <p>
 
-                    Liquidity:
 
-                    <strong id="liquidity">
 
-                        --
+<section class="explanation-card">
 
-                    </strong>
 
-                </p>
+<h2>
+🤖 AI Explanation
+</h2>
 
 
-            </div>
+<p id="explanation">
 
+Waiting for scan...
 
+</p>
 
 
+</section>
 
 
 
-            <div class="analysis-card">
 
 
-                <h3>
-                    Smart Money Scan
-                </h3>
 
 
-                <p>
 
-                    BOS:
 
-                    <strong id="bos">
+<section class="voice-card">
 
-                        --
 
-                    </strong>
+<h3>
+🔊 Voice Alert
+</h3>
 
-                </p>
 
+<p id="voiceStatus">
 
+Ready
 
-                <p>
+</p>
 
-                    CHoCH:
 
-                    <strong id="choch">
+</section>
 
-                        --
 
-                    </strong>
 
-                </p>
 
 
 
-                <p>
 
-                    Order Flow:
 
-                    <strong id="orderFlow">
 
-                        --
+<section class="history-card">
 
-                    </strong>
 
-                </p>
+<h2>
+📜 Scan History
+</h2>
 
 
-            </div>
+<div id="history">
 
+No scans yet
 
+</div>
 
 
+</section>
 
 
 
-            <div class="analysis-card">
 
 
-                <h3>
-                    Trade Setup
-                </h3>
 
 
-                <p>
 
-                    Entry:
 
-                    <strong id="entry">
+<footer>
 
-                        --
 
-                    </strong>
+BTC Smart Money Radar AI
 
-                </p>
+<br>
 
+<small>
 
+Analysis tool for BTCUSDT 15M market data
 
-                <p>
+</small>
 
-                    Stop Loss:
 
-                    <strong id="stopLoss">
-
-                        --
-
-                    </strong>
-
-                </p>
-
-
-
-                <p>
-
-                    Target:
-
-                    <strong id="target">
-
-                        --
-
-                    </strong>
-
-                </p>
-
-
-            </div>
-
-
-
-        </div>
-
-
-    </section>
-
-
-
-
-
-
-
-
-
-    <!-- SCAN PROGRESS -->
-
-
-    <section class="progress-section">
-
-
-        <h2>
-            ⚙️ Analysis Progress
-        </h2>
-
-
-        <div class="analysis-bar">
-
-
-            <div id="scanProgress">
-
-            </div>
-
-
-        </div>
-
-
-
-        <p id="progressText">
-
-            Press Scan Now to start
-
-        </p>
-
-
-
-    </section>
-
-
-
-
-
-
-
-
-
-    <!-- FINAL EXPLANATION -->
-
-
-    <section class="decision-section">
-
-
-        <h2>
-            📌 AI Explanation
-        </h2>
-
-
-        <div id="explanation">
-
-
-            Waiting for market analysis...
-
-
-        </div>
-
-
-    </section>
-
-
-
-
-
-
-
-
-
-    <!-- VOICE STATUS -->
-
-
-    <section class="voice-section">
-
-
-        <div>
-
-
-            🔊 Voice Alert System:
-
-
-            <span id="voiceStatus">
-
-                Active
-
-            </span>
-
-
-        </div>
-
-
-    </section>
-
-
-
-
-
-
-
-
-
-    <!-- SIGNAL HISTORY -->
-
-
-    <section class="history-section">
-
-
-        <h2>
-            📜 Previous Signals
-        </h2>
-
-
-
-        <div id="history">
-
-
-            No signals yet...
-
-
-        </div>
-
-
-
-    </section>
-
-
-
-
-
-
-
-
-
-    <!-- FOOTER -->
-
-
-    <footer>
-
-
-        <p>
-
-            BTC Smart Money Radar AI
-
-            |
-
-            Binance 15M Analysis System
-
-        </p>
-
-
-        <small>
-
-            Market analysis tool — not guaranteed financial advice.
-
-        </small>
-
-
-    </footer>
-
-
+</footer>
 
 
 
