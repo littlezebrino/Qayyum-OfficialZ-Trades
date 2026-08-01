@@ -1,570 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- ============================= -->
+<!-- PREMIUM BTC MOMENTUM DETECTOR -->
+<!-- PART 1 -->
+<!-- ============================= -->
 
-<head>
+<section id="momentum-detector" class="momentum-section">
 
-<meta charset="UTF-8">
+    <div class="momentum-header">
+        <h2>
+            🚀 BTC AI Momentum Detector
+        </h2>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <p>
+            Analyze Bitcoin momentum using technical indicators,
+            momentum strength and market conditions.
+        </p>
+    </div>
 
-<title>
-BTC Smart Money Radar AI
-</title>
+    <div class="momentum-card">
 
+        <div class="scan-status">
 
-<link rel="stylesheet" href="style.css">
+            <div class="status-dot" id="statusDot"></div>
 
-</head>
+            <span id="scanStatus">
+                Ready to Scan
+            </span>
 
+        </div>
 
-<body>
+        <div class="btc-price-box">
 
+            <h3>BTC Live Price</h3>
 
-<div class="container">
+            <div id="btcLivePrice" class="btc-price">
+                Loading...
+            </div>
 
+        </div>
 
-<header>
+        <div class="countdown-box">
 
+            <h3>Scan Countdown</h3>
 
-<div>
+            <div id="countdown" class="countdown-number">
+                30
+            </div>
 
-<h1>
-⚡ BTC Smart Money Radar AI
-</h1>
+        </div>
 
-<p>
-BTCUSDT • 15 Minute AI Market Scanner
-</p>
+        <button
+            id="scanBtn"
+            class="scan-button"
+            onclick="startMomentumScan()">
 
-</div>
+            🔍 Scan Now
 
+        </button>
 
-<div class="status">
+    </div>
 
-<span id="connection">
-Connecting...
-</span>
+    <!-- RESULT CARD -->
 
-<br>
+    <div class="result-card">
 
-<span id="lastUpdate">
-Waiting Data
-</span>
+        <h3>
+            Scan Result
+        </h3>
 
-</div>
+        <div
+            id="momentumResult"
+            class="momentum-result neutral">
 
+            Waiting for Scan...
 
-</header>
+        </div>
 
+        <div class="confidence-box">
 
+            <div class="confidence-title">
+                Confidence
+            </div>
 
+            <div id="confidenceValue">
+                --
+            </div>
 
+        </div>
 
-<section class="main-card">
+        <div class="analysis-box">
 
+            <h4>
+                AI Analysis
+            </h4>
 
-<div class="signal-box">
+            <p id="analysisText">
 
+                Click Scan Now to start
+                Bitcoin momentum analysis.
 
-<h3>
-CURRENT SIGNAL
-</h3>
+            </p>
 
+        </div>
 
-<h2 id="signal">
-WAITING
-</h2>
+    </div>
 
+    <!-- EXTRA MARKET DATA -->
 
+    <div class="market-grid">
 
-<div class="confidence">
+        <div class="market-item">
 
+            <span class="label">
+                Trend
+            </span>
 
-Confidence:
+            <span id="trendValue">
+                --
+            </span>
 
-<strong id="confidence">
-0%
-</strong>
+        </div>
 
+        <div class="market-item">
 
-<div class="bar">
+            <span class="label">
+                RSI
+            </span>
 
-<div id="confidenceBar">
+            <span id="rsiValue">
+                --
+            </span>
 
-</div>
+        </div>
 
-</div>
+        <div class="market-item">
 
+            <span class="label">
+                EMA Signal
+            </span>
 
-</div>
+            <span id="emaValue">
+                --
+            </span>
 
+        </div>
 
-</div>
+        <div class="market-item">
 
+            <span class="label">
+                Volume
+            </span>
 
+            <span id="volumeValue">
+                --
+            </span>
 
+        </div>
 
+    </div>
 
-<div class="scan-box">
+    <!-- LAST SCAN -->
 
+    <div class="last-scan-box">
 
-<button id="scanBtn">
+        <h3>
+            Last Scan
+        </h3>
 
-🚀 SCAN NOW
+        <div id="lastScanTime">
 
-</button>
+            Never
 
+        </div>
 
-<h3 id="timer">
+    </div>
 
-Ready
+    <!-- SCAN HISTORY -->
 
-</h3>
+    <div class="history-card">
 
+        <h3>
 
-<p id="scanStatus">
+            Recent Momentum Signals
 
-Press button to start 60 second scan
+        </h3>
 
-</p>
+        <div id="historyContainer">
 
 
-</div>
+                        <div class="history-item">
+                <span class="history-time">--:--</span>
+                <span class="history-result">No scans yet</span>
+                <span class="history-confidence">--%</span>
+            </div>
 
+        </div>
+
+    </div>
+
+    <!-- INFO BOX -->
+
+    <div class="info-card">
+
+        <h3>How It Works</h3>
+
+        <ul>
+            <li>✅ Fetches live BTC market data.</li>
+            <li>✅ Starts a 30-second momentum scan.</li>
+            <li>✅ Evaluates price momentum using technical logic.</li>
+            <li>✅ Displays Bullish, Bearish or Neutral result.</li>
+            <li>✅ Shows confidence percentage.</li>
+            <li>✅ Saves the latest scan in history.</li>
+        </ul>
+
+    </div>
 
 </section>
-
-
-
-
-
-
-
-
-<section class="cards">
-
-
-<div class="card">
-
-<h3>
-BTC Price
-</h3>
-
-
-<h2 id="price">
-Loading...
-</h2>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-<h3>
-24H Change
-</h3>
-
-
-<h2 id="change">
---
-
-</h2>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-<h3>
-Market Regime
-</h3>
-
-
-<h2 id="regime">
---
-
-</h2>
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-<section class="chart-card">
-
-
-<h2>
-📊 BTC 15M Chart
-</h2>
-
-
-<div class="chart-area">
-
-<canvas id="btcChart"></canvas>
-
-</div>
-
-
-</section>
-
-
-    <section class="scanner-section">
-
-
-<h2>
-🧠 AI Market Analysis
-</h2>
-
-
-
-<div class="scanner-grid">
-
-
-
-<div class="scanner-card">
-
-
-<h3>
-🚀 Momentum Radar
-</h3>
-
-
-<div id="momentum">
-0%
-</div>
-
-
-<p id="momentumText">
-Waiting...
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="scanner-card">
-
-
-<h3>
-💰 Smart Money Concept
-</h3>
-
-
-<div id="smartMoney">
-0%
-</div>
-
-
-<p id="smartText">
-Waiting...
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="scanner-card">
-
-
-<h3>
-💥 Volatility Scanner
-</h3>
-
-
-<div id="volatility">
-0%
-</div>
-
-
-<p id="volatilityText">
-Waiting...
-</p>
-
-
-</div>
-
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section class="trade-card">
-
-
-<h2>
-📌 Trade Setup
-</h2>
-
-
-<div class="trade-grid">
-
-
-<div>
-
-Entry
-
-<strong id="entry">
---
-</strong>
-
-</div>
-
-
-
-<div>
-
-Stop Loss
-
-<strong id="stop">
---
-</strong>
-
-</div>
-
-
-
-<div>
-
-Target
-
-<strong id="target">
---
-</strong>
-
-</div>
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section class="analysis-card">
-
-
-<h2>
-🔎 Smart Money Details
-</h2>
-
-
-
-<div class="details">
-
-
-<p>
-
-Trend:
-
-<strong id="trend">
---
-</strong>
-
-</p>
-
-
-
-<p>
-
-Liquidity:
-
-<strong id="liquidity">
---
-</strong>
-
-</p>
-
-
-
-<p>
-
-Structure:
-
-<strong id="structure">
---
-</strong>
-
-</p>
-
-
-
-<p>
-
-Order Flow:
-
-<strong id="orderFlow">
---
-</strong>
-
-</p>
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section class="explanation-card">
-
-
-<h2>
-🤖 AI Explanation
-</h2>
-
-
-<p id="explanation">
-
-Waiting for scan...
-
-</p>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section class="voice-card">
-
-
-<h3>
-🔊 Voice Alert
-</h3>
-
-
-<p id="voiceStatus">
-
-Ready
-
-</p>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section class="history-card">
-
-
-<h2>
-📜 Scan History
-</h2>
-
-
-<div id="history">
-
-No scans yet
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<footer>
-
-
-BTC Smart Money Radar AI
-
-<br>
-
-<small>
-
-Analysis tool for BTCUSDT 15M market data
-
-</small>
-
-
-</footer>
-
-
-
-
-</div>
-
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="script.js"></script>
-
-
-
-</body>
-
-
-</html>
+<!-- ============================= -->
+<!-- END BTC MOMENTUM DETECTOR -->
+<!-- ============================= -->
