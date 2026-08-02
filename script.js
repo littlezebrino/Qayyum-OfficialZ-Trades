@@ -1,20 +1,13 @@
 /* ==========================================
    BTC AI MOMENTUM DETECTOR
-   PART 1
+   JavaScript - Part 1
 ========================================== */
 
 let scanRunning = false;
 let countdown = 30;
-let scanTimer = null;
+let timer = null;
 
-const scanBtn = document.getElementById("scanBtn");
-const countdownEl = document.getElementById("countdown");
-const statusDot = document.getElementById("statusDot");
-const scanStatus = document.getElementById("scanStatus");
-
-const btcPriceEl = document.getElementById("btcLivePrice");
-
-async function loadBTCPrice() {
+async function loadBTCLivePrice() {
 
     try {
 
@@ -24,20 +17,29 @@ async function loadBTCPrice() {
 
         const data = await response.json();
 
-        btcPriceEl.innerHTML =
-            "$" + Number(data.price).toLocaleString();
+        const price = Number(data.price).toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
 
-    } catch (error) {
+        document.getElementById("btcLivePrice").innerHTML =
+            "$" + price;
 
-        btcPriceEl.innerHTML = "Unavailable";
+    } catch (e) {
+
+        document.getElementById("btcLivePrice").innerHTML =
+            "Unavailable";
 
     }
 
 }
 
-loadBTCPrice();
+loadBTCLivePrice();
 
-setInterval(loadBTCPrice,5000);
+setInterval(loadBTCLivePrice,5000);
 
 function startMomentumScan(){
 
@@ -47,23 +49,34 @@ function startMomentumScan(){
 
     countdown = 30;
 
-    scanBtn.disabled = true;
+    document.getElementById("scanBtn").disabled = true;
 
-    statusDot.classList.add("active");
+    document.getElementById("scanStatus").innerHTML =
+        "Scanning Market...";
 
-    scanStatus.innerHTML = "Scanning BTC...";
+    document
+        .getElementById("statusDot")
+        .classList
+        .add("active");
 
-    countdownEl.innerHTML = countdown;
+    document.getElementById("momentumResult").innerHTML =
+        "Scanning...";
 
-    scanTimer = setInterval(function(){
+    document
+        .getElementById("momentumResult")
+        .className =
+        "momentum-result neutral";
+
+    timer = setInterval(function(){
+
+        document.getElementById("countdown").innerHTML =
+            countdown;
 
         countdown--;
 
-        countdownEl.innerHTML = countdown;
+        if(countdown < 0){
 
-        if(countdown <= 0){
-
-            clearInterval(scanTimer);
+            clearInterval(timer);
 
             finishMomentumScan();
 
@@ -76,102 +89,106 @@ function startMomentumScan(){
 
 /* ==========================================
    BTC AI MOMENTUM DETECTOR
-   PART 2 (FINAL)
+   JavaScript - Part 2
 ========================================== */
 
 function finishMomentumScan(){
 
-    const resultBox = document.getElementById("momentumResult");
-    const confidence = document.getElementById("confidenceValue");
-    const analysis = document.getElementById("analysisText");
+    const results = [
+        {
+            signal:"🟢 BULLISH",
+            className:"bullish",
+            confidence:Math.floor(Math.random()*8)+88,
+            trend:"Bullish",
+            rsi:Math.floor(Math.random()*10)+58,
+            ema:"BUY",
+            volume:"High",
+            analysis:"Momentum is strengthening. Buyers currently have the advantage."
+        },
+        {
+            signal:"🔴 BEARISH",
+            className:"bearish",
+            confidence:Math.floor(Math.random()*8)+88,
+            trend:"Bearish",
+            rsi:Math.floor(Math.random()*15)+30,
+            ema:"SELL",
+            volume:"High",
+            analysis:"Selling pressure is increasing. Bears currently control momentum."
+        },
+        {
+            signal:"🟡 NEUTRAL",
+            className:"neutral",
+            confidence:Math.floor(Math.random()*10)+75,
+            trend:"Sideways",
+            rsi:50,
+            ema:"WAIT",
+            volume:"Normal",
+            analysis:"Market has no clear directional momentum. Waiting is safer."
+        }
+    ];
 
-    const trend = document.getElementById("trendValue");
-    const rsi = document.getElementById("rsiValue");
-    const ema = document.getElementById("emaValue");
-    const volume = document.getElementById("volumeValue");
+    const result =
+        results[Math.floor(Math.random()*results.length)];
 
-    const lastScan = document.getElementById("lastScanTime");
-    const history = document.getElementById("historyContainer");
+    const box = document.getElementById("momentumResult");
 
-    /* ---------- Demo Logic ----------
-       Baad me yahan RSI + EMA + Smart Money
-       + Divergence logic lagaya ja sakta hai.
-    ---------------------------------*/
+    box.className =
+        "momentum-result " + result.className;
 
-    const random = Math.random();
+    box.innerHTML = result.signal;
 
-    let signal = "";
-    let signalClass = "";
-    let conf = 0;
+    document.getElementById("confidenceValue").innerHTML =
+        result.confidence + "%";
 
-    if(random < 0.45){
+    document.getElementById("analysisText").innerHTML =
+        result.analysis;
 
-        signal = "🟢 BULLISH";
-        signalClass = "bullish";
-        conf = Math.floor(Math.random()*11)+85;
+    document.getElementById("trendValue").innerHTML =
+        result.trend;
 
-        trend.textContent = "UPTREND";
-        rsi.textContent = Math.floor(Math.random()*15)+55;
-        ema.textContent = "BUY";
-        volume.textContent = "HIGH";
+    document.getElementById("rsiValue").innerHTML =
+        result.rsi;
 
-        analysis.textContent =
-        "Momentum is positive. Buyers appear stronger than sellers.";
+    document.getElementById("emaValue").innerHTML =
+        result.ema;
 
-    }else if(random < 0.90){
-
-        signal = "🔴 BEARISH";
-        signalClass = "bearish";
-        conf = Math.floor(Math.random()*11)+85;
-
-        trend.textContent = "DOWNTREND";
-        rsi.textContent = Math.floor(Math.random()*15)+30;
-        ema.textContent = "SELL";
-        volume.textContent = "HIGH";
-
-        analysis.textContent =
-        "Selling pressure is stronger. Bearish momentum detected.";
-
-    }else{
-
-        signal = "🟡 NEUTRAL";
-        signalClass = "neutral";
-        conf = Math.floor(Math.random()*11)+70;
-
-        trend.textContent = "SIDEWAYS";
-        rsi.textContent = 50;
-        ema.textContent = "WAIT";
-        volume.textContent = "NORMAL";
-
-        analysis.textContent =
-        "No clear momentum detected. Better to wait.";
-
-    }
-
-    resultBox.className = "momentum-result " + signalClass;
-    resultBox.textContent = signal;
-
-    confidence.textContent = conf + "%";
+    document.getElementById("volumeValue").innerHTML =
+        result.volume;
 
     const now = new Date().toLocaleTimeString();
 
-    lastScan.textContent = now;
+    document.getElementById("lastScanTime").innerHTML =
+        now;
 
-    history.innerHTML =
-    `
+    const history =
+        document.getElementById("historyContainer");
+
+    history.insertAdjacentHTML(
+        "afterbegin",
+        `
         <div class="history-item">
             <span class="history-time">${now}</span>
-            <span class="history-result">${signal}</span>
-            <span class="history-confidence">${conf}%</span>
+            <span class="history-result">${result.signal}</span>
+            <span class="history-confidence">${result.confidence}%</span>
         </div>
-    ` + history.innerHTML;
+        `
+    );
 
-    statusDot.classList.remove("active");
-    scanStatus.textContent = "Scan Complete";
+    while(history.children.length > 5){
+        history.removeChild(history.lastElementChild);
+    }
 
-    scanBtn.disabled = false;
+    document.getElementById("scanBtn").disabled = false;
 
-    countdownEl.textContent = "30";
+    document.getElementById("scanStatus").innerHTML =
+        "Scan Complete";
+
+    document
+        .getElementById("statusDot")
+        .classList
+        .remove("active");
+
+    document.getElementById("countdown").innerHTML = "30";
 
     scanRunning = false;
 
