@@ -1,298 +1,129 @@
+/* ==========================
+   BTC QUANT SCANNER
+   PREMIUM UI PART 1
+========================== */
+
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", "Segoe UI", sans-serif;
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Inter","Segoe UI",sans-serif;
+
 }
+
 
 
 body {
 
-    min-height: 100vh;
-    background:
-    radial-gradient(circle at top left, #14213d, transparent 35%),
-    radial-gradient(circle at bottom right, #003049, transparent 40%),
-    #050816;
+    min-height:100vh;
 
-    color: white;
-    overflow-x: hidden;
+    background:
+
+    radial-gradient(
+        circle at top left,
+        #162447,
+        transparent 35%
+    ),
+
+    radial-gradient(
+        circle at bottom right,
+        #003b46,
+        transparent 40%
+    ),
+
+    #030712;
+
+
+    color:white;
+
+    overflow-x:hidden;
+
 }
+
+
 
 
 
 body::before {
 
-    content: "";
-    position: fixed;
-    inset: 0;
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
 
     background:
+
     linear-gradient(
         120deg,
         rgba(255,255,255,0.05),
         transparent
     );
 
-    pointer-events: none;
-}
 
+    pointer-events:none;
 
-
-.app {
-
-    width: 100%;
-    max-width: 1400px;
-    margin: auto;
-    padding: 25px;
 
 }
 
 
 
 
-/* HEADER */
 
 
-.top-header {
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:30px;
-
-}
+.app-container {
 
 
-.top-header h1 {
+    max-width:1450px;
 
-    font-size:32px;
-    letter-spacing:3px;
-
-    background:
-    linear-gradient(90deg,#00f5ff,#ffffff);
-
-    -webkit-background-clip:text;
-    color:transparent;
-
-}
-
-
-
-.top-header p {
-
-    color:#9ca3af;
-    margin-top:8px;
-
-}
-
-
-
-.status {
-
-    padding:12px 20px;
-
-    border-radius:50px;
-
-    background:
-    rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    border:1px solid rgba(255,255,255,.15);
-
-}
-
-
-
-.dot {
-
-    display:inline-block;
-
-    width:10px;
-    height:10px;
-
-    background:#00ff88;
-
-    border-radius:50%;
-
-    margin-right:8px;
-
-    box-shadow:
-    0 0 15px #00ff88;
-
-}
-
-
-
-
-/* DASHBOARD */
-
-
-.dashboard {
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(320px,1fr));
-
-    gap:25px;
-
-}
-
-
-
-
-/* GLASS CARD */
-
-
-.glass-card {
-
-    background:
-
-    linear-gradient(
-        145deg,
-        rgba(255,255,255,.12),
-        rgba(255,255,255,.03)
-    );
-
-
-    border:
-
-    1px solid rgba(255,255,255,.18);
-
-
-    backdrop-filter:
-
-    blur(25px);
-
-
-    border-radius:25px;
-
+    margin:auto;
 
     padding:30px;
 
 
-    box-shadow:
-
-    0 20px 50px rgba(0,0,0,.4),
-
-    inset 0 0 30px rgba(255,255,255,.05);
-
-}
-
-
-
-
-.glass-card h2,
-.glass-card h3 {
-
-    margin-bottom:20px;
-
-    letter-spacing:1px;
-
 }
 
 
 
 
 
-/* PRICE */
-
-
-#btcPrice {
-
-    font-size:45px;
-
-    font-weight:700;
-
-    color:#00f5ff;
-
-    margin:20px 0;
-
-}
 
 
 
-.price-change {
-
-    color:#00ff88;
-
-    font-size:20px;
-
-}
+/* ==========================
+ HEADER
+========================== */
 
 
 
-
-/* SCANNER */
-
-
-.scanner-card {
-
-    text-align:center;
-
-}
-
-
-
-
-.scanner-circle {
-
-    width:180px;
-    height:180px;
-
-    margin:20px auto;
-
-    border-radius:50%;
+.top-header {
 
 
     display:flex;
 
-    justify-content:center;
+    justify-content:space-between;
+
     align-items:center;
 
 
-    background:
-
-    radial-gradient(
-        circle,
-        rgba(0,245,255,.3),
-        transparent 65%
-    );
-
-
-    border:
-
-    2px solid #00f5ff;
-
-
-    box-shadow:
-
-    0 0 40px #00f5ff;
+    margin-bottom:35px;
 
 
 }
 
 
 
-#scanTimer {
-
-    font-size:30px;
-    font-weight:bold;
-
-}
 
 
+.brand h1 {
 
-#scanBtn {
 
+    font-size:34px;
 
-    padding:15px 45px;
-
-    border:none;
-
-    border-radius:50px;
+    letter-spacing:3px;
 
 
     background:
@@ -300,15 +131,570 @@ body::before {
     linear-gradient(
         90deg,
         #00f5ff,
-        #0077ff
+        #ffffff
     );
+
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+
+
+}
+
+
+
+
+
+.brand p {
+
+
+    margin-top:8px;
+
+    color:#94a3b8;
+
+    font-size:15px;
+
+
+}
+
+
+
+
+
+
+
+.market-status {
+
+
+    padding:14px 25px;
+
+
+    border-radius:50px;
+
+
+    background:
+
+    rgba(255,255,255,0.08);
+
+
+    border:
+
+    1px solid rgba(255,255,255,0.15);
+
+
+    backdrop-filter:blur(20px);
+
+
+    font-size:14px;
+
+
+}
+
+
+
+
+
+
+.status-dot {
+
+
+    display:inline-block;
+
+
+    width:11px;
+
+    height:11px;
+
+
+    background:#00ff88;
+
+
+    border-radius:50%;
+
+
+    margin-right:8px;
+
+
+
+    box-shadow:
+
+    0 0 20px #00ff88;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+/* ==========================
+ GLASS CARD
+========================== */
+
+
+.glass-card {
+
+
+    background:
+
+
+    linear-gradient(
+
+        145deg,
+
+        rgba(255,255,255,0.12),
+
+        rgba(255,255,255,0.03)
+
+    );
+
+
+
+    border:
+
+    1px solid rgba(255,255,255,0.18);
+
+
+
+    backdrop-filter:
+
+    blur(25px);
+
+
+
+    border-radius:28px;
+
+
+
+    padding:30px;
+
+
+
+    margin-bottom:25px;
+
+
+
+    box-shadow:
+
+
+    0 25px 60px rgba(0,0,0,.45),
+
+
+    inset 0 0 30px rgba(255,255,255,.04);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+ BTC PRICE PANEL
+========================== */
+
+
+
+.coin-title {
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+
+}
+
+
+
+.coin-title h3 {
+
+
+    font-size:20px;
+
+    letter-spacing:1px;
+
+
+}
+
+
+
+.coin-title span {
+
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+
+}
+
+
+
+
+
+
+
+.price-row {
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:space-between;
+
+
+    margin-top:25px;
+
+
+}
+
+
+
+
+
+
+#btcPrice {
+
+
+    font-size:48px;
+
+
+    font-weight:700;
+
+
+    color:#00f5ff;
+
+
+    text-shadow:
+
+    0 0 25px rgba(0,245,255,.5);
+
+
+
+}
+
+
+
+
+
+
+
+.change-box {
+
+
+    padding:12px 22px;
+
+
+    border-radius:15px;
+
+
+    background:
+
+    rgba(0,255,136,.12);
+
+
+    color:#00ff88;
+
+
+    font-size:20px;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+ PANEL TITLES
+========================== */
+
+
+
+.panel-title {
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+.panel-title h2 {
+
+
+    font-size:22px;
+
+    letter-spacing:1px;
+
+
+}
+
+
+
+.panel-title span {
+
+
+    color:#64748b;
+
+    font-size:13px;
+
+
+}
+
+
+
+
+
+
+/* CHART BASE */
+
+
+#btcChart {
+
+
+    width:100%;
+
+    height:350px;
+
+
+    border-radius:20px;
+
+
+    background:
+
+    rgba(0,0,0,.25);
+
+
+}
+
+
+/* ==========================
+   SCANNER SECTION
+========================== */
+
+
+.scanner-panel {
+
+    text-align:center;
+
+}
+
+
+
+.scanner-panel h2 {
+
+    margin-bottom:25px;
+
+    letter-spacing:2px;
+
+}
+
+
+
+
+
+.scanner-core {
+
+
+    width:200px;
+
+    height:200px;
+
+
+    margin:25px auto;
+
+
+    border-radius:50%;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+
+    background:
+
+
+    radial-gradient(
+
+        circle,
+
+        rgba(0,245,255,.35),
+
+        transparent 65%
+
+    );
+
+
+
+    border:
+
+    2px solid #00f5ff;
+
+
+
+    box-shadow:
+
+
+    0 0 30px #00f5ff,
+
+
+    inset 0 0 40px rgba(0,245,255,.3);
+
+
+
+    animation:pulseScanner 3s infinite;
+
+
+}
+
+
+
+
+
+@keyframes pulseScanner {
+
+
+    0% {
+
+        transform:scale(1);
+
+        opacity:.8;
+
+    }
+
+
+
+    50% {
+
+        transform:scale(1.08);
+
+        opacity:1;
+
+    }
+
+
+
+    100% {
+
+        transform:scale(1);
+
+        opacity:.8;
+
+    }
+
+
+}
+
+
+
+
+
+
+#scanTimer {
+
+
+    font-size:32px;
+
+    font-weight:700;
+
+
+    color:#00f5ff;
+
+
+}
+
+
+
+
+
+
+
+
+#scanBtn {
+
+
+    margin-top:15px;
+
+
+    padding:16px 55px;
+
+
+    border:none;
+
+
+    border-radius:50px;
+
+
+
+    background:
+
+
+    linear-gradient(
+
+        90deg,
+
+        #00f5ff,
+
+        #0066ff
+
+    );
+
 
 
     color:white;
 
+
     font-size:18px;
 
+
+    font-weight:bold;
+
+
     cursor:pointer;
+
+
+
+    box-shadow:
+
+
+    0 0 25px rgba(0,245,255,.5);
+
+
 
     transition:.3s;
 
@@ -317,22 +703,35 @@ body::before {
 
 
 
+
+
+
 #scanBtn:hover {
 
-    transform:scale(1.08);
+
+    transform:translateY(-3px) scale(1.05);
+
 
     box-shadow:
-    0 0 30px #00f5ff;
+
+
+    0 0 45px rgba(0,245,255,.9);
+
 
 }
+
+
 
 
 
 #scanStatus {
 
+
     margin-top:20px;
 
-    color:#aaa;
+
+    color:#94a3b8;
+
 
 }
 
@@ -340,71 +739,160 @@ body::before {
 
 
 
-/* SIGNAL */
+
+
+
+
+/* ==========================
+ FINAL ANALYSIS
+========================== */
 
 
 .signal-box {
 
+
     text-align:center;
 
-    margin:20px 0;
+
+    margin:25px 0;
+
 
 }
+
+
+
+
+.signal-box p {
+
+
+    color:#94a3b8;
+
+
+    letter-spacing:2px;
+
+
+}
+
+
 
 
 
 #signal {
 
-    font-size:45px;
 
-    margin-top:10px;
+    margin-top:15px;
+
+
+    font-size:52px;
+
 
     color:#ffd166;
 
+
+    text-shadow:
+
+
+    0 0 25px rgba(255,209,102,.4);
+
+
 }
 
 
 
 
-.stats {
+
+
+.analysis-grid {
+
 
     display:grid;
 
-    grid-template-columns:repeat(3,1fr);
 
-    gap:15px;
+    grid-template-columns:
+
+    repeat(3,1fr);
+
+
+    gap:18px;
+
 
 }
 
 
 
-.stats div {
+
+
+
+.info-box {
+
+
+    padding:20px;
+
+
+    border-radius:18px;
+
 
     background:
+
+
     rgba(255,255,255,.06);
 
 
-    padding:15px;
+    border:
 
-    border-radius:15px;
+    1px solid rgba(255,255,255,.1);
+
 
     text-align:center;
 
-}
-
-
-
-.stats p {
-
-    color:#aaa;
-    margin-bottom:8px;
 
 }
 
 
 
 
-/* INDICATORS */
+
+
+.info-box span {
+
+
+    display:block;
+
+
+    color:#94a3b8;
+
+
+    margin-bottom:12px;
+
+
+}
+
+
+
+
+
+.info-box strong {
+
+
+    font-size:20px;
+
+
+    color:#00f5ff;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+ MARKET INTELLIGENCE
+========================== */
 
 
 .indicator-grid {
@@ -412,74 +900,42 @@ body::before {
 
     display:grid;
 
+
     grid-template-columns:
-    repeat(2,1fr);
 
-    gap:15px;
-
-}
+    repeat(4,1fr);
 
 
+    gap:18px;
 
-.indicator {
-
-    background:
-    rgba(0,0,0,.25);
-
-    padding:20px;
-
-    border-radius:18px;
-
-}
-
-
-
-.indicator span {
-
-    display:block;
-
-    color:#aaa;
-
-    margin-bottom:10px;
-
-}
-
-
-
-.indicator b {
-
-    font-size:22px;
-
-    color:#00f5ff;
 
 }
 
 
 
 
-/* VOICE */
+.indicator-box {
 
 
-.voice-panel {
-
-
-    margin-top:25px;
-
-    padding:20px;
-
-    text-align:center;
+    padding:22px;
 
 
     border-radius:20px;
 
 
+
     background:
-    rgba(255,255,255,.08);
 
 
-    backdrop-filter:blur(20px);
+    rgba(0,0,0,.25);
 
-    color:#00f5ff;
+
+
+    border:
+
+    1px solid rgba(255,255,255,.08);
+
+
 
 }
 
@@ -487,33 +943,660 @@ body::before {
 
 
 
-/* RESPONSIVE */
+.indicator-box p {
 
 
-@media(max-width:700px){
+    color:#94a3b8;
+
+
+    margin-bottom:10px;
+
+
+}
+
+
+
+
+
+.indicator-box b {
+
+
+    font-size:22px;
+
+
+    color:#00f5ff;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+ ADVANCED DATA
+========================== */
+
+
+.advanced-grid {
+
+
+    display:grid;
+
+
+    grid-template-columns:
+
+    repeat(3,1fr);
+
+
+
+    gap:18px;
+
+
+}
+
+
+
+
+
+.advanced-box {
+
+
+    padding:22px;
+
+
+    border-radius:20px;
+
+
+
+    background:
+
+
+    linear-gradient(
+
+        145deg,
+
+        rgba(255,255,255,.08),
+
+        rgba(255,255,255,.02)
+
+    );
+
+
+
+}
+
+
+
+
+
+.advanced-box p {
+
+
+    color:#94a3b8;
+
+
+    margin-bottom:12px;
+
+
+}
+
+
+
+
+.advanced-box strong {
+
+
+    color:#ffffff;
+
+
+    font-size:18px;
+
+
+}
+
+
+/* ==========================
+   VOICE PANEL
+========================== */
+
+
+.voice-panel {
+
+    text-align:center;
+
+}
+
+
+
+.voice-panel h2 {
+
+    margin-bottom:15px;
+
+    letter-spacing:2px;
+
+}
+
+
+
+#voiceText {
+
+    color:#00f5ff;
+
+    font-size:16px;
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   PREMIUM HOVER EFFECTS
+========================== */
+
+
+.glass-card {
+
+
+    transition:
+
+    transform .35s ease,
+
+    border-color .35s ease;
+
+
+}
+
+
+
+
+.glass-card:hover {
+
+
+    transform:translateY(-5px);
+
+
+    border-color:
+
+    rgba(0,245,255,.45);
+
+
+
+}
+
+
+
+
+
+
+
+
+.info-box:hover,
+.indicator-box:hover,
+.advanced-box:hover {
+
+
+    background:
+
+
+    rgba(0,245,255,.08);
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   SIGNAL COLORS
+========================== */
+
+
+.long {
+
+
+    color:#00ff88 !important;
+
+
+    text-shadow:
+
+    0 0 25px rgba(0,255,136,.7);
+
+
+}
+
+
+
+.short {
+
+
+    color:#ff4d6d !important;
+
+
+    text-shadow:
+
+    0 0 25px rgba(255,77,109,.7);
+
+
+}
+
+
+
+.wait {
+
+
+    color:#ffd166 !important;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   SCANNING EFFECT
+========================== */
+
+
+.scanning {
+
+
+    animation:
+
+
+    scanGlow 1s infinite alternate;
+
+
+}
+
+
+
+
+@keyframes scanGlow {
+
+
+    from {
+
+
+        box-shadow:
+
+        0 0 25px #00f5ff;
+
+
+    }
+
+
+    to {
+
+
+        box-shadow:
+
+        0 0 60px #00f5ff;
+
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   SCROLL BAR
+========================== */
+
+
+::-webkit-scrollbar {
+
+
+    width:8px;
+
+
+}
+
+
+
+
+::-webkit-scrollbar-track {
+
+
+    background:#020617;
+
+
+}
+
+
+
+
+::-webkit-scrollbar-thumb {
+
+
+    background:
+
+    linear-gradient(
+
+        #00f5ff,
+
+        #0066ff
+
+    );
+
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   TABLET
+========================== */
+
+
+@media(max-width:1000px){
+
+
+
+.analysis-grid {
+
+
+    grid-template-columns:
+
+    1fr;
+
+
+}
+
+
+
+.indicator-grid {
+
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+
+}
+
+
+
+
+.advanced-grid {
+
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+
+@media(max-width:650px){
+
+
+
+.app-container {
+
+
+    padding:15px;
+
+
+}
+
+
+
 
 
 .top-header {
 
+
     flex-direction:column;
+
 
     gap:20px;
 
+
+    text-align:center;
+
+
 }
 
 
-.stats {
 
-    grid-template-columns:1fr;
+
+.brand h1 {
+
+
+    font-size:25px;
+
 
 }
+
+
+
+
+.market-status {
+
+
+    width:max-content;
+
+
+}
+
+
+
+
+.price-row {
+
+
+    flex-direction:column;
+
+
+    gap:20px;
+
+
+}
+
+
+
 
 
 #btcPrice {
 
-    font-size:35px;
+
+    font-size:36px;
+
 
 }
 
 
-            }
+
+
+
+.scanner-core {
+
+
+    width:160px;
+
+
+    height:160px;
+
+
+}
+
+
+
+
+
+#scanBtn {
+
+
+    width:100%;
+
+
+}
+
+
+
+
+
+.indicator-grid {
+
+
+    grid-template-columns:
+
+    1fr;
+
+
+}
+
+
+
+
+
+.advanced-grid {
+
+
+    grid-template-columns:
+
+    1fr;
+
+
+}
+
+
+
+
+
+.panel-title {
+
+
+    flex-direction:column;
+
+
+    gap:8px;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================
+   EXTRA CRYSTAL EFFECT
+========================== */
+
+
+.glass-card::after {
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    inset:0;
+
+
+    border-radius:28px;
+
+
+    background:
+
+
+    linear-gradient(
+
+        120deg,
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+
+    );
+
+
+    opacity:0;
+
+
+    transition:.4s;
+
+
+    pointer-events:none;
+
+
+}
+
+
+
+
+.glass-card:hover::after {
+
+
+    opacity:1;
+
+
+    }
