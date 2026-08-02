@@ -1,546 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Quantum Scanner</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>BTC Quant Scanner</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
+<div class="app">
 
-<div class="app-container">
+    <!-- Header -->
+    <header class="top-header">
+        <div>
+            <h1>BTC QUANT SCANNER</h1>
+            <p>Real-Time Market Intelligence Engine</p>
+        </div>
+
+        <div class="status">
+            <span class="dot"></span>
+            LIVE MARKET
+        </div>
+    </header>
+
+
+    <!-- Main Dashboard -->
+
+    <main class="dashboard">
+
+
+        <!-- Price Card -->
+
+        <section class="glass-card price-card">
+
+            <h3>BTC / USDT</h3>
+
+            <div id="btcPrice">
+                $0.00
+            </div>
+
+            <div class="price-change" id="priceChange">
+                0.00%
+            </div>
+
+        </section>
 
 
 
-<!-- HEADER -->
+        <!-- Scanner -->
 
-<header class="top-header">
+        <section class="glass-card scanner-card">
+
+            <h2>AI MARKET SCANNER</h2>
+
+            <div class="scanner-circle">
+
+                <div id="scanTimer">
+                    READY
+                </div>
+
+            </div>
 
 
-<div class="brand">
+            <button id="scanBtn">
+                SCAN NOW
+            </button>
 
-<h1>BTC QUANT SCANNER</h1>
 
-<p>Real-Time Market Intelligence Engine</p>
+            <div id="scanStatus">
+                Waiting for analysis...
+            </div>
+
+
+        </section>
+
+
+
+
+        <!-- Signal Result -->
+
+
+        <section class="glass-card result-card">
+
+            <h2>FINAL ANALYSIS</h2>
+
+
+            <div class="signal-box">
+
+                <span>MARKET BIAS</span>
+
+                <h1 id="signal">
+                    WAIT
+                </h1>
+
+            </div>
+
+
+
+            <div class="stats">
+
+
+                <div>
+                    <p>Confidence</p>
+                    <strong id="confidence">
+                        0%
+                    </strong>
+                </div>
+
+
+                <div>
+                    <p>Momentum</p>
+                    <strong id="momentum">
+                        Neutral
+                    </strong>
+                </div>
+
+
+                <div>
+                    <p>Liquidity Magnet</p>
+                    <strong id="liquidity">
+                        Searching...
+                    </strong>
+                </div>
+
+
+
+            </div>
+
+
+        </section>
+
+
+
+
+        <!-- Indicators -->
+
+
+        <section class="glass-card indicators-card">
+
+            <h2>Market Intelligence</h2>
+
+
+            <div class="indicator-grid">
+
+
+                <div class="indicator">
+                    <span>RSI</span>
+                    <b id="rsi">--</b>
+                </div>
+
+
+                <div class="indicator">
+                    <span>EMA Trend</span>
+                    <b id="ema">--</b>
+                </div>
+
+
+                <div class="indicator">
+                    <span>Volume</span>
+                    <b id="volume">--</b>
+                </div>
+
+
+                <div class="indicator">
+                    <span>Volatility</span>
+                    <b id="volatility">--</b>
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+    </main>
+
+
+
+    <!-- Voice Result -->
+
+    <div class="voice-panel">
+
+        <p id="voiceText">
+            Voice system ready
+        </p>
+
+    </div>
+
+
 
 </div>
-
-
-
-<div class="market-status">
-
-<span class="status-dot"></span>
-
-LIVE MARKET
-
-</div>
-
-
-
-</header>
-
-
-
-
-
-
-<!-- BTC PRICE SECTION -->
-
-
-<section class="glass-card btc-panel">
-
-
-<div class="coin-title">
-
-<h3>BTC / USDT</h3>
-
-
-<span>
-24H CHANGE
-</span>
-
-</div>
-
-
-
-
-<div class="price-row">
-
-
-<h2 id="btcPrice">
-$0.00
-</h2>
-
-
-
-<div id="change24h" class="change-box">
-
-0.00%
-
-</div>
-
-
-</div>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- LIVE CHART -->
-
-
-<section class="glass-card chart-panel">
-
-
-<div class="panel-title">
-
-<h2>BTC LIVE CHART</h2>
-
-<span>
-REAL TIME DATA
-</span>
-
-</div>
-
-
-
-<div id="btcChart">
-
-
-<!-- Trading chart will load here -->
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- SCANNER -->
-
-
-<section class="glass-card scanner-panel">
-
-
-<h2>
-BTC MARKET SCANNER
-</h2>
-
-
-
-<div class="scanner-core">
-
-
-<div id="scanTimer">
-
-READY
-
-</div>
-
-
-</div>
-
-
-
-
-<button id="scanBtn">
-
-SCAN NOW
-
-</button>
-
-
-
-
-
-<p id="scanStatus">
-
-Waiting for market analysis...
-
-</p>
-
-
-
-
-</section>
-
-
-
-
-
-</div>
-
 
 
 
 <script src="script.js"></script>
 
-
 </body>
-
 </html>
-
-<!-- FINAL ANALYSIS -->
-
-
-<section class="glass-card analysis-panel">
-
-
-<div class="panel-title">
-
-<h2>FINAL ANALYSIS</h2>
-
-<span>
-QUANT DECISION
-</span>
-
-</div>
-
-
-
-<div class="signal-box">
-
-
-<p>MARKET BIAS</p>
-
-
-<h1 id="signal">
-WAIT
-</h1>
-
-
-</div>
-
-
-
-
-
-<div class="analysis-grid">
-
-
-
-<div class="info-box">
-
-<span>
-Confidence
-</span>
-
-<strong id="confidence">
-0%
-</strong>
-
-</div>
-
-
-
-
-<div class="info-box">
-
-<span>
-Momentum
-</span>
-
-<strong id="momentum">
-Neutral
-</strong>
-
-</div>
-
-
-
-
-<div class="info-box">
-
-<span>
-Liquidity Magnet
-</span>
-
-<strong id="liquidity">
-Calculating...
-</strong>
-
-</div>
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- MARKET INTELLIGENCE -->
-
-
-<section class="glass-card intelligence-panel">
-
-
-<div class="panel-title">
-
-<h2>MARKET INTELLIGENCE</h2>
-
-<span>
-LIVE CALCULATIONS
-</span>
-
-</div>
-
-
-
-
-<div class="indicator-grid">
-
-
-
-<div class="indicator-box">
-
-<p>RSI</p>
-
-<b id="rsi">
---
-</b>
-
-</div>
-
-
-
-
-<div class="indicator-box">
-
-<p>EMA TREND</p>
-
-<b id="ema">
---
-</b>
-
-</div>
-
-
-
-
-<div class="indicator-box">
-
-<p>VOLUME</p>
-
-<b id="volume">
---
-</b>
-
-</div>
-
-
-
-
-<div class="indicator-box">
-
-<p>VOLATILITY</p>
-
-<b id="volatility">
---
-</b>
-
-</div>
-
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-
-<!-- ADVANCED DATA -->
-
-
-<section class="glass-card advanced-panel">
-
-
-<div class="panel-title">
-
-<h2>ADVANCED QUANT DATA</h2>
-
-<span>
-MARKET DEPTH
-</span>
-
-</div>
-
-
-
-
-<div class="advanced-grid">
-
-
-
-<div class="advanced-box">
-
-<p>Order Book Depth</p>
-
-<strong id="orderBook">
-
-Loading
-
-</strong>
-
-</div>
-
-
-
-
-<div class="advanced-box">
-
-<p>Funding Rate</p>
-
-<strong id="fundingRate">
-
-Loading
-
-</strong>
-
-</div>
-
-
-
-
-
-<div class="advanced-box">
-
-<p>Open Interest</p>
-
-<strong id="openInterest">
-
-Loading
-
-</strong>
-
-</div>
-
-
-
-
-
-<div class="advanced-box">
-
-<p>Liquidation Zone</p>
-
-<strong id="liquidation">
-
-Loading
-
-</strong>
-
-</div>
-
-
-
-
-
-<div class="advanced-box">
-
-<p>Volume Delta</p>
-
-<strong id="volumeDelta">
-
-Loading
-
-</strong>
-
-</div>
-
-
-
-
-
-<div class="advanced-box">
-
-<p>Market Structure</p>
-
-<strong id="structure">
-
-Loading
-
-</strong>
-
-</div>
-
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-
-<!-- VOICE -->
-
-
-<section class="glass-card voice-panel">
-
-
-<h2>
-VOICE ASSISTANT
-</h2>
-
-
-<p id="voiceText">
-
-Voice system ready
-
-</p>
-
-
-
-</section>
