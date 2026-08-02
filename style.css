@@ -1,1571 +1,519 @@
-/*==================================================
-            QUANTUM AI DASHBOARD
-                CSS PART 1
-==================================================*/
-
-/*================ GOOGLE FONT =================*/
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-/*================ ROOT =================*/
-
-:root{
-
---bg:#07090f;
---bg2:#0f131d;
---card:#141a24;
---card2:#1b2230;
-
---green:#00ff9d;
---red:#ff4d6d;
---yellow:#ffc857;
---blue:#3aa8ff;
---purple:#8b5cf6;
-
---white:#ffffff;
---text:#c8d1dc;
---muted:#7f8da3;
-
---border:rgba(255,255,255,.06);
-
---shadow:
-0 10px 30px rgba(0,0,0,.35);
-
---radius:18px;
-
-}
-
-/*================ RESET =================*/
-
-*{
-
-margin:0;
-padding:0;
-box-sizing:border-box;
-
-}
-
-html{
-
-scroll-behavior:smooth;
-
-}
-
-body{
-
-font-family:'Poppins',sans-serif;
-
-background:var(--bg);
-
-color:var(--white);
-
-overflow-x:hidden;
-
-}
-
-/*================ SCROLLBAR =================*/
-
-::-webkit-scrollbar{
-
-width:8px;
-
-}
-
-::-webkit-scrollbar-track{
-
-background:#0b1017;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-background:var(--green);
-
-border-radius:20px;
-
-}
-
-/*================ LINKS =================*/
-
-a{
-
-text-decoration:none;
-color:inherit;
-
-}
-
-button{
-
-font-family:'Poppins',sans-serif;
-
-cursor:pointer;
-
-border:none;
-
-outline:none;
-
-}
-
-/*================ LOADER =================*/
-
-#loader{
-
-position:fixed;
-
-inset:0;
-
-background:#05070c;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-z-index:99999;
-
-}
-
-.loader-box{
-
-text-align:center;
-
-}
-
-.loader-circle{
-
-width:90px;
-height:90px;
-
-border-radius:50%;
-
-border:5px solid rgba(255,255,255,.08);
-
-border-top:5px solid var(--green);
-
-animation:spin 1s linear infinite;
-
-margin:auto auto 25px;
-
-}
-
-.loader-box h1{
-
-font-size:32px;
-
-font-weight:700;
-
-margin-bottom:10px;
-
-color:var(--green);
-
-}
-
-.loader-box p{
-
-font-size:15px;
-
-color:var(--muted);
-
-}
-
-/*================ APP =================*/
-
-#app{
-
-display:flex;
-
-min-height:100vh;
-
-}
-
-/*================ SIDEBAR =================*/
-
-.sidebar{
-
-width:270px;
-
-background:linear-gradient(
-180deg,
-#0d121b,
-#111827
-);
-
-border-right:1px solid var(--border);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:space-between;
-
-padding:25px;
-
-position:fixed;
-
-left:0;
-
-top:0;
-
-bottom:0;
-
-}
-
-/*================ LOGO =================*/
-
-.logo{
-
-margin-bottom:35px;
-
-}
-
-.logo h2{
-
-font-size:28px;
-
-font-weight:700;
-
-color:var(--green);
-
-}
-
-.logo span{
-
-font-size:13px;
-
-color:var(--muted);
-
-}
-
-/*================ MENU =================*/
-
-.sidebar ul{
-
-list-style:none;
-
-}
-
-.sidebar li{
-
-padding:15px 18px;
-
-margin-bottom:10px;
-
-border-radius:14px;
-
-transition:.30s;
-
-font-size:15px;
-
-font-weight:500;
-
-color:var(--text);
-
-}
-
-.sidebar li:hover{
-
-background:rgba(0,255,157,.08);
-
-color:var(--green);
-
-transform:translateX(6px);
-
-}
-
-.sidebar li.active{
-
-background:rgba(0,255,157,.14);
-
-color:var(--green);
-
-}
-
-.sidebar-footer{
-
-padding-top:20px;
-
-border-top:1px solid var(--border);
-
-font-size:14px;
-
-font-weight:600;
-
-color:var(--green);
-
-}
-
-/*================ CONTENT =================*/
-
-.content{
-
-margin-left:270px;
-
-width:calc(100% - 270px);
-
-padding:30px;
-
-}
-
-/*================ TOPBAR =================*/
-
-.topbar{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:30px;
-
-}
-
-.market-name h1{
-
-font-size:34px;
-
-font-weight:700;
-
-}
-
-.market-name span{
-
-font-size:14px;
-
-color:var(--muted);
-
-}
-
-.top-right{
-
-display:flex;
-
-align-items:center;
-
-gap:20px;
-
-}
-
-.connection{
-
-padding:10px 22px;
-
-border-radius:50px;
-
-font-size:14px;
-
-font-weight:700;
-
-}
-
-.connection.online{
-
-background:rgba(0,255,157,.12);
-
-color:var(--green);
-
-}
-
-.clock{
-
-background:var(--card);
-
-padding:10px 20px;
-
-border-radius:50px;
-
-border:1px solid var(--border);
-
-font-size:15px;
-
-}
-
-/*================ CARDS =================*/
-
-.card,
-.panel{
-
-background:linear-gradient(
-180deg,
-var(--card),
-var(--card2)
-);
-
-border-radius:var(--radius);
-
-border:1px solid var(--border);
-
-box-shadow:var(--shadow);
-
-}
-
-
-/*==================================================
-            QUANTUM AI DASHBOARD
-                CSS PART 2
-==================================================*/
-
-
-/*================ OVERVIEW CARDS =================*/
-
-.overview{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:20px;
-
-margin-bottom:30px;
-
-}
-
-
-.card{
-
-padding:25px;
-
-min-height:150px;
-
-transition:.3s;
-
-}
-
-
-.card:hover{
-
-transform:translateY(-5px);
-
-border-color:rgba(0,255,157,.25);
-
-}
-
-
-.card h3{
-
-font-size:14px;
-
-font-weight:500;
-
-color:var(--muted);
-
-margin-bottom:15px;
-
-}
-
-
-.card h2{
-
-font-size:28px;
-
-font-weight:700;
-
-}
-
-
-.price-card h2{
-
-color:var(--green);
-
-}
-
-
-#btcChange{
-
-margin-top:10px;
-
-color:var(--green);
-
-font-weight:600;
-
-}
-
-
-
-/*================ CHART =================*/
-
-
-.chart-wrapper{
-
-background:linear-gradient(
-180deg,
-var(--card),
-var(--card2)
-);
-
-border-radius:var(--radius);
-
-border:1px solid var(--border);
-
-padding:25px;
-
-box-shadow:var(--shadow);
-
-margin-bottom:30px;
-
-}
-
-
-.chart-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:20px;
-
-}
-
-
-.chart-header h2{
-
-font-size:22px;
-
-}
-
-
-.chart-header p{
-
-font-size:13px;
-
-color:var(--muted);
-
-}
-
-
-.chart-tools{
-
-display:flex;
-
-gap:10px;
-
-}
-
-
-.chart-tools button{
-
-background:#202938;
-
-color:var(--text);
-
-padding:10px 18px;
-
-border-radius:12px;
-
-transition:.3s;
-
-}
-
-
-.chart-tools button:hover{
-
-background:var(--green);
-
-color:#000;
-
-}
-
-
-#chart{
-
-height:550px;
-
-width:100%;
-
-border-radius:15px;
-
-overflow:hidden;
-
-background:#080b12;
-
-}
-
-
-
-/*================ ANALYSIS GRID =================*/
-
-
-.analysis-grid{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:20px;
-
-margin-bottom:30px;
-
-}
-
-
-.analysis-card{
-
-background:var(--card);
-
-padding:22px;
-
-border-radius:var(--radius);
-
-border:1px solid var(--border);
-
-box-shadow:var(--shadow);
-
-}
-
-
-.analysis-card h3{
-
-font-size:16px;
-
-margin-bottom:15px;
-
-color:var(--green);
-
-}
-
-
-.analysis-card p,
-.analysis-card div{
-
-font-size:14px;
-
-color:var(--text);
-
-}
-
-
-
-/*================ BOTTOM GRID =================*/
-
-
-.bottom-grid{
-
-display:grid;
-
-grid-template-columns:2fr 1fr 1fr;
-
-gap:20px;
-
-margin-bottom:30px;
-
-}
-
-
-.panel{
-
-padding:25px;
-
-}
-
-
-.panel-header{
-
-margin-bottom:20px;
-
-}
-
-
-.panel h2{
-
-font-size:20px;
-
-margin-bottom:20px;
-
-}
-
-
-
-/*================ INDICATORS =================*/
-
-
-.indicator-grid{
-
-display:grid;
-
-grid-template-columns:repeat(5,1fr);
-
-gap:15px;
-
-}
-
-
-.indicator-card{
-
-background:#0d131e;
-
-padding:18px;
-
-border-radius:14px;
-
-border:1px solid var(--border);
-
-display:flex;
-
-flex-direction:column;
-
-gap:8px;
-
-}
-
-
-.indicator-card span{
-
-font-size:12px;
-
-color:var(--muted);
-
-}
-
-
-.indicator-card strong{
-
-font-size:18px;
-
-color:var(--green);
-
-}
-
-
-
-/*================ PATTERN LIST =================*/
-
-
-.pattern-list,
-#candlePatterns{
-
-background:#0d131e;
-
-padding:20px;
-
-border-radius:15px;
-
-min-height:120px;
-
-color:var(--text);
-
-font-size:14px;
-
-}
-
-
-.pattern-item{
-
-padding:12px;
-
-margin-bottom:10px;
-
-border-radius:10px;
-
-background:rgba(0,255,157,.08);
-
-color:var(--green);
-
-}
-
-
-
-/*================ AI SECTION =================*/
-
-
-.ai-section{
-
-display:grid;
-
-grid-template-columns:1fr 1fr 1fr;
-
-gap:20px;
-
-margin-bottom:30px;
-
-}
-
-
-.confidence-circle{
-
-width:150px;
-
-height:150px;
-
-border-radius:50%;
-
-border:8px solid var(--green);
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-margin:auto;
-
-box-shadow:
-0 0 30px rgba(0,255,157,.3);
-
-}
-
-
-.confidence-circle span{
-
-font-size:28px;
-
-font-weight:700;
-
-}
-
-
-.panel>p{
-
-text-align:center;
-
-margin-top:20px;
-
-color:var(--muted);
-
-}
-
-
-
-/*================ MARKET LIST =================*/
-
-
-.market-list{
-
-list-style:none;
-
-}
-
-
-.market-list li{
-
-padding:12px 0;
-
-border-bottom:1px solid var(--border);
-
-font-size:14px;
-
-color:var(--text);
-
-}
-
-
-.market-list span{
-
-float:right;
-
-color:var(--green);
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", sans-serif;
 }
-
-
-
-/*================ TRADE BOX =================*/
 
 
-.trade-box{
+body {
 
-background:#0d131e;
+    min-height: 100vh;
+    background:
+    radial-gradient(circle at top left, #14213d, transparent 35%),
+    radial-gradient(circle at bottom right, #003049, transparent 40%),
+    #050816;
 
-padding:20px;
-
-border-radius:15px;
-
+    color: white;
+    overflow-x: hidden;
 }
 
 
-.trade-box p{
 
-display:flex;
+body::before {
 
-justify-content:space-between;
+    content: "";
+    position: fixed;
+    inset: 0;
 
-padding:12px 0;
+    background:
+    linear-gradient(
+        120deg,
+        rgba(255,255,255,0.05),
+        transparent
+    );
 
-border-bottom:1px solid var(--border);
-
+    pointer-events: none;
 }
 
 
-.trade-box span{
 
-color:var(--green);
+.app {
 
-font-weight:600;
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+    padding: 25px;
 
 }
-
 
 
-/*================ ALERTS =================*/
 
 
-.alerts-section{
+/* HEADER */
 
-margin-bottom:30px;
 
-}
-
-
-#alertContainer{
-
-background:#0d131e;
+.top-header {
 
-padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-border-radius:15px;
+    margin-bottom:30px;
 
-color:var(--muted);
-
 }
-
-
-
-/*================ FOOTER =================*/
 
 
-footer{
+.top-header h1 {
 
-display:flex;
+    font-size:32px;
+    letter-spacing:3px;
 
-justify-content:space-between;
+    background:
+    linear-gradient(90deg,#00f5ff,#ffffff);
 
-padding:20px 0;
+    -webkit-background-clip:text;
+    color:transparent;
 
-color:var(--muted);
-
-font-size:13px;
-
-border-top:1px solid var(--border);
-
 }
-
-
-
-/*================ MODAL =================*/
-
-
-.modal{
 
-position:fixed;
 
-inset:0;
 
-background:rgba(0,0,0,.7);
+.top-header p {
 
-display:none;
+    color:#9ca3af;
+    margin-top:8px;
 
-align-items:center;
-
-justify-content:center;
-
-z-index:9999;
-
 }
-
 
-.modal-content{
 
-background:var(--card);
 
-padding:35px;
+.status {
 
-border-radius:20px;
+    padding:12px 20px;
 
-border:1px solid var(--border);
+    border-radius:50px;
 
-width:350px;
+    background:
+    rgba(255,255,255,0.08);
 
-}
-
+    backdrop-filter:blur(20px);
 
-.modal-content h2{
+    border:1px solid rgba(255,255,255,.15);
 
-margin-bottom:20px;
-
 }
-
 
-.modal-content button{
 
-display:block;
 
-width:100%;
+.dot {
 
-padding:12px;
+    display:inline-block;
 
-margin:10px 0;
+    width:10px;
+    height:10px;
 
-background:#202938;
+    background:#00ff88;
 
-color:white;
+    border-radius:50%;
 
-border-radius:12px;
+    margin-right:8px;
 
-}
-
-
-.modal-content button:hover{
-
-background:var(--green);
+    box-shadow:
+    0 0 15px #00ff88;
 
-color:#000;
-
 }
-
-
-/*==================================================
-            QUANTUM AI DASHBOARD
-                CSS PART 3 FINAL
-==================================================*/
-
 
-/*================ ANIMATIONS =================*/
 
 
-@keyframes spin{
 
-from{
+/* DASHBOARD */
 
-transform:rotate(0deg);
 
-}
+.dashboard {
 
-to{
+    display:grid;
 
-transform:rotate(360deg);
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
 
-}
+    gap:25px;
 
 }
 
 
-@keyframes pulse{
 
-0%{
 
-box-shadow:0 0 0 0 rgba(0,255,157,.5);
-
-}
+/* GLASS CARD */
 
-70%{
 
-box-shadow:0 0 0 15px rgba(0,255,157,0);
+.glass-card {
 
-}
+    background:
 
-100%{
+    linear-gradient(
+        145deg,
+        rgba(255,255,255,.12),
+        rgba(255,255,255,.03)
+    );
 
-box-shadow:0 0 0 0 rgba(0,255,157,0);
 
-}
+    border:
 
-}
+    1px solid rgba(255,255,255,.18);
 
 
-@keyframes glow{
+    backdrop-filter:
 
-0%{
+    blur(25px);
 
-text-shadow:
-0 0 5px var(--green);
 
-}
+    border-radius:25px;
 
-50%{
 
-text-shadow:
-0 0 25px var(--green);
+    padding:30px;
 
-}
 
-100%{
+    box-shadow:
 
-text-shadow:
-0 0 5px var(--green);
+    0 20px 50px rgba(0,0,0,.4),
 
-}
+    inset 0 0 30px rgba(255,255,255,.05);
 
 }
-
-
-@keyframes slideUp{
 
-from{
 
-opacity:0;
 
-transform:translateY(20px);
 
-}
-
-to{
+.glass-card h2,
+.glass-card h3 {
 
-opacity:1;
+    margin-bottom:20px;
 
-transform:translateY(0);
-
-}
+    letter-spacing:1px;
 
 }
 
 
 
-/*================ APP ANIMATION =================*/
 
 
-.card,
-.panel,
-.chart-wrapper,
-.analysis-card{
+/* PRICE */
 
-animation:slideUp .6s ease;
 
-}
-
-
-
-/*================ LIVE STATUS =================*/
+#btcPrice {
 
-
-.connection.online{
-
-animation:pulse 2s infinite;
-
-}
+    font-size:45px;
 
+    font-weight:700;
 
-#signalStatus{
+    color:#00f5ff;
 
-animation:glow 2s infinite;
+    margin:20px 0;
 
 }
 
 
 
-/*================ SIGNAL COLORS =================*/
+.price-change {
 
+    color:#00ff88;
 
-.buy{
+    font-size:20px;
 
-color:var(--green)!important;
-
-background:rgba(0,255,157,.12);
-
-padding:8px 15px;
-
-border-radius:10px;
-
 }
 
 
-.sell{
 
-color:var(--red)!important;
 
-background:rgba(255,77,109,.12);
-
-padding:8px 15px;
-
-border-radius:10px;
-
-}
+/* SCANNER */
 
 
-.long{
+.scanner-card {
 
-color:#00ffaa!important;
+    text-align:center;
 
 }
 
 
-.short{
 
-color:#ff5577!important;
 
-}
-
+.scanner-circle {
 
+    width:180px;
+    height:180px;
 
-/*================ CHART GLOW =================*/
+    margin:20px auto;
 
+    border-radius:50%;
 
-#chart{
 
-box-shadow:
+    display:flex;
 
-inset 0 0 40px rgba(0,255,157,.05);
-
-}
+    justify-content:center;
+    align-items:center;
 
 
+    background:
 
-/*================ AI EFFECT =================*/
+    radial-gradient(
+        circle,
+        rgba(0,245,255,.3),
+        transparent 65%
+    );
 
 
-.confidence-circle{
+    border:
 
-animation:pulse 3s infinite;
+    2px solid #00f5ff;
 
-}
 
+    box-shadow:
 
-#confidencePercent{
+    0 0 40px #00f5ff;
 
-color:var(--green);
 
 }
-
-
-
-/*================ SPECIAL PANELS =================*/
 
 
-.pattern-item:hover{
 
-transform:translateX(5px);
+#scanTimer {
 
-background:rgba(0,255,157,.15);
+    font-size:30px;
+    font-weight:bold;
 
 }
-
-
-.pattern-item{
-
-transition:.3s;
-
-}
-
-
-
-/*================ BUTTON EFFECT =================*/
 
 
-.chart-tools button{
 
-position:relative;
+#scanBtn {
 
-overflow:hidden;
 
-}
-
-
-.chart-tools button::before{
-
-content:"";
+    padding:15px 45px;
 
-position:absolute;
+    border:none;
 
-top:0;
+    border-radius:50px;
 
-left:-100%;
 
-width:100%;
+    background:
 
-height:100%;
+    linear-gradient(
+        90deg,
+        #00f5ff,
+        #0077ff
+    );
 
-background:
 
-linear-gradient(
-90deg,
-transparent,
-rgba(255,255,255,.2),
-transparent
-);
+    color:white;
 
-transition:.5s;
+    font-size:18px;
 
-}
-
+    cursor:pointer;
 
-.chart-tools button:hover::before{
+    transition:.3s;
 
-left:100%;
 
 }
-
-
 
-/*================ PRICE FLASH =================*/
 
 
-.price-up{
+#scanBtn:hover {
 
-color:var(--green)!important;
+    transform:scale(1.08);
 
-animation:glow 1s infinite;
+    box-shadow:
+    0 0 30px #00f5ff;
 
 }
-
-
-.price-down{
-
-color:var(--red)!important;
-
-animation:glow 1s infinite;
-
-}
-
-
 
-/*================ RESPONSIVE TABLET =================*/
 
 
-@media(max-width:1200px){
+#scanStatus {
 
+    margin-top:20px;
 
-.sidebar{
+    color:#aaa;
 
-width:220px;
-
-}
-
-
-.content{
-
-margin-left:220px;
-
-width:calc(100% - 220px);
-
 }
-
 
-.overview{
 
-grid-template-columns:repeat(2,1fr);
 
-}
-
 
-.analysis-grid{
 
-grid-template-columns:repeat(2,1fr);
+/* SIGNAL */
 
-}
 
+.signal-box {
 
-.bottom-grid{
+    text-align:center;
 
-grid-template-columns:1fr;
+    margin:20px 0;
 
 }
-
 
-.ai-section{
 
-grid-template-columns:1fr;
 
-}
-
+#signal {
 
-.indicator-grid{
+    font-size:45px;
 
-grid-template-columns:repeat(3,1fr);
-
-}
+    margin-top:10px;
 
+    color:#ffd166;
 
 }
 
 
 
-/*================ MOBILE =================*/
 
+.stats {
 
-@media(max-width:768px){
+    display:grid;
 
+    grid-template-columns:repeat(3,1fr);
 
-#app{
+    gap:15px;
 
-display:block;
-
 }
-
-
-.sidebar{
-
-position:relative;
 
-width:100%;
 
-height:auto;
 
-}
+.stats div {
 
+    background:
+    rgba(255,255,255,.06);
 
-.content{
 
-margin-left:0;
+    padding:15px;
 
-width:100%;
+    border-radius:15px;
 
-padding:15px;
+    text-align:center;
 
 }
-
 
-.topbar{
 
-flex-direction:column;
 
-gap:20px;
+.stats p {
 
-align-items:flex-start;
+    color:#aaa;
+    margin-bottom:8px;
 
 }
 
 
-.market-name h1{
 
-font-size:26px;
-
-}
 
+/* INDICATORS */
 
-.overview{
 
-grid-template-columns:1fr;
+.indicator-grid {
 
-}
 
+    display:grid;
 
-.analysis-grid{
+    grid-template-columns:
+    repeat(2,1fr);
 
-grid-template-columns:1fr;
+    gap:15px;
 
 }
-
-
-.indicator-grid{
-
-grid-template-columns:repeat(2,1fr);
 
-}
 
 
-.chart-header{
+.indicator {
 
-flex-direction:column;
+    background:
+    rgba(0,0,0,.25);
 
-align-items:flex-start;
+    padding:20px;
 
-gap:15px;
+    border-radius:18px;
 
 }
-
 
-.chart-tools{
 
-flex-wrap:wrap;
 
-}
+.indicator span {
 
+    display:block;
 
-#chart{
+    color:#aaa;
 
-height:400px;
+    margin-bottom:10px;
 
 }
-
 
-footer{
 
-flex-direction:column;
 
-gap:10px;
+.indicator b {
 
-}
-
+    font-size:22px;
 
+    color:#00f5ff;
 
 }
-
-
 
-/*================ SMALL MOBILE =================*/
 
 
-@media(max-width:420px){
 
-
-.indicator-grid{
-
-grid-template-columns:1fr;
-
-}
+/* VOICE */
 
 
-.chart-tools button{
+.voice-panel {
 
-width:100%;
 
-}
+    margin-top:25px;
 
+    padding:20px;
 
-.card h2{
+    text-align:center;
 
-font-size:22px;
 
-}
+    border-radius:20px;
 
 
-.panel{
+    background:
+    rgba(255,255,255,.08);
 
-padding:18px;
 
-}
+    backdrop-filter:blur(20px);
 
+    color:#00f5ff;
 
 }
-
 
 
-/*================ PREMIUM GLASS EFFECT =================*/
 
 
-.card,
-.panel,
-.chart-wrapper{
-
-backdrop-filter:blur(15px);
-
-background:
-
-linear-gradient(
-135deg,
-rgba(255,255,255,.05),
-rgba(255,255,255,.02)
-);
-
-}
 
+/* RESPONSIVE */
 
 
-/*================ FINAL POLISH =================*/
+@media(max-width:700px){
 
 
-::selection{
+.top-header {
 
-background:var(--green);
+    flex-direction:column;
 
-color:#000;
+    gap:20px;
 
 }
 
 
-h1,h2,h3{
+.stats {
 
-letter-spacing:.3px;
+    grid-template-columns:1fr;
 
 }
 
 
-strong{
+#btcPrice {
 
-font-weight:700;
+    font-size:35px;
 
 }
 
 
-/* END OF QUANTUM AI CSS */
+            }
