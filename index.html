@@ -1,1 +1,292 @@
+<!-- ========================================= -->
+<!-- BTC AI MOMENTUM DETECTOR - HTML PART 1 -->
+<!-- ========================================= -->
 
+<section id="momentumDetector" class="momentum-section">
+
+    <div class="glass-card detector-card">
+
+        <div class="detector-header">
+
+            <h2>
+                🚀 BTC AI Momentum Detector
+            </h2>
+
+            <p>
+                Professional Bitcoin Momentum Scanner
+            </p>
+
+        </div>
+
+        <div class="status-row">
+
+            <div class="status-left">
+
+                <span class="status-dot" id="statusDot"></span>
+
+                <span id="scanStatus">
+                    Ready To Scan
+                </span>
+
+            </div>
+
+            <div class="status-right">
+
+                <span class="live-text">
+                    ● LIVE BTC
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="price-box">
+
+            <h3>Bitcoin Price</h3>
+
+            <div id="btcPrice" class="btc-price">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+        <div class="scan-box">
+
+            <div class="timer-circle">
+
+                <span id="countdown">
+
+                    30
+
+                </span>
+
+            </div>
+
+            <button
+                id="scanBtn"
+                class="scan-btn"
+                onclick="startMomentumScan()">
+
+                🔍 Scan Now
+
+            </button>
+
+        </div>
+
+        <div class="progress-container">
+
+            <div
+                id="scanProgress"
+                class="progress-bar">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RESULT CARD -->
+
+    <div class="glass-card result-card">
+
+        <h3>
+
+            Momentum Result
+
+        </h3>
+
+        <div
+            id="momentumResult"
+            class="momentum-result neutral">
+
+            Waiting...
+
+        </div>
+
+        <div class="confidence-card">
+
+            <span>
+
+                Confidence
+
+            </span>
+
+            <h2 id="confidenceValue">
+
+                95%
+
+            </h2>
+
+        </div>
+
+        <div class="analysis-card">
+
+            <h4>
+
+                AI Analysis
+
+            </h4>
+
+            <p id="analysisText">
+
+                Click Scan Now to start BTC momentum analysis.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- MARKET DATA -->
+
+    <div class="glass-card market-card">
+
+        <div class="market-grid">
+
+            <div class="market-item">
+
+                <label>Trend</label>
+
+                <span id="trendValue">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <div class="market-item">
+
+                <label>RSI</label>
+
+                <span id="rsiValue">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <div class="market-item">
+
+                <label>EMA</label>
+
+                <span id="emaValue">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <div class="market-item">
+
+                <label>Volume</label>
+
+                <span id="volumeValue">
+
+                    --
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- HISTORY -->
+
+    <div class="glass-card history-card">
+
+        <h3>
+
+            Recent Momentum Signals
+
+        </h3>
+
+        <div id="historyContainer">
+
+
+                      <div class="history-item">
+
+                <span class="history-time">
+
+                    --:--
+
+                </span>
+
+                <span class="history-result">
+
+                    No Scan Yet
+
+                </span>
+
+                <span class="history-confidence">
+
+                    95%
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- INFO CARD -->
+
+    <div class="glass-card info-card">
+
+        <h3>
+
+            Scanner Information
+
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-box">
+
+                <h4>⏱ Scan Time</h4>
+
+                <p>30 Seconds</p>
+
+            </div>
+
+            <div class="info-box">
+
+                <h4>📊 Market</h4>
+
+                <p>BTCUSDT Futures</p>
+
+            </div>
+
+            <div class="info-box">
+
+                <h4>🤖 Engine</h4>
+
+                <p>AI Momentum Analysis</p>
+
+            </div>
+
+            <div class="info-box">
+
+                <h4>🎯 Result</h4>
+
+                <p>Bullish / Bearish / Neutral</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================================= -->
+<!-- END BTC AI MOMENTUM DETECTOR -->
+<!-- ========================================= -->
+          
