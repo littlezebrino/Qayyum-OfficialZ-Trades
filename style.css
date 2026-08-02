@@ -1,361 +1,1488 @@
-/* =========================================
-   BTC AI MOMENTUM DETECTOR
-   CSS PART 1
-========================================= */
+/* ==========================
+   GLOBAL RESET
+========================== */
 
-.momentum-section{
-    width:95%;
-    max-width:1200px;
-    margin:40px auto;
-}
+*{
 
-.glass-card{
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:24px;
-    padding:25px;
-    margin-bottom:25px;
-    box-shadow:
-        0 10px 35px rgba(0,0,0,.35),
-        inset 0 1px 1px rgba(255,255,255,.15);
-}
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Arial,sans-serif;
 
-.detector-header{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.detector-header h2{
-    color:#ffffff;
-    font-size:32px;
-    margin-bottom:8px;
-    font-weight:700;
-}
-
-.detector-header p{
-    color:#cfcfcf;
-    font-size:15px;
-}
-
-.status-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-}
-
-.status-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    color:#ffffff;
-    font-weight:600;
-}
-
-.status-dot{
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    background:#8a8a8a;
-}
-
-.status-dot.active{
-    background:#00ff88;
-    box-shadow:0 0 18px #00ff88;
-}
-
-.live-text{
-    color:#00ff88;
-    font-weight:bold;
-}
-
-.price-box{
-    text-align:center;
-    padding:20px;
-    border-radius:18px;
-    background:rgba(255,255,255,.05);
-    margin-bottom:22px;
-}
-
-.price-box h3{
-    color:#cfcfcf;
-    margin-bottom:10px;
-}
-
-.btc-price{
-    color:#00ff88;
-    font-size:34px;
-    font-weight:700;
-}
-
-.scan-box{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
-}
-
-.timer-circle{
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border:4px solid #00d4ff;
-    color:#ffffff;
-    font-size:36px;
-    font-weight:bold;
-    box-shadow:0 0 25px rgba(0,212,255,.35);
-}
-
-.scan-btn{
-    width:100%;
-    border:none;
-    cursor:pointer;
-    border-radius:16px;
-    padding:16px;
-    font-size:18px;
-    font-weight:bold;
-    color:#ffffff;
-    background:linear-gradient(135deg,#00c853,#00e676);
-    transition:.3s;
-}
-
-.scan-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 0 25px rgba(0,255,136,.45);
-}
-
-.scan-btn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-}
-
-.progress-container{
-    width:100%;
-    height:10px;
-    background:rgba(255,255,255,.08);
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:25px;
-}
-
-.progress-bar{
-    width:0%;
-    height:100%;
-    border-radius:20px;
-    background:linear-gradient(90deg,#00ff88,#00d4ff);
-    transition:width 1s linear;
-}
-
-.result-card h3{
-    color:#ffffff;
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.momentum-result{
-    padding:18px;
-    text-align:center;
-    border-radius:18px;
-    font-size:28px;
-    font-weight:bold;
-}
-
-.momentum-result.bullish{
-    color:#00ff88;
-    background:rgba(0,255,136,.12);
-}
-
-.momentum-result.bearish{
-    color:#ff4f6d;
-    background:rgba(255,79,109,.12);
-}
-
-.momentum-result.neutral{
-    color:#ffd54f;
-    background:rgba(255,213,79,.12);
-}
-
-.confidence-card{
-    text-align:center;
-    margin-top:22px;
-}
-
-.confidence-card span{
-    color:#bbbbbb;
-}
-
-.confidence-card h2{
-    color:#00d4ff;
-    font-size:34px;
-    margin-top:8px;
 }
 
 
-/* =========================================
-   BTC AI MOMENTUM DETECTOR
-   CSS PART 2 (FINAL)
-========================================= */
 
-.analysis-card{
-    margin-top:22px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-    padding:20px;
+body{
+
+background:
+linear-gradient(135deg,#030712,#0f172a,#111827,#020617);
+
+color:white;
+
+padding:20px;
+
+min-height:100vh;
+
 }
 
-.analysis-card h4{
-    color:#ffffff;
-    margin-bottom:10px;
+
+
+
+/* ==========================
+   HEADER
+========================== */
+
+
+.header{
+
+text-align:center;
+
+padding:30px;
+
+background:
+
+linear-gradient(
+145deg,
+rgba(17,24,39,.85),
+rgba(15,23,42,.65)
+);
+
+backdrop-filter:blur(15px);
+
+border-radius:22px;
+
+margin-bottom:25px;
+
+border:
+
+1px solid rgba(0,229,255,.25);
+
+
+box-shadow:
+
+0 0 35px rgba(0,229,255,.15);
+
 }
 
-.analysis-card p{
-    color:#d6d6d6;
-    line-height:1.7;
+
+
+.header h1{
+
+color:#00e5ff;
+
+font-size:34px;
+
+letter-spacing:1px;
+
+
+text-shadow:
+
+0 0 18px #00e5ff;
+
+
+margin-bottom:10px;
+
 }
 
-.market-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:15px;
+
+
+.header p{
+
+color:#cbd5e1;
+
+font-size:16px;
+
 }
 
-.market-item{
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-    padding:20px;
-    text-align:center;
-    transition:.3s;
+
+
+
+/* ==========================
+   LIVE COIN CARDS
+========================== */
+
+
+.coins{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(170px,1fr));
+
+
+gap:18px;
+
+margin-bottom:30px;
+
 }
 
-.market-item:hover{
-    transform:translateY(-4px);
-    box-shadow:0 0 20px rgba(0,212,255,.20);
+
+
+
+
+.coin-card{
+
+
+background:
+
+linear-gradient(
+145deg,
+#111827,
+#0b1220
+);
+
+
+padding:20px;
+
+border-radius:20px;
+
+
+text-align:center;
+
+
+border:
+
+1px solid rgba(255,255,255,.12);
+
+
+
+box-shadow:
+
+0 15px 35px rgba(0,0,0,.35);
+
+
+
+transition:.3s;
+
+
 }
 
-.market-item label{
-    display:block;
-    color:#bdbdbd;
-    margin-bottom:8px;
-    font-size:14px;
+
+
+
+.coin-card:hover{
+
+
+transform:translateY(-7px);
+
+
+border-color:#00e5ff;
+
+
+box-shadow:
+
+
+0 0 30px rgba(0,229,255,.25);
+
+
 }
 
-.market-item span{
-    color:#ffffff;
-    font-size:20px;
-    font-weight:bold;
+
+
+
+.coin-card h2{
+
+
+color:#ffd54f;
+
+
+font-size:20px;
+
+
+margin-bottom:12px;
+
+
 }
 
-.history-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 0;
-    border-bottom:1px solid rgba(255,255,255,.08);
+
+
+
+
+.coin-card p{
+
+
+font-size:22px;
+
+
+font-weight:bold;
+
+
+color:white;
+
+
 }
 
-.history-item:last-child{
-    border-bottom:none;
+
+
+
+
+
+/* ==========================
+   FUTURES SIGNALS
+========================== */
+
+
+.signals{
+
+
+display:grid;
+
+
+grid-template-columns:
+
+repeat(auto-fit,minmax(280px,1fr));
+
+
+gap:20px;
+
+
 }
 
-.history-time{
-    color:#a9a9a9;
+
+
+
+
+.signal-box{
+
+
+background:
+
+
+linear-gradient(
+145deg,
+rgba(17,24,39,.95),
+rgba(15,23,42,.75)
+);
+
+
+
+padding:22px;
+
+
+border-radius:22px;
+
+
+border:
+
+1px solid rgba(255,255,255,.12);
+
+
+
+margin-bottom:20px;
+
+
+
+box-shadow:
+
+
+0 18px 40px rgba(0,0,0,.45);
+
+
+
+transition:.3s;
+
+
+
 }
 
-.history-result{
-    color:#ffffff;
-    font-weight:600;
+
+
+
+
+.signal-box:hover{
+
+
+transform:translateY(-5px);
+
+
+
+border-color:#00ff88;
+
+
+
+box-shadow:
+
+
+0 0 30px rgba(0,255,136,.18);
+
+
 }
 
-.history-confidence{
-    color:#00ff88;
-    font-weight:bold;
+
+
+
+
+.signal-box h2{
+
+
+color:#00ff88;
+
+
+margin-bottom:18px;
+
+
+font-size:22px;
+
+
 }
 
-.info-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:15px;
+
+
+
+
+.signal-box p{
+
+
+margin:10px 0;
+
+
+color:#cbd5e1;
+
+
+font-size:15px;
+
+
+line-height:1.4;
+
+
 }
 
-.info-box{
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-    padding:18px;
-    text-align:center;
+
+
+
+
+.signal-box span{
+
+
+font-weight:bold;
+
+
+color:#38bdf8;
+
+
 }
 
-.info-box h4{
-    color:#ffffff;
-    margin-bottom:8px;
+
+
+
+/* ==========================
+   ANALYSIS
+========================== */
+
+
+.analysis{
+
+
+background:
+
+linear-gradient(
+145deg,
+#1e293b,
+#111827
+);
+
+
+
+padding:25px;
+
+
+border-radius:20px;
+
+
+border:
+
+1px solid #ff9800;
+
+
+
+box-shadow:
+
+
+0 0 30px rgba(255,152,0,.15);
+
+
+
+margin-top:20px;
+
+
 }
 
-.info-box p{
-    color:#cfcfcf;
+
+
+
+.analysis h2{
+
+
+color:#ff9800;
+
+
+margin-bottom:15px;
+
+
 }
 
-@keyframes crystalGlow{
-    0%{
-        box-shadow:0 0 10px rgba(0,212,255,.15);
-    }
-    50%{
-        box-shadow:0 0 30px rgba(0,212,255,.35);
-    }
-    100%{
-        box-shadow:0 0 10px rgba(0,212,255,.15);
-    }
+
+
+
+#analysis{
+
+
+color:#e5e7eb;
+
+
+line-height:1.8;
+
+
 }
 
-.glass-card{
-    animation:crystalGlow 3s infinite;
+/* ==========================
+   TRADING CALCULATOR
+========================== */
+
+
+.calculator-box{
+
+
+background:
+
+linear-gradient(
+145deg,
+rgba(255,255,255,.12),
+rgba(255,255,255,.05)
+);
+
+
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+
+
+border:
+
+1px solid rgba(255,255,255,.18);
+
+
+
+border-radius:25px;
+
+
+
+padding:30px;
+
+
+
+margin:30px 0;
+
+
+
+box-shadow:
+
+
+0 20px 50px rgba(0,0,0,.45);
+
+
 }
 
-@media(max-width:768px){
 
-    .detector-header h2{
-        font-size:25px;
-    }
 
-    .btc-price{
-        font-size:28px;
-    }
 
-    .timer-circle{
-        width:100px;
-        height:100px;
-        font-size:30px;
-    }
+.calculator-box h2{
 
-    .momentum-result{
-        font-size:22px;
-    }
 
-    .confidence-card h2{
-        font-size:28px;
-    }
+text-align:center;
 
-    .history-item{
-        flex-direction:column;
-        gap:8px;
-        text-align:center;
-    }
 
-    .status-row{
-        flex-direction:column;
-        gap:12px;
-    }
+font-size:28px;
 
-    .market-grid,
-    .info-grid{
-        grid-template-columns:1fr;
-    }
-                             }
 
+color:#00e5ff;
+
+
+margin-bottom:25px;
+
+
+
+text-shadow:
+
+0 0 12px rgba(0,229,255,.5);
+
+
+}
+
+
+
+
+.calculator-box input,
+.calculator-box select{
+
+
+width:90%;
+
+
+padding:14px;
+
+
+margin:8px auto;
+
+
+display:block;
+
+
+border-radius:15px;
+
+
+border:none;
+
+
+outline:none;
+
+
+
+background:
+
+rgba(255,255,255,.9);
+
+
+
+color:#111827;
+
+
+font-size:16px;
+
+
+}
+
+
+
+
+
+
+/* CALCULATE BUTTON */
+
+
+.calculator-box button{
+
+
+width:90%;
+
+
+padding:15px;
+
+
+margin:15px auto;
+
+
+display:block;
+
+
+border:none;
+
+
+border-radius:16px;
+
+
+
+background:
+
+linear-gradient(
+135deg,
+#00e5ff,
+#2563eb
+);
+
+
+
+color:white;
+
+
+font-size:18px;
+
+
+font-weight:bold;
+
+
+cursor:pointer;
+
+
+
+box-shadow:
+
+
+0 10px 30px rgba(0,229,255,.35);
+
+
+
+}
+
+
+
+
+
+.calculator-box button:hover{
+
+
+transform:translateY(-3px);
+
+
+box-shadow:
+
+
+0 0 35px rgba(0,229,255,.5);
+
+
+}
+
+
+
+
+
+
+/* RESULT BOX */
+
+
+.calc-result{
+
+
+margin-top:25px;
+
+
+padding:20px;
+
+
+border-radius:20px;
+
+
+
+background:
+
+rgba(15,23,42,.75);
+
+
+
+border:
+
+1px solid rgba(255,255,255,.18);
+
+
+
+}
+
+
+
+.calc-result p{
+
+
+font-size:18px;
+
+
+margin:12px 0;
+
+
+}
+
+
+
+
+#profit{
+
+
+color:#00ff88;
+
+
+font-weight:bold;
+
+
+}
+
+
+
+#percentage{
+
+
+color:#38bdf8;
+
+
+font-weight:bold;
+
+
+}
+
+
+
+#rr{
+
+
+color:#ffd54f;
+
+
+font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+ PERFORMANCE DASHBOARD
+========================== */
+
+
+
+.performance-box{
+
+
+background:
+
+
+linear-gradient(
+145deg,
+rgba(255,255,255,.14),
+rgba(255,255,255,.05)
+);
+
+
+
+backdrop-filter:blur(20px);
+
+
+-webkit-backdrop-filter:blur(20px);
+
+
+
+border:
+
+1px solid rgba(255,255,255,.22);
+
+
+
+border-radius:25px;
+
+
+
+padding:30px;
+
+
+
+margin:30px 0;
+
+
+
+box-shadow:
+
+
+0 20px 55px rgba(0,0,0,.45);
+
+
+
+}
+
+
+
+
+.performance-box h2{
+
+
+text-align:center;
+
+
+color:#00e5ff;
+
+
+font-size:27px;
+
+
+margin-bottom:25px;
+
+
+text-shadow:
+
+
+0 0 15px rgba(0,229,255,.4);
+
+
+}
+
+
+
+
+
+
+.stats{
+
+
+display:grid;
+
+
+grid-template-columns:repeat(2,1fr);
+
+
+gap:15px;
+
+
+}
+
+
+
+
+
+.stat-card{
+
+
+background:
+
+
+rgba(255,255,255,.10);
+
+
+
+border-radius:20px;
+
+
+
+padding:20px;
+
+
+
+text-align:center;
+
+
+
+border:
+
+1px solid rgba(255,255,255,.18);
+
+
+
+box-shadow:
+
+
+0 10px 25px rgba(0,0,0,.25);
+
+
+
+}
+
+
+
+
+
+.stat-card h3{
+
+
+color:#cbd5e1;
+
+
+font-size:15px;
+
+
+}
+
+
+
+
+.stat-card p{
+
+
+font-size:30px;
+
+
+font-weight:bold;
+
+
+margin-top:10px;
+
+
+color:#38bdf8;
+
+
+}
+
+
+
+
+#wins{
+
+
+color:#00ff88;
+
+
+}
+
+
+
+
+#losses{
+
+
+color:#ff5252;
+
+
+}
+
+
+
+
+#accuracy{
+
+
+color:#ffd54f;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+ HISTORY
+========================== */
+
+
+#history-btn{
+
+
+width:90%;
+
+
+padding:15px;
+
+
+margin:20px auto;
+
+
+display:block;
+
+
+border:none;
+
+
+border-radius:18px;
+
+
+
+background:
+
+
+linear-gradient(
+135deg,
+#00e5ff,
+#2563eb
+);
+
+
+
+color:white;
+
+
+font-size:17px;
+
+
+font-weight:bold;
+
+
+cursor:pointer;
+
+
+
+box-shadow:
+
+
+0 10px 30px rgba(0,229,255,.35);
+
+
+
+}
+
+
+
+#history-btn:hover{
+
+
+transform:translateY(-3px);
+
+
+}
+
+
+
+
+
+.history-box{
+
+
+background:
+
+
+rgba(255,255,255,.10);
+
+
+
+backdrop-filter:blur(18px);
+
+
+
+border:
+
+1px solid rgba(255,255,255,.2);
+
+
+
+border-radius:25px;
+
+
+
+padding:25px;
+
+
+
+margin:20px 0;
+
+
+
+}
+
+
+
+
+
+.history-box h2{
+
+
+text-align:center;
+
+
+color:#00e5ff;
+
+
+margin-bottom:20px;
+
+
+}
+
+
+
+
+.trade-item{
+
+
+background:
+
+
+rgba(0,0,0,.3);
+
+
+
+padding:15px;
+
+
+
+border-radius:15px;
+
+
+
+margin-bottom:12px;
+
+
+
+line-height:1.6;
+
+
+     }
+
+
+/* ==========================
+   FOOTER BANNER
+========================== */
+
+
+.footer-banner{
+
+
+text-align:center;
+
+
+margin-top:40px;
+
+
+padding:25px;
+
+
+
+background:
+
+
+linear-gradient(
+145deg,
+rgba(17,24,39,.85),
+rgba(15,23,42,.65)
+);
+
+
+
+border-radius:22px;
+
+
+
+border:
+
+1px solid rgba(0,229,255,.25);
+
+
+
+box-shadow:
+
+
+0 15px 45px rgba(0,0,0,.4);
+
+
+
+}
+
+
+
+
+
+.footer-banner img{
+
+
+width:80%;
+
+
+max-width:300px;
+
+
+height:auto;
+
+
+max-height:250px;
+
+
+object-fit:contain;
+
+
+display:block;
+
+
+margin:0 auto 20px;
+
+
+
+border-radius:20px;
+
+
+
+box-shadow:
+
+
+0 0 25px rgba(0,229,255,.2);
+
+
+
+}
+
+
+
+
+
+.footer-banner h2{
+
+
+color:#00e5ff;
+
+
+margin-bottom:15px;
+
+
+font-size:25px;
+
+
+
+text-shadow:
+
+
+0 0 12px rgba(0,229,255,.4);
+
+
+
+}
+
+
+
+
+
+.footer-banner p{
+
+
+color:#cbd5e1;
+
+
+line-height:1.8;
+
+
+margin:12px 0;
+
+
+font-size:15px;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+   GLOBAL SMOOTH EFFECTS
+========================== */
+
+
+button,
+.coin-card,
+.signal-box,
+.stat-card{
+
+
+transition:.3s ease;
+
+
+}
+
+
+
+
+button:hover{
+
+
+transform:translateY(-3px);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+   SIGNAL COLORS
+========================== */
+
+
+#btc-signal,
+#eth-signal,
+#sol-signal,
+#xrp-signal,
+#link-signal,
+#ltc-signal{
+
+
+font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+   MOBILE RESPONSIVE
+========================== */
+
+
+@media(max-width:600px){
+
+
+
+body{
+
+
+padding:12px;
+
+
+}
+
+
+
+
+
+.header{
+
+
+padding:22px;
+
+
+}
+
+
+
+
+.header h1{
+
+
+font-size:26px;
+
+
+}
+
+
+
+
+
+.header p{
+
+
+font-size:14px;
+
+
+}
+
+
+
+
+
+.coin-card p{
+
+
+font-size:18px;
+
+
+}
+
+
+
+
+
+.signal-box{
+
+
+padding:18px;
+
+
+}
+
+
+
+
+
+.signal-box h2{
+
+
+font-size:20px;
+
+
+}
+
+
+
+
+
+.calculator-box{
+
+
+padding:20px;
+
+
+}
+
+
+
+
+.calculator-box h2{
+
+
+font-size:22px;
+
+
+}
+
+
+
+
+
+.performance-box{
+
+
+padding:20px;
+
+
+}
+
+
+
+
+
+.stats{
+
+
+grid-template-columns:1fr;
+
+
+}
+
+
+
+
+
+.stat-card p{
+
+
+font-size:26px;
+
+
+}
+
+
+
+
+
+.footer-banner{
+
+
+padding:18px;
+
+
+}
+
+
+
+
+
+.footer-banner h2{
+
+
+font-size:21px;
+
+
+}
+
+
+
+
+.footer-banner img{
+
+
+width:90%;
+
+
+}
+
+
+
+
+   }
