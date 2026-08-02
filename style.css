@@ -1,1 +1,361 @@
+/* =========================================
+   BTC AI MOMENTUM DETECTOR
+   CSS PART 1
+========================================= */
+
+.momentum-section{
+    width:95%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+.glass-card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:24px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.35),
+        inset 0 1px 1px rgba(255,255,255,.15);
+}
+
+.detector-header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.detector-header h2{
+    color:#ffffff;
+    font-size:32px;
+    margin-bottom:8px;
+    font-weight:700;
+}
+
+.detector-header p{
+    color:#cfcfcf;
+    font-size:15px;
+}
+
+.status-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.status-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#ffffff;
+    font-weight:600;
+}
+
+.status-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#8a8a8a;
+}
+
+.status-dot.active{
+    background:#00ff88;
+    box-shadow:0 0 18px #00ff88;
+}
+
+.live-text{
+    color:#00ff88;
+    font-weight:bold;
+}
+
+.price-box{
+    text-align:center;
+    padding:20px;
+    border-radius:18px;
+    background:rgba(255,255,255,.05);
+    margin-bottom:22px;
+}
+
+.price-box h3{
+    color:#cfcfcf;
+    margin-bottom:10px;
+}
+
+.btc-price{
+    color:#00ff88;
+    font-size:34px;
+    font-weight:700;
+}
+
+.scan-box{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+}
+
+.timer-circle{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:4px solid #00d4ff;
+    color:#ffffff;
+    font-size:36px;
+    font-weight:bold;
+    box-shadow:0 0 25px rgba(0,212,255,.35);
+}
+
+.scan-btn{
+    width:100%;
+    border:none;
+    cursor:pointer;
+    border-radius:16px;
+    padding:16px;
+    font-size:18px;
+    font-weight:bold;
+    color:#ffffff;
+    background:linear-gradient(135deg,#00c853,#00e676);
+    transition:.3s;
+}
+
+.scan-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 25px rgba(0,255,136,.45);
+}
+
+.scan-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.progress-container{
+    width:100%;
+    height:10px;
+    background:rgba(255,255,255,.08);
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:25px;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#00ff88,#00d4ff);
+    transition:width 1s linear;
+}
+
+.result-card h3{
+    color:#ffffff;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.momentum-result{
+    padding:18px;
+    text-align:center;
+    border-radius:18px;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.momentum-result.bullish{
+    color:#00ff88;
+    background:rgba(0,255,136,.12);
+}
+
+.momentum-result.bearish{
+    color:#ff4f6d;
+    background:rgba(255,79,109,.12);
+}
+
+.momentum-result.neutral{
+    color:#ffd54f;
+    background:rgba(255,213,79,.12);
+}
+
+.confidence-card{
+    text-align:center;
+    margin-top:22px;
+}
+
+.confidence-card span{
+    color:#bbbbbb;
+}
+
+.confidence-card h2{
+    color:#00d4ff;
+    font-size:34px;
+    margin-top:8px;
+}
+
+
+/* =========================================
+   BTC AI MOMENTUM DETECTOR
+   CSS PART 2 (FINAL)
+========================================= */
+
+.analysis-card{
+    margin-top:22px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:20px;
+}
+
+.analysis-card h4{
+    color:#ffffff;
+    margin-bottom:10px;
+}
+
+.analysis-card p{
+    color:#d6d6d6;
+    line-height:1.7;
+}
+
+.market-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.market-item{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:20px;
+    text-align:center;
+    transition:.3s;
+}
+
+.market-item:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 20px rgba(0,212,255,.20);
+}
+
+.market-item label{
+    display:block;
+    color:#bdbdbd;
+    margin-bottom:8px;
+    font-size:14px;
+}
+
+.market-item span{
+    color:#ffffff;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.history-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.history-item:last-child{
+    border-bottom:none;
+}
+
+.history-time{
+    color:#a9a9a9;
+}
+
+.history-result{
+    color:#ffffff;
+    font-weight:600;
+}
+
+.history-confidence{
+    color:#00ff88;
+    font-weight:bold;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.info-box{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+}
+
+.info-box h4{
+    color:#ffffff;
+    margin-bottom:8px;
+}
+
+.info-box p{
+    color:#cfcfcf;
+}
+
+@keyframes crystalGlow{
+    0%{
+        box-shadow:0 0 10px rgba(0,212,255,.15);
+    }
+    50%{
+        box-shadow:0 0 30px rgba(0,212,255,.35);
+    }
+    100%{
+        box-shadow:0 0 10px rgba(0,212,255,.15);
+    }
+}
+
+.glass-card{
+    animation:crystalGlow 3s infinite;
+}
+
+@media(max-width:768px){
+
+    .detector-header h2{
+        font-size:25px;
+    }
+
+    .btc-price{
+        font-size:28px;
+    }
+
+    .timer-circle{
+        width:100px;
+        height:100px;
+        font-size:30px;
+    }
+
+    .momentum-result{
+        font-size:22px;
+    }
+
+    .confidence-card h2{
+        font-size:28px;
+    }
+
+    .history-item{
+        flex-direction:column;
+        gap:8px;
+        text-align:center;
+    }
+
+    .status-row{
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .market-grid,
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+                             }
 
