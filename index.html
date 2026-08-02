@@ -1,714 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Quantum Scanner</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Quantum AI BTC Dashboard</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- ================= LOADER ================= -->
+<div class="app">
 
-<div id="loader">
+    <!-- Header -->
+    <header class="top-header">
+        <div>
+            <h1>BTC QUANT SCANNER</h1>
+            <p>Real-Time Market Intelligence Engine</p>
+        </div>
 
-    <div class="loader-box">
+        <div class="status">
+            <span class="dot"></span>
+            LIVE MARKET
+        </div>
+    </header>
 
-        <div class="loader-circle"></div>
 
-        <h1>Quantum AI</h1>
+    <!-- Main Dashboard -->
 
-        <p>Connecting To Binance...</p>
+    <main class="dashboard">
+
+
+        <!-- Price Card -->
+
+        <section class="glass-card price-card">
+
+            <h3>BTC / USDT</h3>
+
+            <div id="btcPrice">
+                $0.00
+            </div>
+
+            <div class="price-change" id="priceChange">
+                0.00%
+            </div>
+
+        </section>
+
+
+
+        <!-- Scanner -->
+
+        <section class="glass-card scanner-card">
+
+            <h2>AI MARKET SCANNER</h2>
+
+            <div class="scanner-circle">
+
+                <div id="scanTimer">
+                    READY
+                </div>
+
+            </div>
+
+
+            <button id="scanBtn">
+                SCAN NOW
+            </button>
+
+
+            <div id="scanStatus">
+                Waiting for analysis...
+            </div>
+
+
+        </section>
+
+
+
+
+        <!-- Signal Result -->
+
+
+        <section class="glass-card result-card">
+
+            <h2>FINAL ANALYSIS</h2>
+
+
+            <div class="signal-box">
+
+                <span>MARKET BIAS</span>
+
+                <h1 id="signal">
+                    WAIT
+                </h1>
+
+            </div>
+
+
+
+            <div class="stats">
+
+
+                <div>
+                    <p>Confidence</p>
+                    <strong id="confidence">
+                        0%
+                    </strong>
+                </div>
+
+
+                <div>
+                    <p>Momentum</p>
+                    <strong id="momentum">
+                        Neutral
+                    </strong>
+                </div>
+
+
+                <div>
+                    <p>Liquidity Magnet</p>
+                    <strong id="liquidity">
+                        Searching...
+                    </strong>
+                </div>
+
+
+
+            </div>
+
+
+        </section>
+
+
+
+
+        <!-- Indicators -->
+
+
+        <section class="glass-card indicators-card">
+
+            <h2>Market Intelligence</h2>
+
+
+            <div class="indicator-grid">
+
+
+                <div class="indicator">
+                    <span>RSI</span>
+                    <b id="rsi">--</b>
+                </div>
+
+
+                <div class="indicator">
+                    <span>EMA Trend</span>
+                    <b id="ema">--</b>
+                </div>
+
+
+                <div class="indicator">
+                    <span>Volume</span>
+                    <b id="volume">--</b>
+                </div>
+
+
+                <div class="indicator">
+                    <span>Volatility</span>
+                    <b id="volatility">--</b>
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+    </main>
+
+
+
+    <!-- Voice Result -->
+
+    <div class="voice-panel">
+
+        <p id="voiceText">
+            Voice system ready
+        </p>
 
     </div>
 
-</div>
 
-<!-- ================= MAIN APP ================= -->
-
-<div id="app">
-
-<!-- ================= SIDEBAR ================= -->
-
-<aside class="sidebar">
-
-<div class="logo">
-
-<h2>Quantum AI</h2>
-
-<span>BTC Dashboard</span>
 
 </div>
 
-<nav>
 
-<ul>
-
-<li class="active">
-
-🏠 Dashboard
-
-</li>
-
-<li>
-
-📈 Live Chart
-
-</li>
-
-<li>
-
-📊 Indicators
-
-</li>
-
-<li>
-
-🧠 AI Signals
-
-</li>
-
-<li>
-
-📐 Patterns
-
-</li>
-
-<li>
-
-📉 Trendlines
-
-</li>
-
-<li>
-
-⚙ Settings
-
-</li>
-
-</ul>
-
-</nav>
-
-<div class="sidebar-footer">
-
-LIVE DATA
-
-</div>
-
-</aside>
-
-<!-- ================= CONTENT ================= -->
-
-<div class="content">
-
-<!-- ================= TOP BAR ================= -->
-
-<header class="topbar">
-
-<div class="market-name">
-
-<h1>
-
-BTC / USDT
-
-</h1>
-
-<span>
-
-Binance Spot
-
-</span>
-
-</div>
-
-<div class="top-right">
-
-<div class="connection online">
-
-LIVE
-
-</div>
-
-<div class="clock">
-
-<span id="clock">
-
-00:00:00
-
-</span>
-
-</div>
-
-</div>
-
-</header>
-
-<!-- ================= MARKET OVERVIEW ================= -->
-
-<section class="overview">
-
-<div class="card price-card">
-
-<h3>
-
-BTC Price
-
-</h3>
-
-<h2 id="btcPrice">
-
-Loading...
-
-</h2>
-
-<p id="btcChange">
-
-0%
-
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>
-
-Trend
-
-</h3>
-
-<h2 id="trendStatus">
-
-Waiting...
-
-</h2>
-
-</div>
-
-<div class="card">
-
-<h3>
-
-Bias
-
-</h3>
-
-<h2 id="biasStatus">
-
-Neutral
-
-</h2>
-
-</div>
-
-<div class="card">
-
-<h3>
-
-Signal
-
-</h3>
-
-<h2 id="signalStatus">
-
-WAIT
-
-</h2>
-
-</div>
-
-</section>
-
-<!-- ================= CHART ================= -->
-
-<section class="chart-wrapper">
-
-<div class="chart-header">
-
-<div>
-
-<h2>
-
-Live BTC Chart
-
-</h2>
-
-<p>
-
-1 Hour Timeframe
-
-</p>
-
-</div>
-
-<div class="chart-tools">
-
-<button>
-
-1H
-
-</button>
-
-<button>
-
-Indicators
-
-</button>
-
-<button>
-
-Patterns
-
-</button>
-
-<button>
-
-Fullscreen
-
-</button>
-
-</div>
-
-</div>
-
-<div id="chart">
-
-<!-- Trading Chart -->
-
-</div>
-
-</section>
-
-<!-- ================= RIGHT PANEL ================= -->
-
-<section class="analysis-grid">
-
-<div class="analysis-card">
-
-<h3>
-
-AI Analysis
-
-</h3>
-
-<p id="aiSummary">
-
-Waiting...
-
-</p>
-
-</div>
-
-<div class="analysis-card">
-
-<h3>
-
-Support
-
-</h3>
-
-<div id="supportLevels">
-
-Loading...
-
-</div>
-
-</div>
-
-<div class="analysis-card">
-
-<h3>
-
-Resistance
-
-</h3>
-
-<div id="resistanceLevels">
-
-Loading...
-
-</div>
-
-</div>
-
-<div class="analysis-card">
-
-<h3>
-
-Trendline
-
-</h3>
-
-<div id="trendlineInfo">
-
-Waiting...
-
-</div>
-
-</div>
-
-</section>
-
-
-     <!-- ================= INDICATORS PANEL ================= -->
-
-<section class="bottom-grid">
-
-    <div class="panel">
-
-        <div class="panel-header">
-
-            <h2>Indicators</h2>
-
-        </div>
-
-        <div class="indicator-grid">
-
-            <div class="indicator-card">
-
-                <span>EMA 20</span>
-
-                <strong id="ema20">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>EMA 50</span>
-
-                <strong id="ema50">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>EMA 100</span>
-
-                <strong id="ema100">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>EMA 200</span>
-
-                <strong id="ema200">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>RSI</span>
-
-                <strong id="rsiValue">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>MACD</span>
-
-                <strong id="macdValue">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>Bollinger</span>
-
-                <strong id="bbValue">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>VWAP</span>
-
-                <strong id="vwapValue">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>ATR</span>
-
-                <strong id="atrValue">--</strong>
-
-            </div>
-
-            <div class="indicator-card">
-
-                <span>ADX</span>
-
-                <strong id="adxValue">--</strong>
-
-            </div>
-
-        </div>
-
-    </div>
-
-<!-- ================= PATTERNS ================= -->
-
-    <div class="panel">
-
-        <div class="panel-header">
-
-            <h2>Pattern Detection</h2>
-
-        </div>
-
-        <div id="patternList" class="pattern-list">
-
-            Waiting for live pattern...
-
-        </div>
-
-    </div>
-
-<!-- ================= CANDLESTICKS ================= -->
-
-    <div class="panel">
-
-        <div class="panel-header">
-
-            <h2>Candlestick Patterns</h2>
-
-        </div>
-
-        <div id="candlePatterns">
-
-            Waiting...
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ================= AI CONFIDENCE ================= -->
-
-<section class="ai-section">
-
-<div class="panel">
-
-<h2>AI Confidence</h2>
-
-<div class="confidence-circle">
-
-<span id="confidencePercent">
-
-0%
-
-</span>
-
-</div>
-
-<p id="confidenceText">
-
-Analyzing Market...
-
-</p>
-
-</div>
-
-<div class="panel">
-
-<h2>Market Structure</h2>
-
-<ul class="market-list">
-
-<li>Trend : <span id="marketTrend">--</span></li>
-
-<li>Momentum : <span id="marketMomentum">--</span></li>
-
-<li>Volatility : <span id="marketVolatility">--</span></li>
-
-<li>Volume : <span id="marketVolume">--</span></li>
-
-<li>Strength : <span id="marketStrength">--</span></li>
-
-</ul>
-
-</div>
-
-<div class="panel">
-
-<h2>Trade Setup</h2>
-
-<div class="trade-box">
-
-<p>
-
-Entry :
-
-<span id="entryPrice">
-
---
-
-</span>
-
-</p>
-
-<p>
-
-Take Profit :
-
-<span id="takeProfit">
-
---
-
-</span>
-
-</p>
-
-<p>
-
-Stop Loss :
-
-<span id="stopLoss">
-
---
-
-</span>
-
-</p>
-
-<p>
-
-Risk Reward :
-
-<span id="riskReward">
-
---
-
-</span>
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ================= ALERTS ================= -->
-
-<section class="alerts-section">
-
-<div class="panel">
-
-<h2>
-
-Live Alerts
-
-</h2>
-
-<div id="alertContainer">
-
-No Alerts Yet...
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-<div>
-
-Quantum AI Dashboard © 2026
-
-</div>
-
-<div>
-
-Binance WebSocket Connected
-
-</div>
-
-</footer>
-
-<!-- ================= SETTINGS MODAL ================= -->
-
-<div id="settingsModal" class="modal">
-
-<div class="modal-content">
-
-<h2>
-
-Settings
-
-</h2>
-
-<button>
-
-BTCUSDT
-
-</button>
-
-<button>
-
-ETHUSDT
-
-</button>
-
-<button>
-
-SOLUSDT
-
-</button>
-
-<button>
-
-1H
-
-</button>
-
-<button>
-
-4H
-
-</button>
-
-<button>
-
-1D
-
-</button>
-
-<button id="closeSettings">
-
-Close
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 
 <script src="script.js"></script>
 
 </body>
-
-     </html>
+</html>
