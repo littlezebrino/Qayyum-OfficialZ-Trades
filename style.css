@@ -1,5 +1,5 @@
 /* ==========================
-   GLOBAL RESET
+GLOBAL RESET
 ========================== */
 
 *{
@@ -13,10 +13,24 @@ font-family:'Segoe UI',Arial,sans-serif;
 
 
 
+html{
+
+scroll-behavior:smooth;
+
+}
+
+
+
 body{
 
 background:
-linear-gradient(135deg,#030712,#0f172a,#111827,#020617);
+linear-gradient(
+135deg,
+#030712,
+#0f172a,
+#111827,
+#020617
+);
 
 color:white;
 
@@ -29,16 +43,19 @@ min-height:100vh;
 
 
 
+
 /* ==========================
-   HEADER
+HEADER
 ========================== */
 
 
 .header{
 
+
 text-align:center;
 
 padding:30px;
+
 
 background:
 
@@ -48,20 +65,28 @@ rgba(17,24,39,.85),
 rgba(15,23,42,.65)
 );
 
+
 backdrop-filter:blur(15px);
+
+-webkit-backdrop-filter:blur(15px);
+
 
 border-radius:22px;
 
+
 margin-bottom:25px;
+
 
 border:
 
 1px solid rgba(0,229,255,.25);
 
 
+
 box-shadow:
 
 0 0 35px rgba(0,229,255,.15);
+
 
 }
 
@@ -69,11 +94,15 @@ box-shadow:
 
 .header h1{
 
+
 color:#00e5ff;
+
 
 font-size:34px;
 
+
 letter-spacing:1px;
+
 
 
 text-shadow:
@@ -83,37 +112,79 @@ text-shadow:
 
 margin-bottom:10px;
 
+
 }
+
 
 
 
 .header p{
 
+
 color:#cbd5e1;
 
+
 font-size:16px;
+
 
 }
 
 
 
 
+
 /* ==========================
-   LIVE COIN CARDS
+SECTION TITLE
+========================== */
+
+
+.section-title{
+
+
+margin:25px 0 15px;
+
+
+color:#00e5ff;
+
+
+text-shadow:
+
+0 0 12px rgba(0,229,255,.5);
+
+
+text-align:center;
+
+
+}
+
+
+
+
+
+/* ==========================
+LIVE COIN CARDS
 ========================== */
 
 
 .coins{
 
+
 display:grid;
 
+
 grid-template-columns:
-repeat(auto-fit,minmax(170px,1fr));
+
+repeat(
+auto-fit,
+minmax(170px,1fr)
+);
 
 
 gap:18px;
 
+
 margin-bottom:30px;
+
 
 }
 
@@ -133,7 +204,9 @@ linear-gradient(
 );
 
 
+
 padding:20px;
+
 
 border-radius:20px;
 
@@ -161,6 +234,7 @@ transition:.3s;
 
 
 
+
 .coin-card:hover{
 
 
@@ -172,11 +246,11 @@ border-color:#00e5ff;
 
 box-shadow:
 
-
 0 0 30px rgba(0,229,255,.25);
 
 
 }
+
 
 
 
@@ -194,7 +268,6 @@ margin-bottom:12px;
 
 
 }
-
 
 
 
@@ -218,8 +291,10 @@ color:white;
 
 
 
+
+
 /* ==========================
-   FUTURES SIGNALS
+SIGNALS GRID
 ========================== */
 
 
@@ -231,7 +306,11 @@ display:grid;
 
 grid-template-columns:
 
-repeat(auto-fit,minmax(280px,1fr));
+repeat(
+auto-fit,
+minmax(280px,1fr)
+);
+
 
 
 gap:20px;
@@ -243,11 +322,16 @@ gap:20px;
 
 
 
+
+/* ==========================
+SIGNAL BOX
+========================== */
+
+
 .signal-box{
 
 
 background:
-
 
 linear-gradient(
 145deg,
@@ -275,7 +359,6 @@ margin-bottom:20px;
 
 box-shadow:
 
-
 0 18px 40px rgba(0,0,0,.45);
 
 
@@ -284,8 +367,12 @@ transition:.3s;
 
 
 
-}
+display:flex;
 
+flex-direction:column;
+
+
+}
 
 
 
@@ -303,8 +390,8 @@ border-color:#00ff88;
 
 box-shadow:
 
-
 0 0 30px rgba(0,255,136,.18);
+
 
 
 }
@@ -365,67 +452,12 @@ color:#38bdf8;
 
 
 
-
 /* ==========================
-   ANALYSIS
+ANALYSIS TEXT
 ========================== */
 
 
-.analysis{
-
-
-background:
-
-linear-gradient(
-145deg,
-#1e293b,
-#111827
-);
-
-
-
-padding:25px;
-
-
-border-radius:20px;
-
-
-border:
-
-1px solid #ff9800;
-
-
-
-box-shadow:
-
-
-0 0 30px rgba(255,152,0,.15);
-
-
-
-margin-top:20px;
-
-
-}
-
-
-
-
-.analysis h2{
-
-
-color:#ff9800;
-
-
-margin-bottom:15px;
-
-
-}
-
-
-
-
-#analysis{
+[id$="-analysis"]{
 
 
 color:#e5e7eb;
@@ -434,10 +466,27 @@ color:#e5e7eb;
 line-height:1.8;
 
 
+margin-top:15px;
+
+
+padding-top:12px;
+
+
+border-top:
+
+1px solid rgba(255,255,255,.12);
+
+
 }
 
+
+
+
+
+
+
 /* ==========================
-   TRADING CALCULATOR
+TRADING CALCULATOR
 ========================== */
 
 
@@ -455,6 +504,7 @@ rgba(255,255,255,.05)
 
 
 backdrop-filter:blur(18px);
+
 
 -webkit-backdrop-filter:blur(18px);
 
@@ -480,11 +530,11 @@ margin:30px 0;
 
 box-shadow:
 
-
 0 20px 50px rgba(0,0,0,.45);
 
 
 }
+
 
 
 
@@ -511,6 +561,7 @@ text-shadow:
 
 
 }
+
 
 
 
@@ -560,10 +611,9 @@ font-size:16px;
 
 
 
-/* CALCULATE BUTTON */
 
-
-.calculator-box button{
+.calculator-box button,
+#history-btn{
 
 
 width:90%;
@@ -610,9 +660,7 @@ cursor:pointer;
 
 box-shadow:
 
-
 0 10px 30px rgba(0,229,255,.35);
-
 
 
 }
@@ -620,15 +668,15 @@ box-shadow:
 
 
 
-
-.calculator-box button:hover{
+.calculator-box button:hover,
+#history-btn:hover{
 
 
 transform:translateY(-3px);
 
 
-box-shadow:
 
+box-shadow:
 
 0 0 35px rgba(0,229,255,.5);
 
@@ -640,7 +688,10 @@ box-shadow:
 
 
 
-/* RESULT BOX */
+
+/* ==========================
+CALCULATOR RESULT
+========================== */
 
 
 .calc-result{
@@ -672,6 +723,7 @@ border:
 
 
 
+
 .calc-result p{
 
 
@@ -682,6 +734,7 @@ margin:12px 0;
 
 
 }
+
 
 
 
@@ -699,6 +752,8 @@ font-weight:bold;
 
 
 
+
+
 #percentage{
 
 
@@ -709,6 +764,8 @@ font-weight:bold;
 
 
 }
+
+
 
 
 
@@ -729,17 +786,17 @@ font-weight:bold;
 
 
 
-/* ==========================
- PERFORMANCE DASHBOARD
-========================== */
 
+
+/* ==========================
+PERFORMANCE DASHBOARD
+========================== */
 
 
 .performance-box{
 
 
 background:
-
 
 linear-gradient(
 145deg,
@@ -776,12 +833,12 @@ margin:30px 0;
 
 box-shadow:
 
-
 0 20px 55px rgba(0,0,0,.45);
 
 
 
 }
+
 
 
 
@@ -801,13 +858,14 @@ font-size:27px;
 margin-bottom:25px;
 
 
-text-shadow:
 
+text-shadow:
 
 0 0 15px rgba(0,229,255,.4);
 
 
 }
+
 
 
 
@@ -820,7 +878,10 @@ text-shadow:
 display:grid;
 
 
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:
+
+repeat(3,1fr);
+
 
 
 gap:15px;
@@ -836,7 +897,6 @@ gap:15px;
 
 
 background:
-
 
 rgba(255,255,255,.10);
 
@@ -862,9 +922,28 @@ border:
 
 box-shadow:
 
-
 0 10px 25px rgba(0,0,0,.25);
 
+
+
+transition:.3s;
+
+
+}
+
+
+
+
+
+.stat-card:hover{
+
+
+transform:scale(1.05);
+
+
+box-shadow:
+
+0 0 25px rgba(0,229,255,.3);
 
 
 }
@@ -918,6 +997,7 @@ color:#00ff88;
 
 
 
+
 #losses{
 
 
@@ -929,92 +1009,13 @@ color:#ff5252;
 
 
 
-#accuracy{
-
-
-color:#ffd54f;
-
-
-}
-
-
-
 
 
 
 
 /* ==========================
- HISTORY
+TRADE HISTORY
 ========================== */
-
-
-#history-btn{
-
-
-width:90%;
-
-
-padding:15px;
-
-
-margin:20px auto;
-
-
-display:block;
-
-
-border:none;
-
-
-border-radius:18px;
-
-
-
-background:
-
-
-linear-gradient(
-135deg,
-#00e5ff,
-#2563eb
-);
-
-
-
-color:white;
-
-
-font-size:17px;
-
-
-font-weight:bold;
-
-
-cursor:pointer;
-
-
-
-box-shadow:
-
-
-0 10px 30px rgba(0,229,255,.35);
-
-
-
-}
-
-
-
-#history-btn:hover{
-
-
-transform:translateY(-3px);
-
-
-}
-
-
-
 
 
 .history-box{
@@ -1022,12 +1023,15 @@ transform:translateY(-3px);
 
 background:
 
-
 rgba(255,255,255,.10);
 
 
 
 backdrop-filter:blur(18px);
+
+
+
+-webkit-backdrop-filter:blur(18px);
 
 
 
@@ -1072,11 +1076,11 @@ margin-bottom:20px;
 
 
 
+
 .trade-item{
 
 
 background:
-
 
 rgba(0,0,0,.3);
 
@@ -1097,11 +1101,12 @@ margin-bottom:12px;
 line-height:1.6;
 
 
-     }
+   }
+
 
 
 /* ==========================
-   FOOTER BANNER
+FOOTER BANNER
 ========================== */
 
 
@@ -1144,6 +1149,12 @@ box-shadow:
 
 0 15px 45px rgba(0,0,0,.4);
 
+
+
+backdrop-filter:blur(15px);
+
+
+-webkit-backdrop-filter:blur(15px);
 
 
 }
@@ -1189,7 +1200,6 @@ box-shadow:
 
 
 }
-
 
 
 
@@ -1243,8 +1253,68 @@ font-size:15px;
 
 
 
+
 /* ==========================
-   GLOBAL SMOOTH EFFECTS
+SIGNAL COLORS
+========================== */
+
+
+.buy{
+
+
+color:#00ff88 !important;
+
+
+text-shadow:
+
+0 0 10px #00ff88;
+
+
+}
+
+
+
+
+.sell{
+
+
+color:#ff5252 !important;
+
+
+text-shadow:
+
+0 0 10px #ff5252;
+
+
+}
+
+
+
+
+
+.wait{
+
+
+color:#ffd54f !important;
+
+
+text-shadow:
+
+0 0 10px #ffd54f;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+GLOBAL EFFECTS
 ========================== */
 
 
@@ -1258,6 +1328,9 @@ transition:.3s ease;
 
 
 }
+
+
+
 
 
 
@@ -1276,32 +1349,10 @@ transform:translateY(-3px);
 
 
 
-/* ==========================
-   SIGNAL COLORS
-========================== */
-
-
-#btc-signal,
-#eth-signal,
-#sol-signal,
-#xrp-signal,
-#link-signal,
-#ltc-signal{
-
-
-font-weight:bold;
-
-
-}
-
-
-
-
-
 
 
 /* ==========================
-   MOBILE RESPONSIVE
+MOBILE RESPONSIVE
 ========================== */
 
 
@@ -1332,6 +1383,7 @@ padding:22px;
 
 
 
+
 .header h1{
 
 
@@ -1348,6 +1400,35 @@ font-size:26px;
 
 
 font-size:14px;
+
+
+}
+
+
+
+
+
+.coins{
+
+
+grid-template-columns:
+
+repeat(2,1fr);
+
+
+gap:10px;
+
+
+}
+
+
+
+
+
+.coin-card{
+
+
+padding:15px;
 
 
 }
@@ -1399,6 +1480,7 @@ padding:20px;
 
 
 }
+
 
 
 
@@ -1474,6 +1556,7 @@ font-size:21px;
 
 
 
+
 .footer-banner img{
 
 
@@ -1484,5 +1567,5 @@ width:90%;
 
 
 
+   }
 
-}
