@@ -1,210 +1,1064 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTC Quantum Scanner</title>
 
-    <link rel="stylesheet" href="style.css">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Qayyum OfficialZ Trades</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<div class="app">
 
-    <!-- Header -->
-    <header class="top-header">
-        <div>
-            <h1>BTC QUANT SCANNER</h1>
-            <p>Real-Time Market Intelligence Engine</p>
-        </div>
+<header class="header">
 
-        <div class="status">
-            <span class="dot"></span>
-            LIVE MARKET
-        </div>
-    </header>
+<h1>Qayyum OfficialZ Trades</h1>
 
+<p>Where Real Finance Meets Smart Technology</p>
 
-    <!-- Main Dashboard -->
+</header>
 
-    <main class="dashboard">
 
 
-        <!-- Price Card -->
 
-        <section class="glass-card price-card">
+<!-- =========================
+     LIVE COIN PRICES
+========================= -->
 
-            <h3>BTC / USDT</h3>
 
-            <div id="btcPrice">
-                $0.00
-            </div>
+<section class="coins">
 
-            <div class="price-change" id="priceChange">
-                0.00%
-            </div>
 
-            <!-- Live Price Chart -->
-            <div class="price-chart">
-                <canvas id="priceChart"></canvas>
-            </div>
+<div class="coin-card">
+<h2>BTCUSDT</h2>
+<p id="btc-price">Loading...</p>
+</div>
 
-        </section>
 
+<div class="coin-card">
+<h2>ETHUSDT</h2>
+<p id="eth-price">Loading...</p>
+</div>
 
 
-        <!-- Scanner -->
+<div class="coin-card">
+<h2>SOLUSDT</h2>
+<p id="sol-price">Loading...</p>
+</div>
 
-        <section class="glass-card scanner-card">
 
-            <h2>AI MARKET SCANNER</h2>
+<div class="coin-card">
+<h2>XRPUSDT</h2>
+<p id="xrp-price">Loading...</p>
+</div>
 
-            <div class="scanner-circle">
 
-                <div id="scanTimer">
-                    READY
-                </div>
+<div class="coin-card">
+<h2>LINKUSDT</h2>
+<p id="link-price">Loading...</p>
+</div>
 
-            </div>
 
+<div class="coin-card">
+<h2>LTCUSDT</h2>
+<p id="ltc-price">Loading...</p>
+</div>
 
-            <button id="scanBtn">
-                SCAN NOW
-            </button>
 
+</section>
 
-            <div id="scanStatus">
-                Waiting for analysis...
-            </div>
 
 
-        </section>
 
 
+<h2 style="margin:25px 0 15px;color:#00e5ff;">
+Futures Signals
+</h2>
 
 
-        <!-- Signal Result -->
 
+<section class="signals">
 
-        <section class="glass-card result-card">
 
-            <h2>FINAL ANALYSIS</h2>
 
 
-            <div class="signal-box">
 
-                <span>MARKET BIAS</span>
 
-                <h1 id="signal">
-                    WAIT
-                </h1>
+<!-- =========================
+        BTC
+========================= -->
 
-            </div>
 
+<div class="signal-box">
 
 
-            <div class="stats">
+<h2>BTCUSDT</h2>
 
 
-                <div>
-                    <p>Confidence</p>
-                    <strong id="confidence">
-                        0%
-                    </strong>
-                </div>
+<p>Signal:
+<span id="btc-signal">WAIT</span>
+</p>
 
 
-                <div>
-                    <p>Momentum</p>
-                    <strong id="momentum">
-                        Neutral
-                    </strong>
-                </div>
+<p>Bias:
+<span id="btc-bias">Neutral</span>
+</p>
 
 
-                <div>
-                    <p>Liquidity Magnet</p>
-                    <strong id="liquidity">
-                        Searching...
-                    </strong>
-                </div>
+<p>Confidence:
+<span id="btc-confidence">--</span>
+</p>
 
 
+<p>Entry:
+<span id="btc-entry">--</span>
+</p>
 
-            </div>
 
+<p>SL:
+<span id="btc-sl">--</span>
+</p>
 
-        </section>
 
+<p>TP1:
+<span id="btc-tp1">--</span>
+</p>
 
 
+<p>TP2:
+<span id="btc-tp2">--</span>
+</p>
 
-        <!-- Indicators -->
 
+<p>TP3:
+<span id="btc-tp3">--</span>
+</p>
 
-        <section class="glass-card indicators-card">
 
-            <h2>Market Intelligence</h2>
 
+<p>RSI:
+<span id="btc-rsi">--</span>
+</p>
 
-            <div class="indicator-grid">
 
+<p>EMA Cross:
+<span id="btc-ema">--</span>
+</p>
 
-                <div class="indicator">
-                    <span>RSI</span>
-                    <b id="rsi">--</b>
-                </div>
 
+<p>EMA Trend:
+<span id="btc-trend">--</span>
+</p>
 
-                <div class="indicator">
-                    <span>EMA Trend</span>
-                    <b id="ema">--</b>
-                </div>
 
+<p>MACD:
+<span id="btc-macd">--</span>
+</p>
 
-                <div class="indicator">
-                    <span>Volume</span>
-                    <b id="volume">--</b>
-                </div>
 
+<p>ADX:
+<span id="btc-adx">--</span>
+</p>
 
-                <div class="indicator">
-                    <span>Volatility</span>
-                    <b id="volatility">--</b>
-                </div>
 
+<p>VWAP:
+<span id="btc-vwap">--</span>
+</p>
 
-            </div>
 
+<p>ATR:
+<span id="btc-atr">--</span>
+</p>
 
-        </section>
 
+<p>Volume:
+<span id="btc-volume">--</span>
+</p>
 
 
-    </main>
+<p>Golden Cross:
+<span id="btc-golden">--</span>
+</p>
 
 
 
-    <!-- Voice Result -->
+<p id="btc-analysis">
+Market Analysis...
+</p>
 
-    <div class="voice-panel">
 
-        <p id="voiceText">
-            Voice system ready
-        </p>
+</div>
 
-    </div>
+
+
+
+
+
+
+
+<!-- =========================
+        ETH
+========================= -->
+
+
+<div class="signal-box">
+
+
+<h2>ETHUSDT</h2>
+
+
+<p>Signal:
+<span id="eth-signal">WAIT</span>
+</p>
+
+
+<p>Bias:
+<span id="eth-bias">Neutral</span>
+</p>
+
+
+<p>Confidence:
+<span id="eth-confidence">--</span>
+</p>
+
+
+<p>Entry:
+<span id="eth-entry">--</span>
+</p>
+
+
+<p>SL:
+<span id="eth-sl">--</span>
+</p>
+
+
+<p>TP1:
+<span id="eth-tp1">--</span>
+</p>
+
+
+<p>TP2:
+<span id="eth-tp2">--</span>
+</p>
+
+
+<p>TP3:
+<span id="eth-tp3">--</span>
+</p>
+
+
+
+<p>RSI:
+<span id="eth-rsi">--</span>
+</p>
+
+
+<p>EMA Cross:
+<span id="eth-ema">--</span>
+</p>
+
+
+<p>EMA Trend:
+<span id="eth-trend">--</span>
+</p>
+
+
+<p>MACD:
+<span id="eth-macd">--</span>
+</p>
+
+
+<p>ADX:
+<span id="eth-adx">--</span>
+</p>
+
+
+<p>VWAP:
+<span id="eth-vwap">--</span>
+</p>
+
+
+<p>ATR:
+<span id="eth-atr">--</span>
+</p>
+
+
+<p>Volume:
+<span id="eth-volume">--</span>
+</p>
+
+
+<p>Golden Cross:
+<span id="eth-golden">--</span>
+</p>
+
+
+
+<p id="eth-analysis">
+Market Analysis...
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =========================
+        SOL
+========================= -->
+
+
+<div class="signal-box">
+
+
+<h2>SOLUSDT</h2>
+
+
+<p>Signal:
+<span id="sol-signal">WAIT</span>
+</p>
+
+
+<p>Bias:
+<span id="sol-bias">Neutral</span>
+</p>
+
+
+<p>Confidence:
+<span id="sol-confidence">--</span>
+</p>
+
+
+<p>Entry:
+<span id="sol-entry">--</span>
+</p>
+
+
+<p>SL:
+<span id="sol-sl">--</span>
+</p>
+
+
+<p>TP1:
+<span id="sol-tp1">--</span>
+</p>
+
+
+<p>TP2:
+<span id="sol-tp2">--</span>
+</p>
+
+
+<p>TP3:
+<span id="sol-tp3">--</span>
+</p>
+
+
+
+<p>RSI:
+<span id="sol-rsi">--</span>
+</p>
+
+
+<p>EMA Cross:
+<span id="sol-ema">--</span>
+</p>
+
+
+<p>EMA Trend:
+<span id="sol-trend">--</span>
+</p>
+
+
+<p>MACD:
+<span id="sol-macd">--</span>
+</p>
+
+
+<p>ADX:
+<span id="sol-adx">--</span>
+</p>
+
+
+<p>VWAP:
+<span id="sol-vwap">--</span>
+</p>
+
+
+<p>ATR:
+<span id="sol-atr">--</span>
+</p>
+
+
+<p>Volume:
+<span id="sol-volume">--</span>
+</p>
+
+
+<p>Golden Cross:
+<span id="sol-golden">--</span>
+</p>
+
+
+
+<p id="sol-analysis">
+Market Analysis...
+</p>
+
+
+</div>
+
+
+     <!-- =========================
+        XRP
+========================= -->
+
+
+<div class="signal-box">
+
+
+<h2>XRPUSDT</h2>
+
+
+<p>Signal:
+<span id="xrp-signal">WAIT</span>
+</p>
+
+
+<p>Bias:
+<span id="xrp-bias">Neutral</span>
+</p>
+
+
+<p>Confidence:
+<span id="xrp-confidence">--</span>
+</p>
+
+
+<p>Entry:
+<span id="xrp-entry">--</span>
+</p>
+
+
+<p>SL:
+<span id="xrp-sl">--</span>
+</p>
+
+
+<p>TP1:
+<span id="xrp-tp1">--</span>
+</p>
+
+
+<p>TP2:
+<span id="xrp-tp2">--</span>
+</p>
+
+
+<p>TP3:
+<span id="xrp-tp3">--</span>
+</p>
+
+
+
+<p>RSI:
+<span id="xrp-rsi">--</span>
+</p>
+
+
+<p>EMA Cross:
+<span id="xrp-ema">--</span>
+</p>
+
+
+<p>EMA Trend:
+<span id="xrp-trend">--</span>
+</p>
+
+
+<p>MACD:
+<span id="xrp-macd">--</span>
+</p>
+
+
+<p>ADX:
+<span id="xrp-adx">--</span>
+</p>
+
+
+<p>VWAP:
+<span id="xrp-vwap">--</span>
+</p>
+
+
+<p>ATR:
+<span id="xrp-atr">--</span>
+</p>
+
+
+<p>Volume:
+<span id="xrp-volume">--</span>
+</p>
+
+
+<p>Golden Cross:
+<span id="xrp-golden">--</span>
+</p>
+
+
+
+<p id="xrp-analysis">
+Market Analysis...
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =========================
+        LINK
+========================= -->
+
+
+<div class="signal-box">
+
+
+<h2>LINKUSDT</h2>
+
+
+<p>Signal:
+<span id="link-signal">WAIT</span>
+</p>
+
+
+<p>Bias:
+<span id="link-bias">Neutral</span>
+</p>
+
+
+<p>Confidence:
+<span id="link-confidence">--</span>
+</p>
+
+
+<p>Entry:
+<span id="link-entry">--</span>
+</p>
+
+
+<p>SL:
+<span id="link-sl">--</span>
+</p>
+
+
+<p>TP1:
+<span id="link-tp1">--</span>
+</p>
+
+
+<p>TP2:
+<span id="link-tp2">--</span>
+</p>
+
+
+<p>TP3:
+<span id="link-tp3">--</span>
+</p>
+
+
+
+<p>RSI:
+<span id="link-rsi">--</span>
+</p>
+
+
+<p>EMA Cross:
+<span id="link-ema">--</span>
+</p>
+
+
+<p>EMA Trend:
+<span id="link-trend">--</span>
+</p>
+
+
+<p>MACD:
+<span id="link-macd">--</span>
+</p>
+
+
+<p>ADX:
+<span id="link-adx">--</span>
+</p>
+
+
+<p>VWAP:
+<span id="link-vwap">--</span>
+</p>
+
+
+<p>ATR:
+<span id="link-atr">--</span>
+</p>
+
+
+<p>Volume:
+<span id="link-volume">--</span>
+</p>
+
+
+<p>Golden Cross:
+<span id="link-golden">--</span>
+</p>
+
+
+
+<p id="link-analysis">
+Market Analysis...
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- =========================
+        LTC
+========================= -->
+
+
+<div class="signal-box">
+
+
+<h2>LTCUSDT</h2>
+
+
+<p>Signal:
+<span id="ltc-signal">WAIT</span>
+</p>
+
+
+<p>Bias:
+<span id="ltc-bias">Neutral</span>
+</p>
+
+
+<p>Confidence:
+<span id="ltc-confidence">--</span>
+</p>
+
+
+<p>Entry:
+<span id="ltc-entry">--</span>
+</p>
+
+
+<p>SL:
+<span id="ltc-sl">--</span>
+</p>
+
+
+<p>TP1:
+<span id="ltc-tp1">--</span>
+</p>
+
+
+<p>TP2:
+<span id="ltc-tp2">--</span>
+</p>
+
+
+<p>TP3:
+<span id="ltc-tp3">--</span>
+</p>
+
+
+
+<p>RSI:
+<span id="ltc-rsi">--</span>
+</p>
+
+
+<p>EMA Cross:
+<span id="ltc-ema">--</span>
+</p>
+
+
+<p>EMA Trend:
+<span id="ltc-trend">--</span>
+</p>
+
+
+<p>MACD:
+<span id="ltc-macd">--</span>
+</p>
+
+
+<p>ADX:
+<span id="ltc-adx">--</span>
+</p>
+
+
+<p>VWAP:
+<span id="ltc-vwap">--</span>
+</p>
+
+
+<p>ATR:
+<span id="ltc-atr">--</span>
+</p>
+
+
+<p>Volume:
+<span id="ltc-volume">--</span>
+</p>
+
+
+<p>Golden Cross:
+<span id="ltc-golden">--</span>
+</p>
+
+
+
+<p id="ltc-analysis">
+Market Analysis...
+</p>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+<!-- =========================
+     TRADING CALCULATOR
+========================= -->
+
+
+<section class="calculator-box">
+
+
+<h2>Trading Calculator</h2>
+
+
+
+<select id="trade-type">
+
+<option value="long">LONG</option>
+
+<option value="short">SHORT</option>
+
+</select>
+
+
+
+
+<select id="coin-name">
+
+<option value="BTCUSDT">BTCUSDT</option>
+
+<option value="ETHUSDT">ETHUSDT</option>
+
+<option value="SOLUSDT">SOLUSDT</option>
+
+<option value="XRPUSDT">XRPUSDT</option>
+
+<option value="LINKUSDT">LINKUSDT</option>
+
+<option value="LTCUSDT">LTCUSDT</option>
+
+</select>
+
+
+
+
+
+<input 
+type="number"
+id="entry-price"
+placeholder="Entry Price">
+
+
+
+
+
+<input
+type="number"
+id="exit-price"
+placeholder="Exit Price">
+
+
+
+
+
+<input
+type="number"
+id="amount"
+placeholder="Investment Amount (USDT)">
+
+
+
+
+
+<button onclick="calculateTrade()">
+
+Calculate
+
+</button>
+
+
+
+
+
+<div class="calc-result">
+
+
+<p>
+Profit / Loss :
+<span id="profit">--</span>
+</p>
+
+
+
+<p>
+Percentage :
+<span id="percentage">--</span>
+</p>
+
+
+
+<p>
+Risk Reward :
+<span id="rr">--</span>
+</p>
+
+
+</div>
+
+
+     </section>
+
+
+     <!-- =========================
+     PERFORMANCE DASHBOARD
+========================= -->
+
+
+<section class="performance-box">
+
+
+<h2>
+Performance Dashboard
+</h2>
+
+
+
+
+<div class="stats">
+
+
+
+<div class="stat-card">
+
+<h3>Total Signals</h3>
+
+<p id="total-signals">
+0
+</p>
+
+</div>
+
+
+
+
+
+<div class="stat-card">
+
+<h3>Wins</h3>
+
+<p id="wins">
+0
+</p>
+
+</div>
+
+
+
+
+
+<div class="stat-card">
+
+<h3>Losses</h3>
+
+<p id="losses">
+0
+</p>
+
+</div>
+
+
+
+
+
+<div class="stat-card">
+
+<h3>Accuracy</h3>
+
+<p id="accuracy">
+0%
+</p>
+
+</div>
 
 
 
 </div>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Main Script -->
+</section>
+
+
+
+
+
+
+
+<!-- =========================
+     TRADE HISTORY
+========================= -->
+
+
+<button id="history-btn" onclick="showTradeHistory()">
+
+View Trade History
+
+</button>
+
+
+
+
+<div id="trade-history" class="history-box" style="display:none;">
+
+
+
+<h2>
+Trade History
+</h2>
+
+
+
+<div id="history-list">
+
+No trades yet
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- =========================
+        FOOTER
+========================= -->
+
+
+<section class="footer-banner">
+
+
+
+<img src="banner.png" alt="Qayyum OfficialZ Banner">
+
+
+
+
+
+<h2>
+Meet Founder Qayyum OfficialZ
+</h2>
+
+
+
+
+
+<p>
+
+A boy from Pakistan build a High-Frequency Trading Web Platform powered by APIs, Bitnodes, Indicators, and Smart Money Concept Strategies.
+
+</p>
+
+
+
+
+
+
+<p>
+
+"Inspired by financial innovators like Jane Street, Renaissance Technologies, and Bloomberg — Qayyum OfficialZ Trades brings professional Signals and market analysis tools, worth $10 to hundreds of dollars elsewhere, free for everyone."
+
+</p>
+
+
+
+
+
+
+<p>
+
+<b>
+Trade With Data. Trade With Discipline.
+</b>
+
+</p>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
 <script src="script.js"></script>
 
+
+
 </body>
-              </html>
+
+
+                          </html>
