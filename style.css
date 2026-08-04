@@ -1,1 +1,782 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
 
+
+body {
+
+    min-height: 100vh;
+
+    background:
+    radial-gradient(circle at top left, #14213d, transparent 35%),
+    radial-gradient(circle at bottom right, #003049, transparent 40%),
+    #050816;
+
+    color: white;
+
+    overflow-x: hidden;
+
+}
+
+
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+    linear-gradient(
+        120deg,
+        rgba(255,255,255,0.05),
+        transparent
+    );
+
+    pointer-events: none;
+
+}
+
+
+
+.app {
+
+    width:100%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:25px;
+
+}
+
+
+
+
+/* HEADER */
+
+
+.top-header {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.top-header h1 {
+
+    font-size:32px;
+
+    letter-spacing:3px;
+
+
+    background:
+    linear-gradient(90deg,#00f5ff,#ffffff);
+
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+
+}
+
+
+
+.top-header p {
+
+    color:#9ca3af;
+
+    margin-top:8px;
+
+}
+
+
+
+
+.status {
+
+    padding:12px 20px;
+
+    border-radius:50px;
+
+
+    background:
+    rgba(255,255,255,0.08);
+
+
+    backdrop-filter:blur(20px);
+
+
+    border:1px solid rgba(255,255,255,.15);
+
+}
+
+
+
+
+.dot {
+
+    display:inline-block;
+
+    width:10px;
+
+    height:10px;
+
+
+    background:#00ff88;
+
+
+    border-radius:50%;
+
+
+    margin-right:8px;
+
+
+    box-shadow:
+    0 0 15px #00ff88;
+
+}
+
+
+
+
+
+/* DASHBOARD */
+
+
+.dashboard {
+
+
+    display:grid;
+
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
+
+    gap:25px;
+
+}
+
+
+
+
+
+/* GLASS CARD */
+
+
+.glass-card {
+
+
+    background:
+
+
+    linear-gradient(
+
+        145deg,
+
+        rgba(255,255,255,.12),
+
+        rgba(255,255,255,.03)
+
+    );
+
+
+
+    border:
+
+    1px solid rgba(255,255,255,.18);
+
+
+
+    backdrop-filter:
+
+    blur(25px);
+
+
+
+    border-radius:25px;
+
+
+
+    padding:30px;
+
+
+
+    box-shadow:
+
+
+    0 20px 50px rgba(0,0,0,.4),
+
+
+    inset 0 0 30px rgba(255,255,255,.05);
+
+
+}
+
+
+
+
+
+.glass-card h2,
+.glass-card h3 {
+
+
+    margin-bottom:20px;
+
+
+    letter-spacing:1px;
+
+
+}
+
+
+
+
+
+/* PRICE */
+
+
+#btcPrice {
+
+
+    font-size:45px;
+
+
+    font-weight:700;
+
+
+    color:#00f5ff;
+
+
+    margin:20px 0;
+
+
+}
+
+
+
+
+.price-change {
+
+
+    color:#00ff88;
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+/* PRICE CHART */
+
+
+.price-chart {
+
+
+    width:100%;
+
+
+    height:180px;
+
+
+    margin-top:20px;
+
+
+}
+
+
+
+#priceChart {
+
+
+    width:100% !important;
+
+
+    height:100% !important;
+
+
+    }
+
+
+/* SCANNER */
+
+
+.scanner-card {
+
+    text-align:center;
+
+}
+
+
+
+
+.scanner-circle {
+
+
+    width:180px;
+
+    height:180px;
+
+
+    margin:20px auto;
+
+
+    border-radius:50%;
+
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+
+    background:
+
+
+    radial-gradient(
+
+        circle,
+
+        rgba(0,245,255,.3),
+
+        transparent 65%
+
+    );
+
+
+
+    border:
+
+
+    2px solid #00f5ff;
+
+
+
+    box-shadow:
+
+
+    0 0 40px #00f5ff;
+
+
+}
+
+
+
+
+
+#scanTimer {
+
+
+    font-size:30px;
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+#scanBtn {
+
+
+
+    padding:15px 45px;
+
+
+
+    border:none;
+
+
+
+    border-radius:50px;
+
+
+
+    background:
+
+
+
+    linear-gradient(
+
+        90deg,
+
+        #00f5ff,
+
+        #0077ff
+
+    );
+
+
+
+    color:white;
+
+
+
+    font-size:18px;
+
+
+
+    cursor:pointer;
+
+
+
+    transition:.3s;
+
+
+
+}
+
+
+
+
+
+#scanBtn:hover {
+
+
+    transform:scale(1.08);
+
+
+
+    box-shadow:
+
+
+    0 0 30px #00f5ff;
+
+
+
+}
+
+
+
+
+
+#scanStatus {
+
+
+    margin-top:20px;
+
+
+    color:#aaa;
+
+
+
+}
+
+
+
+
+
+
+/* SIGNAL */
+
+
+.signal-box {
+
+
+    text-align:center;
+
+
+    margin:20px 0;
+
+
+}
+
+
+
+
+
+#signal {
+
+
+    font-size:45px;
+
+
+    margin-top:10px;
+
+
+    color:#ffd166;
+
+
+
+}
+
+
+
+
+
+.stats {
+
+
+    display:grid;
+
+
+
+    grid-template-columns:repeat(3,1fr);
+
+
+
+    gap:15px;
+
+
+
+}
+
+
+
+
+
+.stats div {
+
+
+
+    background:
+
+
+    rgba(255,255,255,.06);
+
+
+
+    padding:15px;
+
+
+
+    border-radius:15px;
+
+
+
+    text-align:center;
+
+
+
+}
+
+
+
+
+
+.stats p {
+
+
+    color:#aaa;
+
+
+    margin-bottom:8px;
+
+
+
+}
+
+
+
+
+
+/* INDICATORS */
+
+
+
+.indicator-grid {
+
+
+
+    display:grid;
+
+
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+
+
+    gap:15px;
+
+
+
+}
+
+
+
+
+
+
+.indicator {
+
+
+
+    background:
+
+
+    rgba(0,0,0,.25);
+
+
+
+    padding:20px;
+
+
+
+    border-radius:18px;
+
+
+
+}
+
+
+
+
+
+
+.indicator span {
+
+
+    display:block;
+
+
+
+    color:#aaa;
+
+
+
+    margin-bottom:10px;
+
+
+
+}
+
+
+
+
+
+
+.indicator b {
+
+
+
+    font-size:22px;
+
+
+
+    color:#00f5ff;
+
+
+
+}
+
+
+
+
+
+
+/* VOICE */
+
+
+
+.voice-panel {
+
+
+
+    margin-top:25px;
+
+
+
+    padding:20px;
+
+
+
+    text-align:center;
+
+
+
+    border-radius:20px;
+
+
+
+    background:
+
+
+    rgba(255,255,255,.08);
+
+
+
+    backdrop-filter:blur(20px);
+
+
+
+    color:#00f5ff;
+
+
+
+}
+
+
+
+
+
+
+/* RESPONSIVE */
+
+
+
+@media(max-width:700px){
+
+
+
+.top-header {
+
+
+    flex-direction:column;
+
+
+    gap:20px;
+
+
+
+}
+
+
+
+.stats {
+
+
+    grid-template-columns:1fr;
+
+
+
+}
+
+
+
+#btcPrice {
+
+
+    font-size:35px;
+
+
+
+}
+
+
+
+  }
