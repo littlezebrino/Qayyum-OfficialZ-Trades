@@ -1,8 +1,8 @@
-// ======================================================
-// BTC QUANTUM SCANNER PRO
-// JAVASCRIPT PART 1
-// REAL MARKET DATA ENGINE
-// ======================================================
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   JAVASCRIPT PART 1
+   MARKET DATA ENGINE
+   ================================================== */
 
 
 
@@ -19,66 +19,23 @@ const priceChange =
 document.getElementById("priceChange");
 
 
-const priceTime =
-document.getElementById("priceTime");
-
-
 const marketState =
 document.getElementById("marketState");
 
 
-const marketStatus =
-document.getElementById("marketStatus");
-
-
-const priceChart =
-document.getElementById("priceChart");
+const priceTime =
+document.getElementById("priceTime");
 
 
 
 
 
 // ===============================
-// MARKET DATA STORAGE
+// MARKET STORAGE
 // ===============================
-
-
-let market = {
-
-
-price:0,
-
-
-open:0,
-
-
-high:0,
-
-
-low:0,
-
-
-volume:0,
-
-
-change:0,
-
-
-time:null
-
-
-};
-
-
-
-
-
-// candle storage
 
 
 let candles = [];
-
-
 
 let closes = [];
 
@@ -90,40 +47,152 @@ let volumes = [];
 
 
 
+let market = {
 
 
+price:0,
 
-// ===============================
-// CONFIG
-// ===============================
+volume:0,
 
-
-const SYMBOL = "btcusdt";
+change:0
 
 
-const INTERVAL = "1m";
-
-
-
-const MAX_CANDLES = 500;
-
+};
 
 
 
 
 
 // ===============================
-// MARKET STATUS
+// HISTORICAL DATA LOADER
 // ===============================
 
 
-function updateMarketStatus(text,color){
+async function loadHistory(){
 
 
-marketState.innerHTML = text;
+try{
 
 
-marketStatus.style.borderColor = color;
+marketState.innerHTML =
+"LOADING DATA";
+
+
+
+const response =
+await fetch(
+
+"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=500"
+
+);
+
+
+
+const data =
+await response.json();
+
+
+
+
+
+data.forEach(item=>{
+
+
+
+let candle={
+
+
+time:item[0],
+
+
+open:parseFloat(item[1]),
+
+
+high:parseFloat(item[2]),
+
+
+low:parseFloat(item[3]),
+
+
+close:parseFloat(item[4]),
+
+
+volume:parseFloat(item[5])
+
+
+
+};
+
+
+
+
+candles.push(candle);
+
+
+closes.push(candle.close);
+
+
+highs.push(candle.high);
+
+
+lows.push(candle.low);
+
+
+volumes.push(candle.volume);
+
+
+
+});
+
+
+
+
+
+market.price =
+closes[closes.length-1];
+
+
+
+btcPrice.innerHTML =
+
+"$"
++
+market.price.toFixed(2);
+
+
+
+marketState.innerHTML =
+"DATA READY";
+
+
+
+priceTime.innerHTML =
+"Historical candles loaded";
+
+
+
+createChart();
+
+
+
+}
+
+catch(error){
+
+
+console.log(
+"History error",
+error
+);
+
+
+
+marketState.innerHTML =
+"DATA ERROR";
+
+
+}
+
 
 
 }
@@ -132,32 +201,27 @@ marketStatus.style.borderColor = color;
 
 
 
+
+
+
+
 // ===============================
-// BINANCE CANDLE SOCKET
+// BINANCE LIVE WEBSOCKET
 // ===============================
 
 
 
-let candleSocket;
+let socket;
 
 
 
-
-
-function connectCandleSocket(){
-
-
-
-updateMarketStatus(
-"CONNECTING",
-"#ffd166"
-);
+function connectSocket(){
 
 
 
-candleSocket = new WebSocket(
+socket = new WebSocket(
 
-`wss://stream.binance.com:9443/ws/${SYMBOL}@kline_${INTERVAL}`
+"wss://stream.binance.com:9443/ws/btcusdt@kline_1m"
 
 );
 
@@ -165,13 +229,12 @@ candleSocket = new WebSocket(
 
 
 
-candleSocket.onopen = ()=>{
+
+socket.onopen=()=>{
 
 
-updateMarketStatus(
-"LIVE MARKET",
-"#00ff88"
-);
+marketState.innerHTML =
+"LIVE";
 
 
 };
@@ -182,81 +245,62 @@ updateMarketStatus(
 
 
 
-candleSocket.onmessage = (event)=>{
+socket.onmessage=(event)=>{
 
 
-const data =
+
+let data =
 JSON.parse(event.data);
 
 
 
-const candle =
+let candleData =
 data.k;
 
 
 
 
-
-const candleData = {
-
-
-open:
-parseFloat(candle.o),
-
-
-high:
-parseFloat(candle.h),
-
-
-low:
-parseFloat(candle.l),
-
-
-close:
-parseFloat(candle.c),
-
-
-volume:
-parseFloat(candle.v),
-
-
-closed:
-candle.x,
-
-
-time:
-candle.t
-
-
-};
-
-
-
-
-
-updateMarketData(candleData);
-
-
-
-};
-
-
-
-
-
-
-
-
-candleSocket.onerror = ()=>{
-
-
-updateMarketStatus(
-"ERROR",
-"#ff4d6d"
+let close =
+parseFloat(
+candleData.c
 );
 
 
 
+
+let volume =
+parseFloat(
+candleData.v
+);
+
+
+
+
+
+market.price =
+close;
+
+
+market.volume =
+volume;
+
+
+
+
+btcPrice.innerHTML =
+
+"$"
++
+close.toFixed(2);
+
+
+
+
+
+updateLiveCandle(candleData);
+
+
+
 };
 
 
@@ -265,19 +309,33 @@ updateMarketStatus(
 
 
 
-candleSocket.onclose = ()=>{
+
+socket.onerror=()=>{
 
 
-updateMarketStatus(
-"RECONNECTING",
-"#ffd166"
-);
+marketState.innerHTML =
+"ERROR";
+
+
+};
+
+
+
+
+
+
+
+socket.onclose=()=>{
+
+
+marketState.innerHTML =
+"RECONNECTING";
 
 
 
 setTimeout(
 
-connectCandleSocket,
+connectSocket,
 
 3000
 
@@ -289,6 +347,31 @@ connectCandleSocket,
 
 
 
+}
+
+
+
+
+
+// ===============================
+// UPDATE CURRENT CANDLE
+// ===============================
+
+
+function updateLiveCandle(data){
+
+
+
+let last =
+candles[candles.length-1];
+
+
+
+
+if(!last){
+
+
+return;
 
 
 }
@@ -296,102 +379,38 @@ connectCandleSocket,
 
 
 
+last.close =
+parseFloat(data.c);
 
 
 
-connectCandleSocket();
+last.high =
+parseFloat(data.h);
 
 
 
+last.low =
+parseFloat(data.l);
 
 
 
+last.volume =
+parseFloat(data.v);
 
 
 
 
-// ===============================
-// PROCESS MARKET DATA
-// ===============================
+closes[closes.length-1]=last.close;
 
+highs[highs.length-1]=last.high;
 
-function updateMarketData(candle){
+lows[lows.length-1]=last.low;
 
+volumes[volumes.length-1]=last.volume;
 
 
-market.price =
-candle.close;
 
-
-
-market.open =
-candle.open;
-
-
-
-market.high =
-candle.high;
-
-
-
-market.low =
-candle.low;
-
-
-
-market.volume =
-candle.volume;
-
-
-
-market.time =
-candle.time;
-
-
-
-
-
-btcPrice.innerHTML =
-
-"$" +
-
-market.price.toFixed(2);
-
-
-
-
-
-
-
-priceTime.innerHTML =
-
-"Last Update: " +
-
-new Date()
-
-.toLocaleTimeString();
-
-
-
-
-
-
-
-if(candle.closed){
-
-
-storeCandle(candle);
-
-
-}
-
-
-
-
-
-updateChart(
-market.price
-);
+updateChart(last.close);
 
 
 
@@ -406,81 +425,11 @@ market.price
 
 
 // ===============================
-// STORE CANDLES
-// ===============================
-
-
-function storeCandle(candle){
-
-
-
-candles.push(candle);
-
-
-
-closes.push(candle.close);
-
-
-
-highs.push(candle.high);
-
-
-
-lows.push(candle.low);
-
-
-
-volumes.push(candle.volume);
-
-
-
-
-
-
-if(candles.length > MAX_CANDLES){
-
-
-
-candles.shift();
-
-
-
-closes.shift();
-
-
-
-highs.shift();
-
-
-
-lows.shift();
-
-
-
-volumes.shift();
-
-
-
-}
-
-
-
-
-
-}
-
-
-
-
-
-// ===============================
-// CHART ENGINE
+// CHART
 // ===============================
 
 
 let chart;
-
-
 
 
 
@@ -489,8 +438,10 @@ function createChart(){
 
 
 const ctx =
-priceChart.getContext("2d");
 
+document
+.getElementById("priceChart")
+.getContext("2d");
 
 
 
@@ -501,45 +452,40 @@ chart = new Chart(ctx,{
 type:"line",
 
 
-
 data:{
 
 
-labels:[],
+labels:closes.map(
+()=>""),
+
 
 
 datasets:[{
 
+label:"BTC",
 
-label:"BTC PRICE",
 
-
-data:[],
+data:closes,
 
 
 borderColor:"#00f5ff",
 
 
-backgroundColor:
-"rgba(0,245,255,.08)",
-
-
 borderWidth:2,
 
 
-fill:true,
-
-
-tension:.35,
+tension:.4,
 
 
 pointRadius:0
 
 
+
 }]
 
-},
 
+
+},
 
 
 
@@ -571,28 +517,13 @@ display:false
 
 
 
-
-
 scales:{
 
 
-x:{
+x:{display:false},
 
 
-display:false
-
-
-},
-
-
-
-y:{
-
-
-display:false
-
-
-}
+y:{display:false}
 
 
 
@@ -608,14 +539,7 @@ display:false
 
 
 
-
 }
-
-
-
-
-
-createChart();
 
 
 
@@ -634,36 +558,24 @@ return;
 
 
 
+chart.data.datasets[0].data.push(price);
+
+
 chart.data.labels.push("");
 
 
 
-chart.data.datasets[0]
-.data.push(price);
+
+if(chart.data.datasets[0].data.length>100){
 
 
-
-
-
-
-
-if(chart.data.labels.length>80){
-
+chart.data.datasets[0].data.shift();
 
 
 chart.data.labels.shift();
 
 
-
-chart.data.datasets[0]
-.data.shift();
-
-
-
 }
-
-
-
 
 
 
@@ -677,123 +589,33 @@ chart.update("none");
 
 
 
-// ===============================
-// PRICE CHANGE FETCH
-// ===============================
-
-
-async function update24HourChange(){
-
-
-
-try{
-
-
-
-let response =
-await fetch(
-
-"https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
-
-);
-
-
-
-let data =
-await response.json();
-
-
-
-
-let change =
-parseFloat(
-data.priceChangePercent
-);
-
-
-
-
-
-market.change = change;
-
-
-
-
-
-priceChange.innerHTML =
-
-
-(change >=0 ? "+" : "")
-
-+
-
-change.toFixed(2)
-
-+
-
-"%";
-
-
-
-
-
-
-priceChange.style.color =
-
-
-change>=0
-
-?
-
-"#00ff88"
-
-:
-
-"#ff4d6d";
-
-
-
-
-}
-
-catch(error){
-
-
-console.log(
-"24H change error",
-error
-);
-
-
-}
-
-
-
-}
-
-
-
-
-update24HourChange();
-
-
-setInterval(
-update24HourChange,
-10000
-);
-
-
-
-// ======================================================
-// BTC QUANTUM SCANNER PRO
-// JAVASCRIPT PART 2
-// PROFESSIONAL INDICATOR ENGINE
-// ======================================================
 
 
 
 // ===============================
-// DOM INDICATORS
+// START ENGINE
+// ===============================
+
+
+
+loadHistory();
+
+
+connectSocket();
+
+
+
+
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   JAVASCRIPT PART 2
+   INDICATORS ENGINE
+   ================================================== */
+
+
+
+// ===============================
+// INDICATOR ELEMENTS
 // ===============================
 
 
@@ -801,20 +623,32 @@ const rsiBox =
 document.getElementById("rsi");
 
 
-const emaBox =
-document.getElementById("ema");
+const ema20Box =
+document.getElementById("ema20");
+
+
+const ema50Box =
+document.getElementById("ema50");
+
+
+const ema200Box =
+document.getElementById("ema200");
 
 
 const macdBox =
 document.getElementById("macd");
 
 
-const volumeBox =
-document.getElementById("volume");
-
-
 const vwapBox =
 document.getElementById("vwap");
+
+
+const atrBox =
+document.getElementById("atr");
+
+
+const volumeBox =
+document.getElementById("volume");
 
 
 const volatilityBox =
@@ -824,16 +658,16 @@ document.getElementById("volatility");
 
 
 
-
 // ===============================
-// RSI - WILDER METHOD
+// RSI WILDER METHOD
 // ===============================
 
 
-function calculateRSI(data, period=14){
+function calculateRSI(period=14){
 
 
-if(data.length <= period){
+
+if(closes.length <= period){
 
 return 50;
 
@@ -841,86 +675,50 @@ return 50;
 
 
 
-let gains = 0;
+let gains=0;
 
-let losses = 0;
-
-
-
-for(let i=1;i<=period;i++){
-
-
-let diff =
-data[i]-data[i-1];
+let losses=0;
 
 
 
-if(diff>=0){
+for(
+let i=closes.length-period;
+i<closes.length;
+i++
+){
 
-gains += diff;
+
+let change =
+closes[i]-closes[i-1];
+
+
+
+if(change>0){
+
+gains+=change;
 
 }
 
 else{
 
-losses += Math.abs(diff);
+losses+=Math.abs(change);
 
 }
 
 
 }
+
+
 
 
 
 let avgGain =
-gains / period;
+gains/period;
 
 
 let avgLoss =
-losses / period;
+losses/period;
 
-
-
-
-for(
-let i=period+1;
-i<data.length;
-i++
-){
-
-
-let diff =
-data[i]-data[i-1];
-
-
-
-let gain =
-diff>0 ? diff : 0;
-
-
-let loss =
-diff<0 ? Math.abs(diff):0;
-
-
-
-
-avgGain =
-(
-avgGain*(period-1)+gain
-)
-/period;
-
-
-
-avgLoss =
-(
-avgLoss*(period-1)+loss
-)
-/period;
-
-
-
-}
 
 
 
@@ -928,10 +726,11 @@ avgLoss*(period-1)+loss
 if(avgLoss===0){
 
 
-return 99;
+return 70;
 
 
 }
+
 
 
 
@@ -941,7 +740,24 @@ avgGain/avgLoss;
 
 
 
-return 100-(100/(1+rs));
+let rsi =
+
+100 -
+
+(
+100/
+(1+rs)
+);
+
+
+
+return Math.min(
+100,
+Math.max(
+0,
+rsi
+)
+);
 
 
 
@@ -956,16 +772,19 @@ return 100-(100/(1+rs));
 
 
 // ===============================
-// EMA ENGINE
+// EMA
 // ===============================
 
 
-function calculateEMA(data,period){
+function calculateEMA(period){
 
 
-if(data.length < period){
 
-return null;
+if(closes.length < period){
+
+
+return 0;
+
 
 }
 
@@ -977,17 +796,23 @@ let multiplier =
 
 
 let ema =
-data[0];
+closes[0];
 
 
 
-for(let i=1;i<data.length;i++){
+
+for(
+let i=1;
+i<closes.length;
+i++
+){
 
 
 
 ema =
+
 (
-data[i]-ema
+closes[i]-ema
 )
 
 *
@@ -1001,6 +826,7 @@ ema;
 
 
 }
+
 
 
 
@@ -1023,68 +849,25 @@ return ema;
 // ===============================
 
 
-function calculateMACD(data){
-
-
-
-if(data.length < 35){
-
-
-return {
-
-macd:0,
-
-signal:0,
-
-histogram:0
-
-};
-
-
-}
-
+function calculateMACD(){
 
 
 
 let ema12 =
-calculateEMA(data,12);
-
+calculateEMA(12);
 
 
 let ema26 =
-calculateEMA(data,26);
+calculateEMA(26);
 
 
 
-let macd =
+let value =
 ema12-ema26;
 
 
 
-
-let signal =
-calculateEMA(
-data.slice(-9),
-9
-);
-
-
-
-return {
-
-
-macd:macd,
-
-
-signal:signal,
-
-
-histogram:
-macd-signal
-
-
-
-};
+return value;
 
 
 
@@ -1115,9 +898,7 @@ return 0;
 
 
 
-
 let totalVolume=0;
-
 
 let totalValue=0;
 
@@ -1135,8 +916,8 @@ let typical =
 c.high+
 c.low+
 c.close
-
 )/3;
+
 
 
 
@@ -1154,6 +935,15 @@ c.volume;
 
 });
 
+
+
+
+
+if(totalVolume===0){
+
+return 0;
+
+}
 
 
 
@@ -1190,13 +980,13 @@ return 0;
 
 
 
-let trs=[];
+let tr=[];
 
 
 
 
 for(
-let i=1;
+let i=candles.length-period;
 i<candles.length;
 i++
 ){
@@ -1212,7 +1002,8 @@ candles[i-1];
 
 
 
-let tr = Math.max(
+
+let range = Math.max(
 
 current.high-current.low,
 
@@ -1230,7 +1021,7 @@ current.low-previous.close
 
 
 
-trs.push(tr);
+tr.push(range);
 
 
 
@@ -1239,17 +1030,11 @@ trs.push(tr);
 
 
 
-
-let recent =
-
-trs.slice(-period);
-
-
-
-return recent.reduce(
+return tr.reduce(
 (a,b)=>a+b,
 0
-)/period;
+)
+/period;
 
 
 
@@ -1264,7 +1049,7 @@ return recent.reduce(
 
 
 // ===============================
-// VOLUME ANALYSIS
+// VOLUME
 // ===============================
 
 
@@ -1282,14 +1067,10 @@ return "Collecting";
 
 
 
-
 let average =
 
-
 volumes
-
 .slice(-20)
-
 .reduce(
 (a,b)=>a+b,
 0
@@ -1298,13 +1079,8 @@ volumes
 
 
 
-
-
 let current =
-
-volumes[
-volumes.length-1
-];
+volumes[volumes.length-1];
 
 
 
@@ -1320,7 +1096,7 @@ return "HIGH";
 
 
 
-if(current < average*.6){
+if(current < average*.7){
 
 
 return "LOW";
@@ -1356,7 +1132,7 @@ function calculateVolatility(){
 if(closes.length<20){
 
 
-return "Collecting";
+return 0;
 
 
 }
@@ -1364,7 +1140,6 @@ return "Collecting";
 
 
 let recent =
-
 closes.slice(-20);
 
 
@@ -1373,30 +1148,13 @@ let high =
 Math.max(...recent);
 
 
+
 let low =
 Math.min(...recent);
 
 
 
-let range =
-high-low;
-
-
-
-if(range > 150){
-
-return "HIGH";
-
-}
-
-else if(range > 60){
-
-return "MEDIUM";
-
-}
-
-
-return "LOW";
+return high-low;
 
 
 
@@ -1411,7 +1169,7 @@ return "LOW";
 
 
 // ===============================
-// UPDATE INDICATORS UI
+// UPDATE ALL INDICATORS
 // ===============================
 
 
@@ -1419,36 +1177,28 @@ function updateIndicators(){
 
 
 
-if(closes.length<30){
-
-return;
-
-}
-
-
-
-
 let rsi =
-calculateRSI(closes);
+calculateRSI();
 
 
 
 let ema20 =
-calculateEMA(closes,20);
+calculateEMA(20);
+
 
 
 let ema50 =
-calculateEMA(closes,50);
+calculateEMA(50);
+
 
 
 let ema200 =
-calculateEMA(closes,200);
-
+calculateEMA(200);
 
 
 
 let macd =
-calculateMACD(closes);
+calculateMACD();
 
 
 
@@ -1462,100 +1212,52 @@ calculateATR();
 
 
 
-
-
 rsiBox.innerHTML =
-
-rsi.toFixed(1);
-
+rsi.toFixed(2);
 
 
 
-
-if(market.price > ema20){
-
-emaBox.innerHTML =
-"BULLISH";
-
-
-}
-
-else{
-
-emaBox.innerHTML =
-"BEARISH";
-
-
-}
+ema20Box.innerHTML =
+ema20.toFixed(2);
 
 
 
+ema50Box.innerHTML =
+ema50.toFixed(2);
+
+
+
+ema200Box.innerHTML =
+ema200.toFixed(2);
 
 
 
 macdBox.innerHTML =
-
-
-macd.histogram>0
-
-?
-
-"BUY"
-
-:
-
-"SELL";
-
-
-
+macd.toFixed(2);
 
 
 
 vwapBox.innerHTML =
-
-
-market.price > vwap
-
-?
-
-"ABOVE"
-
-:
-
-"BELOW";
+vwap.toFixed(2);
 
 
 
-
-
-
-volumeBox.innerHTML =
-
-analyzeVolume();
-
-
-
-
-
-
-volatilityBox.innerHTML =
-
-calculateVolatility()
-
-+
-
-" | ATR "
-
-+
-
+atrBox.innerHTML =
 atr.toFixed(2);
 
 
 
+volumeBox.innerHTML =
+analyzeVolume();
+
+
+
+volatilityBox.innerHTML =
+calculateVolatility().toFixed(2);
+
 
 
 }
-
 
 
 
@@ -1565,14 +1267,21 @@ atr.toFixed(2);
 
 
 // ===============================
-// AUTO UPDATE AFTER EACH CANDLE
+// AUTO UPDATE
 // ===============================
 
 
 setInterval(()=>{
 
 
+if(closes.length>50){
+
+
 updateIndicators();
+
+
+}
+
 
 
 },3000);
@@ -1580,185 +1289,33 @@ updateIndicators();
 
 
 
-// ======================================================
-// BTC QUANTUM SCANNER PRO
-// JAVASCRIPT PART 3
-// MARKET STRUCTURE + LIQUIDITY ENGINE
-// ======================================================
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   JAVASCRIPT PART 3
+   MARKET INTELLIGENCE ENGINE
+   ================================================== */
 
 
 
 // ===============================
-// DOM ELEMENTS
+// INTELLIGENCE ELEMENTS
 // ===============================
 
 
-const liquidityBox =
-document.getElementById("liquidity");
+const trendBox =
+document.getElementById("trend");
 
 
-const marketSummary =
-document.getElementById("marketSummary");
+const structureBox =
+document.getElementById("structure");
 
 
+const liquidityZoneBox =
+document.getElementById("liquidityZone");
 
 
-
-
-
-// ===============================
-// SWING HIGH / LOW
-// ===============================
-
-
-
-function findSwingHigh(period=3){
-
-
-let highsFound=[];
-
-
-
-for(
-let i=period;
-i<highs.length-period;
-i++
-){
-
-
-
-let high =
-highs[i];
-
-
-
-let isHigh=true;
-
-
-
-for(
-let x=1;
-x<=period;
-x++
-){
-
-
-
-if(
-high <= highs[i-x]
-||
-high <= highs[i+x]
-){
-
-isHigh=false;
-
-break;
-
-}
-
-
-}
-
-
-
-
-if(isHigh){
-
-highsFound.push(high);
-
-
-}
-
-
-
-}
-
-
-
-return highsFound;
-
-
-
-}
-
-
-
-
-
-
-
-function findSwingLow(period=3){
-
-
-
-let lowsFound=[];
-
-
-
-for(
-let i=period;
-i<lows.length-period;
-i++
-){
-
-
-
-let low =
-lows[i];
-
-
-
-let isLow=true;
-
-
-
-
-for(
-let x=1;
-x<=period;
-x++
-){
-
-
-
-if(
-low >= lows[i-x]
-||
-low >= lows[i+x]
-){
-
-isLow=false;
-
-break;
-
-}
-
-
-}
-
-
-
-
-
-if(isLow){
-
-lowsFound.push(low);
-
-
-}
-
-
-
-}
-
-
-
-return lowsFound;
-
-
-
-}
-
+const marketConditionBox =
+document.getElementById("marketCondition");
 
 
 
@@ -1767,7 +1324,7 @@ return lowsFound;
 
 
 // ===============================
-// MARKET TREND
+// TREND DETECTION
 // ===============================
 
 
@@ -1775,7 +1332,7 @@ function detectTrend(){
 
 
 
-if(closes.length<50){
+if(closes.length < 50){
 
 return "WAITING";
 
@@ -1783,32 +1340,21 @@ return "WAITING";
 
 
 
-
-let recent =
-closes.slice(-50);
-
+let ema20 =
+calculateEMA(20);
 
 
-
-let first =
-recent[0];
-
-
-let last =
-recent[recent.length-1];
+let ema50 =
+calculateEMA(50);
 
 
 
 
 
-let change =
-((last-first)/first)*100;
-
-
-
-
-
-if(change>0.5){
+if(
+market.price > ema20 &&
+ema20 > ema50
+){
 
 
 return "BULLISH";
@@ -1817,13 +1363,19 @@ return "BULLISH";
 }
 
 
-if(change<-0.5){
+
+
+if(
+market.price < ema20 &&
+ema20 < ema50
+){
 
 
 return "BEARISH";
 
 
 }
+
 
 
 
@@ -1842,36 +1394,20 @@ return "SIDEWAYS";
 
 
 // ===============================
-// SUPPORT RESISTANCE
+// SWING HIGH / LOW
 // ===============================
 
 
-function calculateSupportResistance(){
+function getSwingLevels(){
 
 
 
-let swingHighs =
-findSwingHigh();
+let recentHighs =
+highs.slice(-50);
 
 
-let swingLows =
-findSwingLow();
-
-
-
-
-
-let resistance =
-Math.max(
-...swingHighs
-);
-
-
-
-let support =
-Math.min(
-...swingLows
-);
+let recentLows =
+lows.slice(-50);
 
 
 
@@ -1880,10 +1416,54 @@ Math.min(
 return {
 
 
-support:support || 0,
+high:
+Math.max(...recentHighs),
 
 
-resistance:resistance || 0
+
+low:
+Math.min(...recentLows)
+
+
+
+};
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// SUPPORT / RESISTANCE
+// ===============================
+
+
+function calculateLiquidityZone(){
+
+
+
+let levels =
+getSwingLevels();
+
+
+
+return {
+
+
+resistance:
+levels.high,
+
+
+support:
+levels.low
+
 
 
 };
@@ -1909,22 +1489,13 @@ function detectBOS(){
 
 
 
-let levels =
-calculateSupportResistance();
-
-
-
-if(!levels.resistance){
-
-return "NONE";
-
-}
+let zone =
+getSwingLevels();
 
 
 
 if(
-market.price >
-levels.resistance
+market.price > zone.high
 ){
 
 
@@ -1936,10 +1507,8 @@ return "BULLISH BOS";
 
 
 
-
 if(
-market.price <
-levels.support
+market.price < zone.low
 ){
 
 
@@ -1947,7 +1516,6 @@ return "BEARISH BOS";
 
 
 }
-
 
 
 
@@ -1966,7 +1534,7 @@ return "NO BOS";
 
 
 // ===============================
-// CHANGE OF CHARACTER
+// CHOCH
 // ===============================
 
 
@@ -1974,64 +1542,30 @@ function detectCHOCH(){
 
 
 
-if(closes.length<30){
+if(closes.length < 60){
 
-return "NONE";
+return "WAITING";
 
 }
-
 
 
 
 let previous =
-closes.slice(-30,-15);
+closes[closes.length-30];
+
 
 
 let current =
-closes.slice(-15);
+market.price;
 
-
-
-
-let oldTrend =
-previous[
-previous.length-1
-]
--
-previous[0];
-
-
-
-let newTrend =
-current[
-current.length-1
-]
--
-current[0];
 
 
 
 
 
 if(
-oldTrend>0
-&&
-newTrend<0
-){
-
-
-return "BEARISH CHOCH";
-
-
-}
-
-
-
-
-if(
-oldTrend<0
-&&
-newTrend>0
+current > previous &&
+detectTrend()==="BULLISH"
 ){
 
 
@@ -2043,65 +1577,61 @@ return "BULLISH CHOCH";
 
 
 
-return "NONE";
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// LIQUIDITY ZONE ENGINE
-// ===============================
-
-
-function calculateLiquidity(){
-
-
-
-let levels =
-calculateSupportResistance();
-
-
 
 if(
-!levels.support
-||
-!levels.resistance
+current < previous &&
+detectTrend()==="BEARISH"
 ){
 
 
-return "Building zones";
+return "BEARISH CHOCH";
 
 
 }
 
 
+
+
+return "NO CHOCH";
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// LIQUIDITY POOL
+// ===============================
+
+
+function detectLiquidity(){
+
+
+
+let zone =
+getSwingLevels();
 
 
 
 
 let distanceHigh =
-
 Math.abs(
-levels.resistance-market.price
+market.price-zone.high
 );
 
 
 
 let distanceLow =
-
 Math.abs(
-market.price-levels.support
+market.price-zone.low
 );
-
 
 
 
@@ -2110,21 +1640,15 @@ market.price-levels.support
 if(distanceHigh < distanceLow){
 
 
-
 return (
 
-"$"
+"BUY SIDE @ "
 
 +
 
-levels.resistance.toFixed(2)
-
-+
-
-" BUY SIDE LIQUIDITY"
+zone.high.toFixed(2)
 
 );
-
 
 
 }
@@ -2132,2087 +1656,20 @@ levels.resistance.toFixed(2)
 
 
 else{
-
 
 
 return (
 
-"$"
+"SELL SIDE @ "
 
 +
 
-levels.support.toFixed(2)
-
-+
-
-" SELL SIDE LIQUIDITY"
+zone.low.toFixed(2)
 
 );
 
 
-
 }
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// MARKET SUMMARY UPDATE
-// ===============================
-
-
-function updateMarketStructure(){
-
-
-
-let trend =
-detectTrend();
-
-
-
-let bos =
-detectBOS();
-
-
-
-let choch =
-detectCHOCH();
-
-
-
-let liquidity =
-calculateLiquidity();
-
-
-
-
-
-
-liquidityBox.innerHTML =
-liquidity;
-
-
-
-
-
-
-
-marketSummary.innerHTML =
-
-
-`
-
-Trend:
-<b>${trend}</b>
-<br>
-
-Structure:
-<b>${bos}</b>
-
-<br>
-
-Market Shift:
-<b>${choch}</b>
-
-<br>
-
-Liquidity:
-<b>${liquidity}</b>
-
-`;
-
-
-
-}
-
-
-
-
-
-
-
-
-// ===============================
-// AUTO STRUCTURE UPDATE
-// ===============================
-
-
-setInterval(()=>{
-
-
-if(closes.length>50){
-
-
-updateMarketStructure();
-
-
-}
-
-
-
-},5000);
-
-
-
-
-
-// ======================================================
-// BTC QUANTUM SCANNER PRO
-// JAVASCRIPT PART 4
-// FINAL SCANNER + SIGNAL ENGINE
-// ======================================================
-
-
-
-// ===============================
-// DOM ELEMENTS
-// ===============================
-
-
-const scanBtn =
-document.getElementById("scanBtn");
-
-
-const scanTimer =
-document.getElementById("scanTimer");
-
-
-const scanStatus =
-document.getElementById("scanStatus");
-
-
-const engineStatus =
-document.getElementById("engineStatus");
-
-
-const signalBox =
-document.getElementById("signal");
-
-
-const confidenceBox =
-document.getElementById("confidence");
-
-
-const momentumBox =
-document.getElementById("momentum");
-
-
-const signalTime =
-document.getElementById("signalTime");
-
-
-const voiceText =
-document.getElementById("voiceText");
-
-
-
-
-
-// ===============================
-// SCANNER VARIABLES
-// ===============================
-
-
-let scanning = false;
-
-let lastSignal = "WAIT";
-
-let timer = null;
-
-
-
-
-
-
-
-// ===============================
-// SCORE ENGINE
-// ===============================
-
-
-function calculateMarketScore(){
-
-
-
-let score = 0;
-
-
-let reasons=[];
-
-
-
-
-// -------------------------------
-// EMA TREND
-// -------------------------------
-
-
-let ema20 =
-calculateEMA(closes,20);
-
-
-
-let ema50 =
-calculateEMA(closes,50);
-
-
-
-
-
-if(
-market.price > ema20
-&&
-ema20 > ema50
-){
-
-
-score +=20;
-
-
-reasons.push(
-"EMA bullish"
-);
-
-
-}
-
-else if(
-market.price < ema20
-&&
-ema20 < ema50
-){
-
-
-score -=20;
-
-
-reasons.push(
-"EMA bearish"
-);
-
-
-}
-
-
-
-
-
-
-
-// -------------------------------
-// RSI
-// -------------------------------
-
-
-let rsi =
-calculateRSI(closes);
-
-
-
-
-
-if(
-rsi > 45
-&&
-rsi < 65
-){
-
-
-score +=10;
-
-
-reasons.push(
-"RSI healthy"
-);
-
-
-}
-
-
-else if(
-rsi >70
-){
-
-
-score -=10;
-
-
-reasons.push(
-"RSI overbought"
-);
-
-
-}
-
-
-else if(
-rsi <30
-){
-
-
-score +=10;
-
-
-reasons.push(
-"RSI oversold"
-);
-
-
-}
-
-
-
-
-
-
-
-// -------------------------------
-// MACD
-// -------------------------------
-
-
-let macd =
-calculateMACD(closes);
-
-
-
-
-
-if(
-macd.histogram >0
-){
-
-
-score +=15;
-
-
-reasons.push(
-"MACD positive"
-);
-
-
-}
-
-else{
-
-
-score -=15;
-
-
-reasons.push(
-"MACD negative"
-);
-
-
-}
-
-
-
-
-
-
-
-// -------------------------------
-// VWAP
-// -------------------------------
-
-
-let vwap =
-calculateVWAP();
-
-
-
-
-
-if(
-market.price > vwap
-){
-
-
-score +=10;
-
-
-reasons.push(
-"Above VWAP"
-);
-
-
-}
-
-else{
-
-
-score -=10;
-
-
-reasons.push(
-"Below VWAP"
-);
-
-
-}
-
-
-
-
-
-
-
-// -------------------------------
-// VOLUME
-// -------------------------------
-
-
-let volume =
-analyzeVolume();
-
-
-
-
-
-if(
-volume==="HIGH"
-){
-
-
-score +=10;
-
-
-reasons.push(
-"Volume spike"
-);
-
-
-}
-
-
-
-
-
-
-
-// -------------------------------
-// STRUCTURE
-// -------------------------------
-
-
-let trend =
-detectTrend();
-
-
-
-let bos =
-detectBOS();
-
-
-
-let choch =
-detectCHOCH();
-
-
-
-
-
-if(trend==="BULLISH"){
-
-
-score+=10;
-
-
-}
-
-
-
-if(trend==="BEARISH"){
-
-
-score-=10;
-
-
-}
-
-
-
-if(
-bos==="BULLISH BOS"
-){
-
-
-score+=15;
-
-
-}
-
-
-
-if(
-bos==="BEARISH BOS"
-){
-
-
-score-=15;
-
-
-}
-
-
-
-if(
-choch==="BULLISH CHOCH"
-){
-
-
-score+=10;
-
-
-}
-
-
-
-if(
-choch==="BEARISH CHOCH"
-){
-
-
-score-=10;
-
-
-}
-
-
-
-
-
-
-
-return {
-
-
-score,
-
-
-reasons
-
-
-};
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// FINAL DECISION
-// ===============================
-
-
-function generateSignal(){
-
-
-
-let result =
-calculateMarketScore();
-
-
-
-let score =
-result.score;
-
-
-
-let confidence =
-Math.min(
-
-95,
-
-Math.max(
-
-50,
-
-Math.abs(score)+50
-
-)
-
-);
-
-
-
-
-
-
-let signal;
-
-
-
-if(score>=35){
-
-
-
-signal="LONG";
-
-
-}
-
-else if(score<=-35){
-
-
-
-signal="SHORT";
-
-
-}
-
-else{
-
-
-signal="WAIT";
-
-
-}
-
-
-
-
-
-
-return {
-
-
-signal,
-
-
-confidence,
-
-
-score,
-
-
-reasons:result.reasons
-
-
-
-};
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// DISPLAY RESULT
-// ===============================
-
-
-function showSignal(data){
-
-
-
-signalBox.innerHTML =
-data.signal;
-
-
-
-confidenceBox.innerHTML =
-data.confidence.toFixed(0)
-+
-"%";
-
-
-
-
-signalTime.innerHTML =
-
-"Generated: "
-
-+
-
-new Date()
-.toLocaleTimeString();
-
-
-
-
-
-
-
-if(data.signal==="LONG"){
-
-
-signalBox.style.color =
-"#00ff88";
-
-
-momentumBox.innerHTML =
-"BULLISH PRESSURE";
-
-
-voiceAlert(
-"Long opportunity detected"
-);
-
-
-
-}
-
-
-
-
-else if(data.signal==="SHORT"){
-
-
-signalBox.style.color =
-"#ff4d6d";
-
-
-momentumBox.innerHTML =
-"BEARISH PRESSURE";
-
-
-voiceAlert(
-"Short opportunity detected"
-);
-
-
-
-}
-
-
-
-
-else{
-
-
-signalBox.style.color =
-"#ffd166";
-
-
-momentumBox.innerHTML =
-"NO CLEAR MOMENTUM";
-
-
-
-voiceAlert(
-"Market is unclear"
-);
-
-
-
-}
-
-
-
-
-
-
-
-lastSignal =
-data.signal;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// SCAN PROCESS
-// ===============================
-
-
-scanBtn.onclick = ()=>{
-
-
-
-if(scanning)
-return;
-
-
-
-
-if(closes.length < 50){
-
-
-
-scanStatus.innerHTML =
-"Collecting candle data...";
-
-
-return;
-
-
-}
-
-
-
-
-
-scanning=true;
-
-
-scanBtn.disabled=true;
-
-
-
-let seconds=10;
-
-
-
-scanTimer.innerHTML =
-seconds;
-
-
-
-engineStatus.innerHTML =
-"Analyzing market structure...";
-
-
-
-
-timer=setInterval(()=>{
-
-
-
-seconds--;
-
-
-scanTimer.innerHTML =
-seconds;
-
-
-
-if(seconds<=0){
-
-
-
-clearInterval(timer);
-
-
-
-runScanner();
-
-
-
-}
-
-
-
-},1000);
-
-
-
-};
-
-
-
-
-
-
-
-
-
-function runScanner(){
-
-
-
-engineStatus.innerHTML =
-"Generating final analysis...";
-
-
-
-
-let result =
-generateSignal();
-
-
-
-
-showSignal(result);
-
-
-
-
-
-scanStatus.innerHTML =
-
-"Analysis completed";
-
-
-
-engineStatus.innerHTML =
-"Engine Ready";
-
-
-
-scanTimer.innerHTML =
-"READY";
-
-
-
-scanBtn.disabled=false;
-
-
-scanning=false;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// VOICE SYSTEM
-// ===============================
-
-
-function voiceAlert(text){
-
-
-
-voiceText.innerHTML =
-text;
-
-
-
-
-if(
-!("speechSynthesis" in window)
-){
-
-return;
-
-}
-
-
-
-speechSynthesis.cancel();
-
-
-
-let speech =
-new SpeechSynthesisUtterance(text);
-
-
-
-speech.rate=.9;
-
-
-speech.pitch=1;
-
-
-
-speechSynthesis.speak(speech);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ======================================================
-// BTC QUANTUM SCANNER PRO
-// JAVASCRIPT PART 5 FINAL
-// ENGINE OPTIMIZATION + RISK MODULE
-// ======================================================
-
-
-
-// ===============================
-// FINAL ENGINE ELEMENTS
-// ===============================
-
-
-const engineBox =
-document.getElementById("engineStatus");
-
-
-
-let signalHistory = [];
-
-let lastVoice = "";
-
-let lastVoiceTime = 0;
-
-
-
-
-
-
-
-// ===============================
-// DATA WARMUP CHECK
-// ===============================
-
-
-function engineReady(){
-
-
-
-return (
-
-closes.length >= 200
-
-&&
-
-volumes.length >= 50
-
-&&
-
-candles.length >= 50
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// SAFE SCAN OVERRIDE
-// ===============================
-
-
-function checkMarketReady(){
-
-
-
-if(!engineReady()){
-
-
-engineBox.innerHTML =
-
-"Collecting Market Data";
-
-
-
-return false;
-
-
-
-}
-
-
-
-return true;
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// SIGNAL HISTORY
-// ===============================
-
-
-function saveSignal(data){
-
-
-
-let record={
-
-
-signal:data.signal,
-
-
-confidence:data.confidence,
-
-
-score:data.score,
-
-
-price:market.price,
-
-
-time:new Date()
-.toLocaleTimeString()
-
-
-
-};
-
-
-
-
-
-signalHistory.unshift(record);
-
-
-
-
-
-if(signalHistory.length>10){
-
-
-signalHistory.pop();
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// RISK MANAGEMENT ENGINE
-// ===============================
-
-
-function calculateRisk(){
-
-
-
-let atr =
-calculateATR();
-
-
-
-if(!atr){
-
-
-
-return {
-
-
-entry:market.price,
-
-
-stop:0,
-
-
-target:0
-
-
-
-};
-
-
-
-}
-
-
-
-
-let entry =
-market.price;
-
-
-
-let stop;
-
-
-
-let target;
-
-
-
-
-
-if(lastSignal==="LONG"){
-
-
-
-stop =
-entry - (atr*1.5);
-
-
-
-target =
-entry + (atr*3);
-
-
-
-}
-
-
-
-
-else if(lastSignal==="SHORT"){
-
-
-
-stop =
-entry + (atr*1.5);
-
-
-
-target =
-entry - (atr*3);
-
-
-
-}
-
-
-
-else{
-
-
-
-stop =
-entry-atr;
-
-
-target =
-entry+atr;
-
-
-
-}
-
-
-
-
-
-return {
-
-
-entry,
-
-
-stop,
-
-
-target
-
-
-
-};
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// RISK DISPLAY
-// ===============================
-
-
-function displayRisk(){
-
-
-
-let risk =
-calculateRisk();
-
-
-
-
-if(!risk.entry)
-return;
-
-
-
-
-
-
-console.log(
-
-"ENTRY:",
-risk.entry,
-
-"STOP:",
-risk.stop,
-
-"TARGET:",
-risk.target
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// ADVANCED VOICE CONTROL
-// ===============================
-
-
-function smartVoice(text){
-
-
-
-let now =
-Date.now();
-
-
-
-if(
-
-text===lastVoice
-
-&&
-
-now-lastVoiceTime < 30000
-
-){
-
-
-return;
-
-
-}
-
-
-
-
-lastVoice=text;
-
-
-lastVoiceTime=now;
-
-
-
-voiceAlert(text);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// ENGINE HEALTH
-// ===============================
-
-
-function engineHealth(){
-
-
-
-if(
-candleSocket
-&&
-candleSocket.readyState===1
-){
-
-
-
-engineBox.innerHTML =
-
-"ENGINE ONLINE";
-
-
-
-}
-
-else{
-
-
-engineBox.innerHTML =
-
-"RECONNECTING";
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-setInterval(
-
-engineHealth,
-
-5000
-
-);
-
-
-
-
-
-
-
-
-
-// ===============================
-// FINAL SCAN WRAPPER
-// ===============================
-
-
-const originalScanner =
-runScanner;
-
-
-
-
-
-runScanner = function(){
-
-
-
-
-
-if(!checkMarketReady()){
-
-
-scanStatus.innerHTML =
-
-"Waiting for enough market data";
-
-
-scanBtn.disabled=false;
-
-
-scanning=false;
-
-
-return;
-
-
-}
-
-
-
-
-
-originalScanner();
-
-
-
-
-
-let result =
-generateSignal();
-
-
-
-saveSignal(result);
-
-
-
-displayRisk();
-
-
-
-
-};
-
-
-
-
-
-
-
-
-
-// ===============================
-// MARKET PRICE HELPERS
-// ===============================
-
-
-function getEntryZone(){
-
-
-
-let atr =
-calculateATR();
-
-
-
-return {
-
-
-low:
-market.price-atr,
-
-
-high:
-market.price+atr
-
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// DEBUG INFORMATION
-// ===============================
-
-
-function engineDebug(){
-
-
-
-return {
-
-
-price:
-market.price,
-
-
-candles:
-candles.length,
-
-
-rsi:
-calculateRSI(closes)
-.toFixed(2),
-
-
-trend:
-detectTrend(),
-
-
-signal:
-lastSignal,
-
-
-socket:
-candleSocket
-?
-candleSocket.readyState
-:
-"offline"
-
-
-
-};
-
-
-
-}
-
-
-
-
-
-console.log(
-"BTC Quantum Scanner Loaded",
-engineDebug()
-);
-
-
-
-
-
-// ======================================================
-// BTC QUANTUM SCANNER PRO
-// JAVASCRIPT PART 6 FINAL
-// PROFESSIONAL QUANT UPGRADE LAYER
-// ======================================================
-
-
-
-
-// ===============================
-// HISTORICAL DATA LOADER
-// ===============================
-
-
-async function loadHistoricalCandles(){
-
-
-try{
-
-
-engineBox.innerHTML =
-"Loading Historical Data";
-
-
-
-let response =
-await fetch(
-
-`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=500`
-
-);
-
-
-
-let data =
-await response.json();
-
-
-
-
-
-data.forEach(c=>{
-
-
-
-let candle={
-
-
-open:
-parseFloat(c[1]),
-
-
-high:
-parseFloat(c[2]),
-
-
-low:
-parseFloat(c[3]),
-
-
-close:
-parseFloat(c[4]),
-
-
-volume:
-parseFloat(c[5]),
-
-
-time:
-c[0]
-
-
-
-};
-
-
-
-
-
-candles.push(candle);
-
-
-closes.push(candle.close);
-
-
-highs.push(candle.high);
-
-
-lows.push(candle.low);
-
-
-volumes.push(candle.volume);
-
-
-
-});
-
-
-
-
-
-
-engineBox.innerHTML =
-"Historical Data Ready";
-
-
-
-updateIndicators();
-
-updateMarketStructure();
-
-
-
-
-
-}
-
-catch(error){
-
-
-console.log(
-"Historical load error",
-error
-);
-
-
-
-engineBox.innerHTML =
-"Data Load Failed";
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-loadHistoricalCandles();
-
-
-
-
-
-
-
-
-
-// ===============================
-// MARKET CONDITION
-// ===============================
-
-
-function marketCondition(){
-
-
-
-if(closes.length<50){
-
-return "WAITING";
-
-}
-
-
-
-let atr =
-calculateATR();
-
-
-
-let price =
-market.price;
-
-
-
-let strength =
-(atr/price)*100;
-
-
-
-
-
-
-if(strength > 0.5){
-
-
-return "HIGH VOLATILITY";
-
-
-}
-
-
-
-let trend =
-detectTrend();
-
-
-
-
-if(trend==="SIDEWAYS"){
-
-
-return "RANGE MARKET";
-
-
-}
-
-
-
-
-return "TRENDING MARKET";
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// EQUAL HIGH / LOW DETECTION
-// ===============================
-
-
-function detectLiquidityPools(){
-
-
-
-if(highs.length<30){
-
-
-return null;
-
-
-}
-
-
-
-
-
-let recentHighs =
-highs.slice(-30);
-
-
-
-let recentLows =
-lows.slice(-30);
-
-
-
-
-let equalHighs=[];
-
-let equalLows=[];
-
-
-
-
-
-for(
-let i=0;
-i<recentHighs.length-1;
-i++
-){
-
-
-
-if(
-
-Math.abs(
-
-recentHighs[i]-
-recentHighs[i+1]
-
-)
-
-<20
-
-){
-
-
-equalHighs.push(
-recentHighs[i]
-);
-
-
-}
-
-
-
-
-
-if(
-
-Math.abs(
-
-recentLows[i]-
-recentLows[i+1]
-
-)
-
-<20
-
-){
-
-
-equalLows.push(
-recentLows[i]
-);
-
-
-}
-
-
-
-
-}
-
-
-
-
-
-return {
-
-
-highs:equalHighs,
-
-lows:equalLows
-
-
-};
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// LIQUIDITY SWEEP
-// ===============================
-
-
-function detectLiquiditySweep(){
-
-
-
-let pools =
-detectLiquidityPools();
-
-
-
-if(!pools){
-
-return "NONE";
-
-}
-
-
-
-
-
-let lastHigh =
-Math.max(...pools.highs);
-
-
-
-let lastLow =
-Math.min(...pools.lows);
-
-
-
-
-
-
-
-if(
-market.price > lastHigh
-){
-
-
-return "BUY SIDE SWEEP";
-
-
-}
-
-
-
-
-
-if(
-market.price < lastLow
-){
-
-
-return "SELL SIDE SWEEP";
-
-
-}
-
-
-
-
-
-
-return "NONE";
 
 
 
@@ -4235,7 +1692,7 @@ function detectFVG(){
 
 
 
-if(candles.length<5){
+if(candles.length < 5){
 
 return "NONE";
 
@@ -4246,7 +1703,6 @@ return "NONE";
 
 let c1 =
 candles[candles.length-3];
-
 
 
 let c3 =
@@ -4298,7 +1754,7 @@ return "NONE";
 
 
 // ===============================
-// ORDER BLOCK BASIC
+// ORDER BLOCK
 // ===============================
 
 
@@ -4306,12 +1762,11 @@ function detectOrderBlock(){
 
 
 
-if(candles.length<10){
+if(candles.length < 10){
 
 return "NONE";
 
 }
-
 
 
 
@@ -4326,36 +1781,29 @@ candles[candles.length-2];
 
 
 
-if(
 
+if(
 last.close > previous.high
-
 ){
 
 
-return "BULLISH ORDER BLOCK";
+return "BULLISH OB";
 
 
 }
-
 
 
 
 
 if(
-
 last.close < previous.low
-
 ){
 
 
-return "BEARISH ORDER BLOCK";
+return "BEARISH OB";
 
 
 }
-
-
-
 
 
 
@@ -4374,15 +1822,232 @@ return "NONE";
 
 
 // ===============================
-// PROFESSIONAL CONFIRMATION
+// MARKET CONDITION
 // ===============================
 
 
-function professionalFilter(){
+function detectMarketCondition(){
 
 
 
-let score = 0;
+let atr =
+calculateATR();
+
+
+
+let volatility =
+atr/market.price*100;
+
+
+
+
+
+if(volatility > 0.5){
+
+
+return "HIGH VOLATILITY";
+
+
+}
+
+
+
+if(
+detectTrend()==="SIDEWAYS"
+){
+
+
+return "RANGE MARKET";
+
+
+}
+
+
+
+return "TRENDING MARKET";
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// UPDATE INTELLIGENCE
+// ===============================
+
+
+function updateMarketIntelligence(){
+
+
+
+let trend =
+detectTrend();
+
+
+
+let zone =
+calculateLiquidityZone();
+
+
+
+
+
+trendBox.innerHTML =
+trend;
+
+
+
+structureBox.innerHTML =
+
+detectBOS()
++
+" | "
++
+detectCHOCH();
+
+
+
+
+
+liquidityZoneBox.innerHTML =
+
+detectLiquidity();
+
+
+
+marketConditionBox.innerHTML =
+
+detectMarketCondition();
+
+
+
+}
+
+
+
+
+
+
+
+
+setInterval(()=>{
+
+
+if(closes.length>50){
+
+
+updateMarketIntelligence();
+
+
+}
+
+
+
+},5000);
+
+
+
+
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   JAVASCRIPT PART 4 FINAL
+   FINAL SCANNER ENGINE
+   ================================================== */
+
+
+
+// ===============================
+// FINAL ELEMENTS
+// ===============================
+
+
+const scanBtn =
+document.getElementById("scanBtn");
+
+
+const scanTimer =
+document.getElementById("scanTimer");
+
+
+const scanStatus =
+document.getElementById("scanStatus");
+
+
+const engineStatus =
+document.getElementById("engineStatus");
+
+
+const signalBox =
+document.getElementById("signal");
+
+
+const confidenceBox =
+document.getElementById("confidence");
+
+
+const momentumBox =
+document.getElementById("momentum");
+
+
+const liquidityBox =
+document.getElementById("liquidity");
+
+
+const signalTime =
+document.getElementById("signalTime");
+
+
+const entryBox =
+document.getElementById("entry");
+
+
+const stopBox =
+document.getElementById("stopLoss");
+
+
+const targetBox =
+document.getElementById("target");
+
+
+const rrBox =
+document.getElementById("riskReward");
+
+
+const voiceText =
+document.getElementById("voiceText");
+
+
+
+
+
+let scanning=false;
+
+
+
+
+
+
+
+
+
+
+// ===============================
+// SCORING ENGINE
+// ===============================
+
+
+function calculateScore(){
+
+
+
+let score=0;
 
 
 let reasons=[];
@@ -4390,22 +2055,33 @@ let reasons=[];
 
 
 
+// TREND
 
 
-let condition =
-marketCondition();
+let trend =
+detectTrend();
 
 
 
-if(condition==="TRENDING MARKET"){
+if(trend==="BULLISH"){
 
 
-score+=10;
+score+=25;
 
 
-reasons.push(
-"Trend confirmed"
-);
+reasons.push("Bullish trend");
+
+
+}
+
+
+else if(trend==="BEARISH"){
+
+
+score-=25;
+
+
+reasons.push("Bearish trend");
 
 
 }
@@ -4414,57 +2090,49 @@ reasons.push(
 
 
 
-if(condition==="RANGE MARKET"){
+
+// RSI
 
 
-score-=10;
-
-
-reasons.push(
-"Range warning"
-);
-
-
-}
-
-
-
-
-
-let sweep =
-detectLiquiditySweep();
+let rsi =
+calculateRSI();
 
 
 
 if(
-sweep==="BUY SIDE SWEEP"
+rsi>45 &&
+rsi<65
 ){
 
 
 score+=10;
 
 
-reasons.push(
-"Liquidity sweep"
-);
+reasons.push("Healthy RSI");
 
 
 }
 
 
-
-
-if(
-sweep==="SELL SIDE SWEEP"
-){
+else if(rsi>70){
 
 
 score-=10;
 
 
-reasons.push(
-"Liquidity sweep"
-);
+reasons.push("Overbought");
+
+
+}
+
+
+else if(rsi<30){
+
+
+score+=10;
+
+
+reasons.push("Oversold");
 
 
 }
@@ -4474,33 +2142,75 @@ reasons.push(
 
 
 
-let fvg =
-detectFVG();
+
+
+// MACD
+
+
+let macd =
+calculateMACD();
+
+
+
+if(macd>0){
+
+
+score+=15;
+
+
+reasons.push("MACD positive");
+
+
+}
+
+else{
+
+
+score-=15;
+
+
+reasons.push("MACD negative");
+
+
+}
+
+
+
+
+
+
+
+
+// VWAP
+
+
+let vwap =
+calculateVWAP();
 
 
 
 if(
-fvg==="BULLISH FVG"
+market.price>vwap
 ){
 
 
 score+=10;
 
 
+reasons.push("Above VWAP");
+
+
 }
 
-
-
-
-
-if(
-fvg==="BEARISH FVG"
-){
+else{
 
 
 score-=10;
 
 
+reasons.push("Below VWAP");
+
+
 }
 
 
@@ -4508,33 +2218,61 @@ score-=10;
 
 
 
-let ob =
-detectOrderBlock();
+
+
+// BOS
+
+
+let bos =
+detectBOS();
 
 
 
 if(
-ob==="BULLISH ORDER BLOCK"
+bos==="BULLISH BOS"
+){
+
+
+score+=15;
+
+
+}
+
+
+if(
+bos==="BEARISH BOS"
+){
+
+
+score-=15;
+
+
+}
+
+
+
+
+
+
+
+
+// VOLUME
+
+
+if(
+analyzeVolume()==="HIGH"
 ){
 
 
 score+=10;
 
 
-}
-
-
-
-
-if(
-ob==="BEARISH ORDER BLOCK"
-){
-
-
-score-=10;
+reasons.push("Volume increase");
 
 
 }
+
+
 
 
 
@@ -4547,16 +2285,7 @@ return {
 
 score,
 
-condition,
-
-sweep,
-
-fvg,
-
-ob,
-
 reasons
-
 
 
 };
@@ -4574,31 +2303,87 @@ reasons
 
 
 // ===============================
-// FINAL MARKET REPORT
+// FINAL SIGNAL
 // ===============================
 
 
-function professionalReport(){
+function generateSignal(){
 
 
 
 let data =
-professionalFilter();
+calculateScore();
+
+
+
+let score =
+data.score;
+
+
+
+let result =
+"WAIT";
 
 
 
 
-console.log(
 
-"QUANT REPORT",
+if(score>=35){
 
-data
+
+result="LONG";
+
+
+}
+
+
+else if(score<=-35){
+
+
+result="SHORT";
+
+
+}
+
+
+
+
+
+
+let confidence =
+
+Math.min(
+
+95,
+
+Math.max(
+
+50,
+
+Math.abs(score)+50
+
+)
 
 );
 
 
 
-return data;
+
+
+
+return {
+
+
+signal:result,
+
+confidence,
+
+score,
+
+reasons:data.reasons
+
+
+};
 
 
 
@@ -4609,18 +2394,439 @@ return data;
 
 
 
+
+
+
+// ===============================
+// RISK CALCULATION
+// ===============================
+
+
+function calculateRisk(signal){
+
+
+
+let atr =
+calculateATR();
+
+
+
+let entry =
+market.price;
+
+
+
+let stop;
+
+let target;
+
+
+
+
+
+
+if(signal==="LONG"){
+
+
+
+stop =
+entry-(atr*1.5);
+
+
+
+target =
+entry+(atr*3);
+
+
+
+}
+
+
+
+
+
+else if(signal==="SHORT"){
+
+
+
+stop =
+entry+(atr*1.5);
+
+
+
+target =
+entry-(atr*3);
+
+
+
+}
+
+
+
+
+
+else{
+
+
+stop=0;
+
+target=0;
+
+
+}
+
+
+
+
+
+
+let rr =
+
+Math.abs(
+target-entry
+)
+
+/
+
+Math.abs(
+entry-stop
+);
+
+
+
+
+
+return {
+
+
+entry,
+
+stop,
+
+target,
+
+rr
+
+
+};
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// SHOW RESULT
+// ===============================
+
+
+function displaySignal(data){
+
+
+
+signalBox.innerHTML =
+data.signal;
+
+
+
+confidenceBox.innerHTML =
+
+data.confidence.toFixed(0)
++
+"%";
+
+
+
+
+
+if(data.signal==="LONG"){
+
+
+
+signalBox.style.color =
+"#00ff88";
+
+
+momentumBox.innerHTML =
+"BUY PRESSURE";
+
+
+speak(
+"Long opportunity detected"
+);
+
+
+
+}
+
+
+
+
+
+else if(data.signal==="SHORT"){
+
+
+
+signalBox.style.color =
+"#ff4d6d";
+
+
+momentumBox.innerHTML =
+"SELL PRESSURE";
+
+
+speak(
+"Short opportunity detected"
+);
+
+
+
+}
+
+
+
+
+
+else{
+
+
+signalBox.style.color =
+"#ffd166";
+
+
+momentumBox.innerHTML =
+"NEUTRAL";
+
+
+speak(
+"No clear opportunity"
+);
+
+
+
+}
+
+
+
+
+
+
+
+let risk =
+calculateRisk(
+data.signal
+);
+
+
+
+entryBox.innerHTML =
+risk.entry.toFixed(2);
+
+
+
+stopBox.innerHTML =
+risk.stop.toFixed(2);
+
+
+
+targetBox.innerHTML =
+risk.target.toFixed(2);
+
+
+
+rrBox.innerHTML =
+risk.rr.toFixed(2);
+
+
+
+
+
+signalTime.innerHTML =
+
+new Date()
+.toLocaleTimeString();
+
+
+
+liquidityBox.innerHTML =
+
+detectLiquidity();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// SCAN BUTTON
+// ===============================
+
+
+scanBtn.onclick=function(){
+
+
+
+if(scanning)
+return;
+
+
+
+if(closes.length<100){
+
+
+
+scanStatus.innerHTML =
+"Collecting data...";
+
+
+return;
+
+
+}
+
+
+
+scanning=true;
+
+
+scanBtn.disabled=true;
+
+
+
+let seconds=10;
+
+
+scanTimer.innerHTML =
+seconds;
+
+
+
+engineStatus.innerHTML =
+"Scanning Market...";
+
+
+
+
+
+let timer =
 setInterval(()=>{
 
 
-if(closes.length>100){
+
+seconds--;
 
 
-professionalReport();
+scanTimer.innerHTML =
+seconds;
+
+
+
+if(seconds<=0){
+
+
+
+clearInterval(timer);
+
+
+let result =
+generateSignal();
+
+
+
+displaySignal(result);
+
+
+
+scanTimer.innerHTML =
+"READY";
+
+
+scanStatus.innerHTML =
+"Analysis Complete";
+
+
+engineStatus.innerHTML =
+"Engine Ready";
+
+
+
+scanBtn.disabled=false;
+
+
+scanning=false;
+
 
 
 }
 
 
 
-},10000);
+},1000);
+
+
+
+};
+
+
+
+
+
+
+
+
+
+// ===============================
+// VOICE
+// ===============================
+
+
+function speak(text){
+
+
+
+voiceText.innerHTML =
+text;
+
+
+
+if(
+speechSynthesis
+){
+
+
+speechSynthesis.cancel();
+
+
+
+let msg =
+new SpeechSynthesisUtterance(text);
+
+
+msg.rate=.9;
+
+
+speechSynthesis.speak(msg);
+
+
+
+}
+
+
+
+}
+
 
