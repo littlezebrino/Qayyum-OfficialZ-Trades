@@ -2,7 +2,7 @@
    BTC QUANTUM SCANNER PRO
    JAVASCRIPT PART 1
    MARKET DATA ENGINE
-   ================================================== */
+   ============================================ */
 
 
 
