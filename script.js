@@ -605,7 +605,6 @@ connectSocket();
 
 
 
-
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    JAVASCRIPT PART 2
@@ -1288,7 +1287,6 @@ updateIndicators();
 
 
 
-
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    JAVASCRIPT PART 3
@@ -1951,7 +1949,6 @@ updateMarketIntelligence();
 
 
 },5000);
-
 
 
 
@@ -2828,5 +2825,3 @@ speechSynthesis.speak(msg);
 
 
 }
-
-
