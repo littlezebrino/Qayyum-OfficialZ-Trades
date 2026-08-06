@@ -1,3 +1,14 @@
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   CSS PART 1
+   ================================================== */
+
+
+/* ===============================
+   RESET
+   =============================== */
+
+
 *{
 
 margin:0;
@@ -6,7 +17,6 @@ box-sizing:border-box;
 font-family:
 "Inter",
 "Segoe UI",
-Arial,
 sans-serif;
 
 }
@@ -56,7 +66,7 @@ background:
 
 linear-gradient(
 120deg,
-rgba(255,255,255,0.06),
+rgba(255,255,255,0.05),
 transparent
 );
 
@@ -69,10 +79,9 @@ pointer-events:none;
 
 
 
-
-/* ========================= */
-/* APP CONTAINER */
-/* ========================= */
+/* ===============================
+   APP CONTAINER
+   =============================== */
 
 
 .app{
@@ -94,13 +103,13 @@ padding:25px;
 
 
 
-/* ========================= */
-/* HEADER */
-/* ========================= */
-
+/* ===============================
+   HEADER
+   =============================== */
 
 
 .top-header{
+
 
 display:flex;
 
@@ -110,7 +119,9 @@ align-items:center;
 
 margin-bottom:30px;
 
+
 }
+
 
 
 
@@ -142,7 +153,6 @@ color:transparent;
 
 
 
-
 .header-left p{
 
 
@@ -160,21 +170,18 @@ font-size:15px;
 
 
 
-/* LIVE STATUS */
+
+/* ===============================
+   LIVE STATUS
+   =============================== */
 
 
 .status{
 
 
-display:flex;
+padding:
 
-align-items:center;
-
-
-gap:10px;
-
-
-padding:12px 22px;
+12px 22px;
 
 
 border-radius:50px;
@@ -198,46 +205,36 @@ blur(20px);
 
 
 
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+
 }
+
+
 
 
 
 .dot{
 
 
-width:11px;
+width:10px;
 
-height:11px;
-
-
-background:#00ff88;
+height:10px;
 
 
 border-radius:50%;
 
 
+background:#00ff88;
+
+
 box-shadow:
 
-0 0 20px #00ff88;
-
-
-animation:
-
-pulseDot 1.5s infinite;
-
-
-}
-
-
-
-@keyframes pulseDot{
-
-
-50%{
-
-opacity:.4;
-
-}
+0 0 15px #00ff88;
 
 
 }
@@ -249,10 +246,10 @@ opacity:.4;
 
 
 
-/* ========================= */
-/* DASHBOARD */
-/* ========================= */
 
+/* ===============================
+   DASHBOARD GRID
+   =============================== */
 
 
 .dashboard{
@@ -281,16 +278,16 @@ gap:25px;
 
 
 
-
-/* ========================= */
-/* GLASS CARD */
-/* ========================= */
+/* ===============================
+   GLASS CARD
+   =============================== */
 
 
 .glass-card{
 
 
 background:
+
 
 linear-gradient(
 
@@ -306,7 +303,9 @@ rgba(255,255,255,.03)
 
 border:
 
-1px solid rgba(255,255,255,.18);
+1px solid
+
+rgba(255,255,255,.18);
 
 
 
@@ -327,14 +326,14 @@ blur(25px);
 box-shadow:
 
 
-0 20px 50px rgba(0,0,0,.45),
+0 20px 50px rgba(0,0,0,.4),
 
 
 inset 0 0 30px rgba(255,255,255,.05);
 
 
 
-transition:.35s ease;
+transition:.3s;
 
 
 }
@@ -345,23 +344,17 @@ transition:.35s ease;
 .glass-card:hover{
 
 
-transform:translateY(-6px);
-
+transform:translateY(-5px);
 
 
 box-shadow:
 
 
-0 25px 70px rgba(0,245,255,.15),
-
-
-inset 0 0 30px rgba(255,255,255,.08);
+0 25px 60px rgba(0,245,255,.15);
 
 
 
 }
-
-
 
 
 
@@ -384,10 +377,9 @@ letter-spacing:1px;
 
 
 
-/* ========================= */
-/* PRICE CARD */
-/* ========================= */
-
+/* ===============================
+   PRICE CARD
+   =============================== */
 
 
 #btcPrice{
@@ -399,10 +391,10 @@ font-size:45px;
 font-weight:700;
 
 
-margin:20px 0;
-
-
 color:#00f5ff;
+
+
+margin:20px 0;
 
 
 }
@@ -417,9 +409,6 @@ color:#00f5ff;
 font-size:20px;
 
 
-font-weight:600;
-
-
 color:#00ff88;
 
 
@@ -428,18 +417,12 @@ color:#00ff88;
 
 
 
-
 #priceTime{
 
 
-margin-top:12px;
+color:#999;
 
-
-font-size:13px;
-
-
-color:#9ca3af;
-
+font-size:14px;
 
 }
 
@@ -448,19 +431,23 @@ color:#9ca3af;
 
 
 
-/* CHART */
+
+
+/* ===============================
+   CHART
+   =============================== */
 
 
 .price-chart{
 
 
-height:200px;
-
-
 width:100%;
 
 
-margin-top:25px;
+height:200px;
+
+
+margin-top:20px;
 
 
 }
@@ -472,7 +459,6 @@ margin-top:25px;
 
 width:100%!important;
 
-
 height:100%!important;
 
 
@@ -480,21 +466,20 @@ height:100%!important;
 
 
 
+/* ==================================================
+   CSS PART 2 FINAL
+   ================================================== */
 
 
 
-
-
-/* ========================= */
-/* SCANNER */
-/* ========================= */
+/* ===============================
+   SCANNER
+   =============================== */
 
 
 .scanner-card{
 
-
 text-align:center;
-
 
 }
 
@@ -504,36 +489,22 @@ text-align:center;
 .scanner-circle{
 
 
-width:190px;
+width:180px;
+
+height:180px;
 
 
-height:190px;
-
-
-
-margin:25px auto;
-
+margin:20px auto;
 
 
 border-radius:50%;
 
 
-
 display:flex;
-
-
-
-align-items:center;
-
-
 
 justify-content:center;
 
-
-
-border:
-
-2px solid #00f5ff;
+align-items:center;
 
 
 
@@ -552,16 +523,22 @@ transparent 65%
 
 
 
+border:
+
+2px solid #00f5ff;
+
+
+
 box-shadow:
 
 
-0 0 45px #00f5ff;
+0 0 40px #00f5ff;
+
 
 
 animation:
 
-scannerPulse 2s infinite;
-
+pulse 2s infinite;
 
 
 }
@@ -569,22 +546,38 @@ scannerPulse 2s infinite;
 
 
 
-@keyframes scannerPulse{
+
+@keyframes pulse{
+
+
+0%{
+
+box-shadow:
+
+0 0 20px #00f5ff;
+
+}
 
 
 50%{
 
+box-shadow:
+
+0 0 60px #00f5ff;
+
+}
+
+
+100%{
 
 box-shadow:
 
-0 0 80px #00f5ff;
-
-
-}
-
+0 0 20px #00f5ff;
 
 }
 
+
+}
 
 
 
@@ -593,10 +586,9 @@ box-shadow:
 #scanTimer{
 
 
-font-size:32px;
+font-size:30px;
 
-
-font-weight:700;
+font-weight:bold;
 
 
 }
@@ -608,34 +600,22 @@ font-weight:700;
 #scanBtn{
 
 
+margin-top:15px;
+
+
 padding:
 
 15px 45px;
 
 
-
 border:none;
-
 
 
 border-radius:50px;
 
 
 
-cursor:pointer;
-
-
-
-font-size:18px;
-
-
-
-color:white;
-
-
-
 background:
-
 
 linear-gradient(
 
@@ -649,8 +629,16 @@ linear-gradient(
 
 
 
-transition:.3s;
+color:white;
 
+
+font-size:18px;
+
+
+cursor:pointer;
+
+
+transition:.3s;
 
 
 }
@@ -664,10 +652,9 @@ transition:.3s;
 transform:scale(1.08);
 
 
-
 box-shadow:
 
-0 0 35px #00f5ff;
+0 0 30px #00f5ff;
 
 
 }
@@ -676,15 +663,15 @@ box-shadow:
 
 
 
-#scanBtn:active{
+#scanBtn:disabled{
 
 
-transform:scale(.95);
+opacity:.5;
+
+cursor:not-allowed;
 
 
 }
-
-
 
 
 
@@ -694,22 +681,25 @@ transform:scale(.95);
 #engineStatus{
 
 
-margin-top:18px;
+margin-top:15px;
 
 
 color:#aaa;
 
 
-font-size:14px;
-
-
-    }
+}
 
 
 
-/* ========================= */
-/* SIGNAL RESULT */
-/* ========================= */
+
+
+
+
+
+
+/* ===============================
+   SIGNAL
+   =============================== */
 
 
 .signal-box{
@@ -718,27 +708,7 @@ font-size:14px;
 text-align:center;
 
 
-margin:25px 0;
-
-
-padding:25px;
-
-
-background:
-
-
-rgba(0,0,0,.18);
-
-
-
-border-radius:20px;
-
-
-
-border:
-
-1px solid rgba(255,255,255,.1);
-
+margin:20px 0;
 
 
 }
@@ -750,13 +720,7 @@ border:
 .signal-box span{
 
 
-color:#9ca3af;
-
-
-letter-spacing:2px;
-
-
-font-size:14px;
+color:#aaa;
 
 
 }
@@ -764,24 +728,17 @@ font-size:14px;
 
 
 
+
 #signal{
 
 
-font-size:48px;
+font-size:45px;
 
 
-margin-top:12px;
+margin-top:10px;
 
 
 color:#ffd166;
-
-
-
-text-shadow:
-
-
-0 0 25px rgba(255,209,102,.4);
-
 
 
 }
@@ -795,27 +752,14 @@ text-shadow:
 
 text-align:center;
 
-
-font-size:13px;
-
-
-color:#9ca3af;
-
+color:#999;
 
 margin-bottom:20px;
-
 
 }
 
 
 
-
-
-
-
-/* ========================= */
-/* STATS */
-/* ========================= */
 
 
 .stats{
@@ -826,10 +770,7 @@ display:grid;
 
 grid-template-columns:
 
-repeat(
-3,
-1fr
-);
+repeat(3,1fr);
 
 
 
@@ -847,7 +788,6 @@ gap:15px;
 
 background:
 
-
 rgba(255,255,255,.06);
 
 
@@ -855,18 +795,12 @@ rgba(255,255,255,.06);
 padding:18px;
 
 
-border-radius:18px;
+
+border-radius:15px;
 
 
 
 text-align:center;
-
-
-
-border:
-
-1px solid rgba(255,255,255,.08);
-
 
 
 }
@@ -878,13 +812,10 @@ border:
 .stats p{
 
 
-color:#9ca3af;
+color:#aaa;
 
 
-margin-bottom:10px;
-
-
-font-size:14px;
+margin-bottom:8px;
 
 
 }
@@ -893,7 +824,73 @@ font-size:14px;
 
 
 
-.stats strong{
+
+
+
+
+/* ===============================
+   INDICATORS
+   =============================== */
+
+
+.indicator-grid{
+
+
+display:grid;
+
+
+grid-template-columns:
+
+repeat(3,1fr);
+
+
+
+gap:15px;
+
+
+}
+
+
+
+
+
+.indicator{
+
+
+background:
+
+rgba(0,0,0,.25);
+
+
+
+padding:20px;
+
+
+border-radius:18px;
+
+
+}
+
+
+
+.indicator span{
+
+
+display:block;
+
+
+color:#aaa;
+
+
+margin-bottom:10px;
+
+
+}
+
+
+
+
+.indicator b{
 
 
 font-size:20px;
@@ -911,13 +908,13 @@ color:#00f5ff;
 
 
 
-/* ========================= */
-/* INDICATORS */
-/* ========================= */
+
+/* ===============================
+   INTELLIGENCE
+   =============================== */
 
 
-
-.indicator-grid{
+.intel-grid{
 
 
 display:grid;
@@ -925,14 +922,11 @@ display:grid;
 
 grid-template-columns:
 
-repeat(
-3,
-1fr
-);
+repeat(2,1fr);
 
 
 
-gap:18px;
+gap:15px;
 
 
 }
@@ -940,32 +934,21 @@ gap:18px;
 
 
 
-.indicator{
+
+.intel-grid div,
+.risk-grid div{
 
 
 background:
 
-
-rgba(0,0,0,.25);
-
-
-
-padding:20px;
+rgba(255,255,255,.06);
 
 
 
-border-radius:18px;
+padding:18px;
 
 
-
-border:
-
-1px solid rgba(255,255,255,.08);
-
-
-
-transition:.3s;
-
+border-radius:15px;
 
 
 }
@@ -973,42 +956,18 @@ transition:.3s;
 
 
 
-.indicator:hover{
 
-
-background:
-
-
-rgba(0,245,255,.08);
-
-
-
-transform:translateY(-4px);
-
-
-
-}
-
-
-
-
-.indicator span{
+.intel-grid span,
+.risk-grid span{
 
 
 display:block;
 
 
-
-color:#9ca3af;
-
+color:#aaa;
 
 
-font-size:14px;
-
-
-
-margin-bottom:12px;
-
+margin-bottom:8px;
 
 
 }
@@ -1016,57 +975,14 @@ margin-bottom:12px;
 
 
 
-
-.indicator b{
-
-
-font-size:22px;
-
+.intel-grid b,
+.risk-grid b{
 
 
 color:#00f5ff;
 
 
-
-}
-
-
-
-
-
-/* ========================= */
-/* MARKET SUMMARY */
-/* ========================= */
-
-
-.summary-card p{
-
-
-line-height:1.8;
-
-
-
-font-size:16px;
-
-
-
-color:#d1d5db;
-
-
-
-background:
-
-
-rgba(0,0,0,.18);
-
-
-
-padding:20px;
-
-
-
-border-radius:18px;
-
+font-size:20px;
 
 
 }
@@ -1075,10 +991,43 @@ border-radius:18px;
 
 
 
-/* ========================= */
-/* VOICE PANEL */
-/* ========================= */
 
+
+
+
+/* ===============================
+   RISK MANAGEMENT
+   =============================== */
+
+
+.risk-grid{
+
+
+display:grid;
+
+
+grid-template-columns:
+
+repeat(4,1fr);
+
+
+
+gap:15px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   VOICE PANEL
+   =============================== */
 
 
 .voice-panel{
@@ -1087,17 +1036,13 @@ border-radius:18px;
 margin-top:25px;
 
 
-
-padding:22px;
-
+padding:20px;
 
 
 text-align:center;
 
 
-
 border-radius:20px;
-
 
 
 background:
@@ -1107,92 +1052,15 @@ rgba(255,255,255,.08);
 
 
 
-border:
-
-1px solid rgba(255,255,255,.12);
-
-
-
 backdrop-filter:
 
 blur(20px);
 
 
 
-}
-
-
-
-
-
-#voiceText{
-
-
 color:#00f5ff;
 
 
-font-size:16px;
-
-
-
-}
-
-
-
-
-
-
-
-/* ========================= */
-/* SCROLLBAR */
-/* ========================= */
-
-
-
-::-webkit-scrollbar{
-
-
-width:8px;
-
-
-}
-
-
-
-
-::-webkit-scrollbar-track{
-
-
-background:#050816;
-
-
-}
-
-
-
-
-::-webkit-scrollbar-thumb{
-
-
-background:
-
-
-linear-gradient(
-
-180deg,
-
-#00f5ff,
-
-#0077ff
-
-);
-
-
-
-border-radius:20px;
-
-
-
 }
 
 
@@ -1202,13 +1070,25 @@ border-radius:20px;
 
 
 
-/* ========================= */
-/* RESPONSIVE */
-/* ========================= */
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
 
 
 
 @media(max-width:900px){
+
+
+.risk-grid{
+
+
+grid-template-columns:
+
+repeat(2,1fr);
+
+
+}
 
 
 
@@ -1217,10 +1097,7 @@ border-radius:20px;
 
 grid-template-columns:
 
-repeat(
-2,
-1fr
-);
+repeat(2,1fr);
 
 
 }
@@ -1237,17 +1114,6 @@ repeat(
 
 
 
-.app{
-
-
-padding:15px;
-
-
-}
-
-
-
-
 .top-header{
 
 
@@ -1257,23 +1123,37 @@ flex-direction:column;
 gap:20px;
 
 
-align-items:flex-start;
+}
 
+
+
+.stats{
+
+
+grid-template-columns:1fr;
 
 
 }
 
 
 
+.risk-grid{
 
-.header-left h1{
 
-
-font-size:26px;
+grid-template-columns:1fr;
 
 
 }
 
+
+
+.indicator-grid{
+
+
+grid-template-columns:1fr;
+
+
+}
 
 
 
@@ -1286,138 +1166,4 @@ font-size:35px;
 }
 
 
-
-
-
-.stats{
-
-
-grid-template-columns:
-
-1fr;
-
-
-
-}
-
-
-
-
-.indicator-grid{
-
-
-grid-template-columns:
-
-1fr;
-
-
-
-}
-
-
-
-.scanner-circle{
-
-
-width:160px;
-
-
-height:160px;
-
-
-
-}
-
-
-
-#signal{
-
-
-font-size:38px;
-
-
-}
-
-
-
-}
-
-
-
-
-
-/* ========================= */
-/* DISABLED BUTTON */
-/* ========================= */
-
-
-#scanBtn:disabled{
-
-
-opacity:.5;
-
-
-cursor:not-allowed;
-
-
-transform:none;
-
-
-box-shadow:none;
-
-
-}
-
-
-
-
-
-
-
-/* ========================= */
-/* GLOW EFFECTS */
-/* ========================= */
-
-
-
-#confidence{
-
-
-color:#00ff88;
-
-
-}
-
-
-
-#liquidity{
-
-
-color:#ffd166;
-
-
-}
-
-
-
-
-
-#macd{
-
-
-color:#ff9f43;
-
-
-}
-
-
-
-
-
-#vwap{
-
-
-color:#c77dff;
-
-
-}
+    }
