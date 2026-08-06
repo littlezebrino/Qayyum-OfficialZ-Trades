@@ -1,210 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTC Quantum Scanner</title>
 
-    <link rel="stylesheet" href="style.css">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta
+name="description"
+content="Professional BTC Quant Scanner with Live Binance Market Intelligence">
+
+<meta
+name="theme-color"
+content="#050816">
+
+<meta
+http-equiv="X-UA-Compatible"
+content="IE=edge">
+
+<title>BTC Quantum Scanner Pro</title>
+
+<link
+rel="preconnect"
+href="https://api.binance.com">
+
+<link
+rel="preconnect"
+href="https://stream.binance.com">
+
+<link
+rel="stylesheet"
+href="style.css">
+
 </head>
 
 <body>
 
-<div class="app">
+<div class="app" id="app">
 
-    <!-- Header -->
-    <header class="top-header">
-        <div>
-            <h1>BTC QUANT SCANNER</h1>
-            <p>Real-Time Market Intelligence Engine</p>
-        </div>
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
 
-        <div class="status">
-            <span class="dot"></span>
-            LIVE MARKET
-        </div>
-    </header>
+<header class="top-header">
 
+<div class="header-left">
 
-    <!-- Main Dashboard -->
+<h1>
 
-    <main class="dashboard">
+BTC QUANTUM SCANNER
 
+</h1>
 
-        <!-- Price Card -->
+<p>
 
-        <section class="glass-card price-card">
+Professional Live Market Intelligence
 
-            <h3>BTC / USDT</h3>
+</p>
 
-            <div id="btcPrice">
-                $0.00
-            </div>
+</div>
 
-            <div class="price-change" id="priceChange">
-                0.00%
-            </div>
 
-            <!-- Live Price Chart -->
-            <div class="price-chart">
-                <canvas id="priceChart"></canvas>
-            </div>
 
-        </section>
+<div
+class="status"
+id="marketStatus">
 
+<span class="dot"></span>
 
+<span id="marketState">
 
-        <!-- Scanner -->
+CONNECTING
 
-        <section class="glass-card scanner-card">
+</span>
 
-            <h2>BTC MARKET SCANNER</h2>
+</div>
 
-            <div class="scanner-circle">
+</header>
 
-                <div id="scanTimer">
-                    READY
-                </div>
 
-            </div>
 
+<!-- ========================= -->
+<!-- MAIN DASHBOARD -->
+<!-- ========================= -->
 
-            <button id="scanBtn">
-                SCAN NOW
-            </button>
+<main class="dashboard">
 
 
-            <div id="scanStatus">
-                Waiting for analysis...
-            </div>
 
+<!-- ========================= -->
+<!-- LIVE PRICE -->
+<!-- ========================= -->
 
-        </section>
+<section
+class="glass-card price-card">
 
 
 
+<h3>
 
-        <!-- Signal Result -->
+BTC / USDT
 
+</h3>
 
-        <section class="glass-card result-card">
 
-            <h2>FINAL ANALYSIS</h2>
 
+<div id="btcPrice">
 
-            <div class="signal-box">
+$0.00
 
-                <span>MARKET BIAS</span>
+</div>
 
-                <h1 id="signal">
-                    WAIT
-                </h1>
 
-            </div>
 
+<div
+class="price-change"
+id="priceChange">
 
+0.00%
 
-            <div class="stats">
+</div>
 
 
-                <div>
-                    <p>Confidence</p>
-                    <strong id="confidence">
-                        0%
-                    </strong>
-                </div>
 
+<div id="priceTime">
 
-                <div>
-                    <p>Momentum</p>
-                    <strong id="momentum">
-                        Neutral
-                    </strong>
-                </div>
+Waiting for live market...
 
+</div>
 
-                <div>
-                    <p>Liquidity Magnet</p>
-                    <strong id="liquidity">
-                        Searching...
-                    </strong>
-                </div>
 
 
+<div class="price-chart">
 
-            </div>
+<canvas id="priceChart">
 
+</canvas>
 
-        </section>
+</div>
 
+</section>
 
 
 
-        <!-- Indicators -->
 
 
-        <section class="glass-card indicators-card">
+<!-- ========================= -->
+<!-- SCANNER -->
+<!-- ========================= -->
 
-            <h2>Market Intelligence</h2>
+<section
+class="glass-card scanner-card">
 
 
-            <div class="indicator-grid">
 
+<h2>
 
-                <div class="indicator">
-                    <span>RSI</span>
-                    <b id="rsi">--</b>
-                </div>
+BTC MARKET SCANNER
 
+</h2>
 
-                <div class="indicator">
-                    <span>EMA Trend</span>
-                    <b id="ema">--</b>
-                </div>
 
 
-                <div class="indicator">
-                    <span>Volume</span>
-                    <b id="volume">--</b>
-                </div>
+<div class="scanner-circle">
 
+<div id="scanTimer">
 
-                <div class="indicator">
-                    <span>Volatility</span>
-                    <b id="volatility">--</b>
-                </div>
+READY
 
+</div>
 
-            </div>
+</div>
 
 
-        </section>
 
+<button id="scanBtn">
 
+SCAN MARKET
 
-    </main>
+</button>
 
 
 
-    <!-- Voice Result -->
+<div id="scanStatus">
 
-    <div class="voice-panel">
+Waiting for analysis...
 
-        <p id="voiceText">
-            Voice system ready
-        </p>
+</div>
 
-    </div>
+
+
+<div id="engineStatus">
+
+Engine Ready
+
+</div>
+
+</section>
+
+
+
+
+
+<!-- ========================= -->
+<!-- RESULT -->
+<!-- ========================= -->
+
+<section
+class="glass-card result-card">
+
+
+
+<h2>
+
+FINAL ANALYSIS
+
+</h2>
+
+
+
+<div class="signal-box">
+
+<span>
+
+MARKET BIAS
+
+</span>
+
+
+
+<h1 id="signal">
+
+WAIT
+
+</h1>
+
+</div>
+
+
+
+<div id="signalTime">
+
+No Signal Generated
+
+</div>
+
+
+
+<div class="stats">
+
+
+
+<div>
+
+<p>
+
+Confidence
+
+</p>
+
+<strong id="confidence">
+
+0%
+
+</strong>
+
+</div>
+
+
+
+<div>
+
+<p>
+
+Momentum
+
+</p>
+
+<strong id="momentum">
+
+Neutral
+
+</strong>
+
+</div>
+
+
+
+    <!-- ========================= -->
+<!-- CONTINUATION RESULT STATS -->
+<!-- ========================= -->
+
+
+<div>
+
+<p>
+
+Liquidity Magnet
+
+</p>
+
+<strong id="liquidity">
+
+Searching...
+
+</strong>
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<!-- ========================= -->
+<!-- MARKET INTELLIGENCE -->
+<!-- ========================= -->
+
+
+<section
+class="glass-card indicators-card">
+
+
+<h2>
+
+Market Intelligence
+
+</h2>
+
+
+
+<div class="indicator-grid">
+
+
+
+<div class="indicator">
+
+<span>
+
+RSI
+
+</span>
+
+
+<b id="rsi">
+
+--
+
+</b>
+
+
+</div>
+
+
+
+
+<div class="indicator">
+
+<span>
+
+EMA Trend
+
+</span>
+
+
+<b id="ema">
+
+--
+
+</b>
+
+
+</div>
+
+
+
+
+<div class="indicator">
+
+<span>
+
+MACD
+
+</span>
+
+
+<b id="macd">
+
+--
+
+</b>
+
+
+</div>
+
+
+
+
+<div class="indicator">
+
+<span>
+
+Volume
+
+</span>
+
+
+<b id="volume">
+
+--
+
+</b>
+
+
+</div>
+
+
+
+
+<div class="indicator">
+
+<span>
+
+VWAP
+
+</span>
+
+
+<b id="vwap">
+
+--
+
+</b>
+
+
+</div>
+
+
+
+
+<div class="indicator">
+
+<span>
+
+Volatility
+
+</span>
+
+
+<b id="volatility">
+
+--
+
+</b>
+
+
+</div>
 
 
 
 </div>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Main Script -->
-<script src="script.js"></script>
+
+</section>
+
+
+
+
+
+
+
+<!-- ========================= -->
+<!-- MARKET SUMMARY -->
+<!-- ========================= -->
+
+
+<section
+class="glass-card summary-card">
+
+
+<h2>
+
+Market Summary
+
+</h2>
+
+
+
+<p id="marketSummary">
+
+Collecting live market intelligence...
+
+</p>
+
+
+
+</section>
+
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+<!-- ========================= -->
+<!-- VOICE SYSTEM -->
+<!-- ========================= -->
+
+
+<div
+class="voice-panel"
+id="voicePanel">
+
+
+<p id="voiceText">
+
+Voice system ready
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ========================= -->
+<!-- LIBRARIES -->
+<!-- ========================= -->
+
+
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+
+
+
+<!-- MAIN ENGINE -->
+
+<script
+src="script.js">
+</script>
+
+
+
+</div>
+
 
 </body>
+
 </html>
