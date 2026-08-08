@@ -1,1169 +1,1551 @@
-/* ==================================================
-   BTC QUANTUM SCANNER PRO
-   CSS PART 1
-   ================================================== */
+/* =========================================================
+BTC QUANTUM SCANNER PRO
+CSS PART 1
+CORE + HEADER + DASHBOARD + PRICE
+========================================================= */
 
+/* =========================================================
+RESET
+========================================================= */
 
-/* ===============================
-   RESET
-   =============================== */
+* {
 
+  margin: 0;
+  padding: 0;
 
-*{
+  box-sizing: border-box;
 
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:
-"Inter",
-"Segoe UI",
-sans-serif;
+  font-family:
+  "Inter",
+  "Segoe UI",
+  Arial,
+  sans-serif;
+  }
 
-}
+/* =========================================================
+BODY
+========================================================= */
 
+body {
 
+```
+min-height: 100vh;
 
-body{
-
-min-height:100vh;
-
-background:
-
-radial-gradient(
-circle at top left,
-#14213d,
-transparent 35%
-),
-
-radial-gradient(
-circle at bottom right,
-#003049,
-transparent 40%
-),
-
-#050816;
-
-
-color:white;
-
-overflow-x:hidden;
-
-}
-
-
-
-
-
-body::before{
-
-content:"";
-
-position:fixed;
-
-inset:0;
+color: #ffffff;
 
 background:
 
-linear-gradient(
-120deg,
-rgba(255,255,255,0.05),
-transparent
-);
+    radial-gradient(
+        circle at top left,
+        #14213d 0%,
+        transparent 35%
+    ),
 
+    radial-gradient(
+        circle at bottom right,
+        #003049 0%,
+        transparent 40%
+    ),
 
-pointer-events:none;
+    #050816;
 
-}
-
-
-
-
-
-/* ===============================
-   APP CONTAINER
-   =============================== */
-
-
-.app{
-
-width:100%;
-
-max-width:1400px;
-
-margin:auto;
-
-padding:25px;
+overflow-x: hidden;
+```
 
 }
 
+/* =========================================================
+BACKGROUND LIGHT LAYER
+========================================================= */
 
+body::before {
 
+```
+content: "";
 
+position: fixed;
 
+inset: 0;
 
+pointer-events: none;
 
-
-/* ===============================
-   HEADER
-   =============================== */
-
-
-.top-header{
-
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:30px;
-
-
-}
-
-
-
-
-
-.header-left h1{
-
-
-font-size:34px;
-
-letter-spacing:3px;
-
+z-index: -1;
 
 background:
 
-linear-gradient(
-90deg,
-#00f5ff,
-#ffffff
-);
-
-
--webkit-background-clip:text;
-
-color:transparent;
-
+    linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.05),
+        transparent 45%
+    );
+```
 
 }
 
+/* =========================================================
+APP CONTAINER
+========================================================= */
 
+.app {
 
+```
+width: 100%;
 
-.header-left p{
+max-width: 1400px;
 
+margin: 0 auto;
 
-margin-top:8px;
-
-color:#9ca3af;
-
-font-size:15px;
-
+padding: 25px;
+```
 
 }
 
+/* =========================================================
+HEADER
+========================================================= */
 
+.top-header {
 
+```
+display: flex;
 
+justify-content: space-between;
 
+align-items: center;
 
+gap: 25px;
 
-/* ===============================
-   LIVE STATUS
-   =============================== */
+margin-bottom: 30px;
+```
 
+}
 
-.status{
+/* =========================================================
+HEADER TITLE
+========================================================= */
 
+.header-left h1 {
 
-padding:
+```
+font-size: 34px;
 
-12px 22px;
+line-height: 1.15;
 
+letter-spacing: 3px;
 
-border-radius:50px;
-
+font-weight: 800;
 
 background:
 
-rgba(255,255,255,.08);
+    linear-gradient(
+        90deg,
+        #00f5ff,
+        #ffffff
+    );
 
+-webkit-background-clip: text;
 
+background-clip: text;
+
+color: transparent;
+```
+
+}
+
+.header-left p {
+
+```
+margin-top: 8px;
+
+color: #9ca3af;
+
+font-size: 15px;
+
+letter-spacing: 0.4px;
+```
+
+}
+
+/* =========================================================
+LIVE STATUS
+========================================================= */
+
+.status {
+
+```
+display: flex;
+
+align-items: center;
+
+gap: 10px;
+
+padding: 12px 22px;
+
+border-radius: 50px;
+
+background:
+
+    rgba(255, 255, 255, 0.08);
 
 border:
 
-1px solid rgba(255,255,255,.15);
+    1px solid
+    rgba(255, 255, 255, 0.15);
 
+backdrop-filter: blur(20px);
 
+-webkit-backdrop-filter: blur(20px);
 
-backdrop-filter:
+white-space: nowrap;
 
-blur(20px);
+font-size: 13px;
 
+font-weight: 700;
 
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
+letter-spacing: 1px;
+```
 
 }
 
+/* =========================================================
+LIVE DOT
+========================================================= */
 
+.dot {
 
+```
+width: 10px;
 
+height: 10px;
 
-.dot{
+flex-shrink: 0;
 
+border-radius: 50%;
 
-width:10px;
-
-height:10px;
-
-
-border-radius:50%;
-
-
-background:#00ff88;
-
+background: #00ff88;
 
 box-shadow:
 
-0 0 15px #00ff88;
+    0 0 8px #00ff88,
+    0 0 18px #00ff88;
 
+animation:
+    livePulse 1.8s infinite ease-in-out;
+```
 
 }
 
+@keyframes livePulse {
 
+```
+0%,
+100% {
 
+    opacity: 1;
 
+    transform: scale(1);
 
+}
 
+50% {
 
+    opacity: 0.55;
 
+    transform: scale(0.82);
 
-/* ===============================
-   DASHBOARD GRID
-   =============================== */
+}
+```
 
+}
 
-.dashboard{
+/* =========================================================
+DASHBOARD GRID
+========================================================= */
 
+.dashboard {
 
-display:grid;
-
+```
+display: grid;
 
 grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(320px, 1fr)
+    );
 
-repeat(
-auto-fit,
-minmax(320px,1fr)
-);
-
-
-
-gap:25px;
-
+gap: 25px;
+```
 
 }
 
+/* =========================================================
+GLASS CARD
+========================================================= */
 
+.glass-card {
 
+```
+position: relative;
 
+overflow: hidden;
 
+padding: 30px;
 
-
-/* ===============================
-   GLASS CARD
-   =============================== */
-
-
-.glass-card{
-
+border-radius: 25px;
 
 background:
 
-
-linear-gradient(
-
-145deg,
-
-rgba(255,255,255,.12),
-
-rgba(255,255,255,.03)
-
-);
-
-
+    linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.12),
+        rgba(255, 255, 255, 0.03)
+    );
 
 border:
 
-1px solid
+    1px solid
+    rgba(255, 255, 255, 0.18);
 
-rgba(255,255,255,.18);
+backdrop-filter: blur(25px);
 
-
-
-border-radius:25px;
-
-
-
-padding:30px;
-
-
-
-backdrop-filter:
-
-blur(25px);
-
-
+-webkit-backdrop-filter: blur(25px);
 
 box-shadow:
 
+    0 20px 50px
+    rgba(0, 0, 0, 0.4),
 
-0 20px 50px rgba(0,0,0,.4),
+    inset 0 0 30px
+    rgba(255, 255, 255, 0.05);
 
+transition:
 
-inset 0 0 30px rgba(255,255,255,.05);
-
-
-
-transition:.3s;
-
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+```
 
 }
 
+/* =========================================================
+CARD LIGHT EFFECT
+========================================================= */
 
+.glass-card::before {
 
+```
+content: "";
 
-.glass-card:hover{
+position: absolute;
 
+top: -100px;
 
-transform:translateY(-5px);
+right: -100px;
 
+width: 220px;
+
+height: 220px;
+
+border-radius: 50%;
+
+background:
+
+    radial-gradient(
+        circle,
+        rgba(0, 245, 255, 0.08),
+        transparent 70%
+    );
+
+pointer-events: none;
+```
+
+}
+
+/* =========================================================
+CARD HOVER
+========================================================= */
+
+.glass-card:hover {
+
+```
+transform: translateY(-5px);
+
+border-color:
+
+    rgba(0, 245, 255, 0.25);
 
 box-shadow:
 
+    0 25px 60px
+    rgba(0, 245, 255, 0.15),
 
-0 25px 60px rgba(0,245,255,.15);
-
-
+    inset 0 0 30px
+    rgba(255, 255, 255, 0.05);
+```
 
 }
 
-
-
-
+/* =========================================================
+CARD HEADINGS
+========================================================= */
 
 .glass-card h2,
-.glass-card h3{
+.glass-card h3 {
 
+```
+position: relative;
 
-margin-bottom:20px;
+margin-bottom: 20px;
 
-letter-spacing:1px;
+letter-spacing: 1px;
 
-
-}
-
-
-
-
-
-
-
-/* ===============================
-   PRICE CARD
-   =============================== */
-
-
-#btcPrice{
-
-
-font-size:45px;
-
-
-font-weight:700;
-
-
-color:#00f5ff;
-
-
-margin:20px 0;
-
+z-index: 1;
+```
 
 }
 
+.glass-card h2 {
 
-
-
-
-.price-change{
-
-
-font-size:20px;
-
-
-color:#00ff88;
-
+```
+font-size: 21px;
+```
 
 }
 
+.glass-card h3 {
 
+```
+font-size: 17px;
 
-
-#priceTime{
-
-
-color:#999;
-
-font-size:14px;
+color: #d9faff;
+```
 
 }
 
+/* =========================================================
+PRICE CARD
+========================================================= */
 
+.price-card {
 
-
-
-
-
-
-/* ===============================
-   CHART
-   =============================== */
-
-
-.price-chart{
-
-
-width:100%;
-
-
-height:200px;
-
-
-margin-top:20px;
-
+```
+min-height: 390px;
+```
 
 }
 
+/* =========================================================
+BTC PRICE
+========================================================= */
 
+#btcPrice {
 
-#priceChart{
+```
+margin: 20px 0 8px;
 
+font-size: 45px;
 
-width:100%!important;
+line-height: 1;
 
-height:100%!important;
+font-weight: 800;
 
+letter-spacing: -1px;
 
-}
+color: #00f5ff;
 
+text-shadow:
 
-
-/* ==================================================
-   CSS PART 2 FINAL
-   ================================================== */
-
-
-
-/* ===============================
-   SCANNER
-   =============================== */
-
-
-.scanner-card{
-
-text-align:center;
+    0 0 20px
+    rgba(0, 245, 255, 0.25);
+```
 
 }
 
+/* =========================================================
+PRICE CHANGE
+========================================================= */
+
+.price-change {
+
+```
+font-size: 20px;
+
+font-weight: 700;
+
+color: #00ff88;
+
+transition: color 0.2s ease;
+```
+
+}
+
+/* =========================================================
+PRICE TIME
+========================================================= */
+
+#priceTime {
+
+```
+margin-top: 8px;
+
+color: #999999;
+
+font-size: 13px;
+```
+
+}
+
+/* =========================================================
+PRICE CHART CONTAINER
+========================================================= */
+
+.price-chart {
+
+```
+width: 100%;
+
+height: 200px;
+
+margin-top: 20px;
+
+position: relative;
+```
+
+}
+
+/* =========================================================
+CHART CANVAS
+========================================================= */
+
+#priceChart {
+
+```
+width: 100% !important;
+
+height: 100% !important;
+
+display: block;
+```
+
+}
+
+/* =========================================================
+INITIAL SIGNAL COLORS
+========================================================= */
+
+#signal {
+
+```
+transition:
+
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+```
+
+}
+
+#confidence,
+#momentum,
+#liquidity {
+
+```
+transition:
+
+    color 0.3s ease;
+```
+
+}
+
+/* =========================================================
+BUTTON BASE SAFETY
+========================================================= */
+
+button {
+
+```
+font-family: inherit;
+```
+
+}
+
+/* =========================================================
+SELECTION
+========================================================= */
+
+::selection {
+
+```
+color: #ffffff;
+
+background: #0077ff;
+```
+
+}
+
+/* =========================================================
+SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+
+```
+width: 8px;
+```
+
+}
+
+::-webkit-scrollbar-track {
+
+```
+background: #050816;
+```
+
+}
+
+::-webkit-scrollbar-thumb {
+
+```
+background:
+
+    linear-gradient(
+        #00f5ff,
+        #0077ff
+    );
+
+border-radius: 10px;
+```
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+```
+background: #00f5ff;
+```
+
+   }
 
 
 
-.scanner-circle{
 
+/* =========================================================
+BTC QUANTUM SCANNER PRO
+CSS PART 2
+SCANNER + SIGNAL + INDICATORS + INTELLIGENCE
 
-width:180px;
+* RISK + VOICE + RESPONSIVE
+  ========================================================= */
 
-height:180px;
+/* =========================================================
+SCANNER CARD
+========================================================= */
 
+.scanner-card {
 
-margin:20px auto;
+```
+text-align: center;
 
+min-height: 390px;
+```
 
-border-radius:50%;
+}
 
+/* =========================================================
+SCANNER CIRCLE
+========================================================= */
 
-display:flex;
+.scanner-circle {
 
-justify-content:center;
+```
+width: 180px;
 
-align-items:center;
+height: 180px;
 
+margin: 20px auto;
 
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+border-radius: 50%;
 
 background:
 
-
-radial-gradient(
-
-circle,
-
-rgba(0,245,255,.35),
-
-transparent 65%
-
-);
-
-
+    radial-gradient(
+        circle,
+        rgba(0, 245, 255, 0.35),
+        rgba(0, 245, 255, 0.08) 45%,
+        transparent 70%
+    );
 
 border:
 
-2px solid #00f5ff;
-
-
+    2px solid #00f5ff;
 
 box-shadow:
 
+    0 0 20px
+    rgba(0, 245, 255, 0.65),
 
-0 0 40px #00f5ff;
-
-
+    inset 0 0 30px
+    rgba(0, 245, 255, 0.15);
 
 animation:
 
-pulse 2s infinite;
-
-
-}
-
-
-
-
-
-@keyframes pulse{
-
-
-0%{
-
-box-shadow:
-
-0 0 20px #00f5ff;
+    scannerPulse 2s infinite ease-in-out;
+```
 
 }
 
+@keyframes scannerPulse {
 
-50%{
+```
+0% {
 
-box-shadow:
+    transform: scale(1);
 
-0 0 60px #00f5ff;
+    box-shadow:
+
+        0 0 20px
+        rgba(0, 245, 255, 0.55),
+
+        inset 0 0 20px
+        rgba(0, 245, 255, 0.12);
+}
+
+50% {
+
+    transform: scale(1.035);
+
+    box-shadow:
+
+        0 0 60px
+        rgba(0, 245, 255, 0.9),
+
+        inset 0 0 35px
+        rgba(0, 245, 255, 0.2);
+}
+
+100% {
+
+    transform: scale(1);
+
+    box-shadow:
+
+        0 0 20px
+        rgba(0, 245, 255, 0.55),
+
+        inset 0 0 20px
+        rgba(0, 245, 255, 0.12);
+}
+```
 
 }
 
+/* =========================================================
+SCAN TIMER
+========================================================= */
 
-100%{
+#scanTimer {
 
-box-shadow:
+```
+font-size: 30px;
 
-0 0 20px #00f5ff;
+font-weight: 800;
 
-}
+color: #ffffff;
 
+letter-spacing: 1px;
 
-}
+text-shadow:
 
-
-
-
-
-#scanTimer{
-
-
-font-size:30px;
-
-font-weight:bold;
-
+    0 0 15px
+    rgba(0, 245, 255, 0.7);
+```
 
 }
 
+/* =========================================================
+SCAN BUTTON
+========================================================= */
 
+#scanBtn {
 
+```
+margin-top: 15px;
 
+padding: 15px 45px;
 
-#scanBtn{
+border: none;
 
-
-margin-top:15px;
-
-
-padding:
-
-15px 45px;
-
-
-border:none;
-
-
-border-radius:50px;
-
-
+border-radius: 50px;
 
 background:
 
-linear-gradient(
+    linear-gradient(
+        90deg,
+        #00f5ff,
+        #0077ff
+    );
 
-90deg,
+color: #ffffff;
 
-#00f5ff,
+font-size: 18px;
 
-#0077ff
+font-weight: 700;
 
-);
+letter-spacing: 0.5px;
 
-
-
-color:white;
-
-
-font-size:18px;
-
-
-cursor:pointer;
-
-
-transition:.3s;
-
-
-}
-
-
-
-
-#scanBtn:hover{
-
-
-transform:scale(1.08);
-
+cursor: pointer;
 
 box-shadow:
 
-0 0 30px #00f5ff;
+    0 0 15px
+    rgba(0, 245, 255, 0.25);
 
+transition:
 
-}
-
-
-
-
-
-#scanBtn:disabled{
-
-
-opacity:.5;
-
-cursor:not-allowed;
-
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+```
 
 }
 
+#scanBtn:hover {
 
+```
+transform: scale(1.08);
 
+box-shadow:
 
+    0 0 30px
+    rgba(0, 245, 255, 0.75);
+```
+
+}
+
+#scanBtn:active {
+
+```
+transform: scale(0.98);
+```
+
+}
+
+#scanBtn:disabled {
+
+```
+opacity: 0.5;
+
+cursor: not-allowed;
+
+transform: none;
+
+box-shadow: none;
+```
+
+}
+
+/* =========================================================
+SCANNER STATUS
+========================================================= */
 
 #scanStatus,
-#engineStatus{
+#engineStatus {
 
+```
+margin-top: 15px;
 
-margin-top:15px;
+color: #aaaaaa;
 
+font-size: 14px;
 
-color:#aaa;
-
-
-}
-
-
-
-
-
-
-
-
-
-/* ===============================
-   SIGNAL
-   =============================== */
-
-
-.signal-box{
-
-
-text-align:center;
-
-
-margin:20px 0;
-
+transition: color 0.3s ease;
+```
 
 }
 
+#engineStatus {
 
-
-
-
-.signal-box span{
-
-
-color:#aaa;
-
+```
+color: #00f5ff;
+```
 
 }
 
+/* =========================================================
+FINAL SIGNAL
+========================================================= */
 
+.result-card {
 
-
-
-#signal{
-
-
-font-size:45px;
-
-
-margin-top:10px;
-
-
-color:#ffd166;
-
+```
+min-height: 390px;
+```
 
 }
 
+.signal-box {
 
+```
+margin: 20px 0;
 
-
-
-#signalTime{
-
-
-text-align:center;
-
-color:#999;
-
-margin-bottom:20px;
+text-align: center;
+```
 
 }
 
+.signal-box span {
 
+```
+color: #aaaaaa;
 
+font-size: 13px;
 
+letter-spacing: 1px;
+```
 
-.stats{
+}
 
+#signal {
 
-display:grid;
+```
+margin-top: 10px;
 
+font-size: 45px;
+
+font-weight: 900;
+
+letter-spacing: 2px;
+
+color: #ffd166;
+
+text-shadow:
+
+    0 0 18px
+    rgba(255, 209, 102, 0.2);
+```
+
+}
+
+/* =========================================================
+SIGNAL TIME
+========================================================= */
+
+#signalTime {
+
+```
+margin-bottom: 20px;
+
+text-align: center;
+
+color: #999999;
+
+font-size: 13px;
+```
+
+}
+
+/* =========================================================
+STATS
+========================================================= */
+
+.stats {
+
+```
+display: grid;
 
 grid-template-columns:
+    repeat(3, 1fr);
 
-repeat(3,1fr);
-
-
-
-gap:15px;
-
+gap: 15px;
+```
 
 }
 
+.stats div {
 
+```
+padding: 18px;
 
+border-radius: 15px;
 
-
-.stats div{
-
+text-align: center;
 
 background:
 
-rgba(255,255,255,.06);
+    rgba(255, 255, 255, 0.06);
 
+border:
 
-
-padding:18px;
-
-
-
-border-radius:15px;
-
-
-
-text-align:center;
-
+    1px solid
+    rgba(255, 255, 255, 0.05);
+```
 
 }
 
+.stats p {
 
+```
+margin-bottom: 8px;
 
+color: #aaaaaa;
 
-
-.stats p{
-
-
-color:#aaa;
-
-
-margin-bottom:8px;
-
+font-size: 13px;
+```
 
 }
 
+.stats strong {
 
+```
+color: #00f5ff;
 
+font-size: 19px;
+```
 
+}
 
+/* =========================================================
+INDICATORS
+========================================================= */
 
+.indicators-card {
 
+```
+min-height: 300px;
+```
 
+}
 
-/* ===============================
-   INDICATORS
-   =============================== */
+.indicator-grid {
 
-
-.indicator-grid{
-
-
-display:grid;
-
+```
+display: grid;
 
 grid-template-columns:
+    repeat(3, 1fr);
 
-repeat(3,1fr);
-
-
-
-gap:15px;
-
+gap: 15px;
+```
 
 }
 
+.indicator {
 
+```
+padding: 20px;
 
-
-
-.indicator{
-
+border-radius: 18px;
 
 background:
 
-rgba(0,0,0,.25);
+    rgba(0, 0, 0, 0.25);
 
+border:
 
+    1px solid
+    rgba(255, 255, 255, 0.05);
 
-padding:20px;
+transition:
 
-
-border-radius:18px;
-
-
-}
-
-
-
-.indicator span{
-
-
-display:block;
-
-
-color:#aaa;
-
-
-margin-bottom:10px;
-
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+```
 
 }
 
+.indicator:hover {
 
+```
+transform: translateY(-3px);
 
+background:
 
-.indicator b{
+    rgba(0, 245, 255, 0.06);
 
+border-color:
 
-font-size:20px;
-
-
-color:#00f5ff;
-
+    rgba(0, 245, 255, 0.18);
+```
 
 }
 
+.indicator span {
 
+```
+display: block;
 
+margin-bottom: 10px;
 
+color: #aaaaaa;
 
+font-size: 13px;
 
+letter-spacing: 0.5px;
+```
 
+}
 
+.indicator b {
 
-/* ===============================
-   INTELLIGENCE
-   =============================== */
+```
+font-size: 20px;
 
+color: #00f5ff;
 
-.intel-grid{
+text-shadow:
 
+    0 0 10px
+    rgba(0, 245, 255, 0.25);
+```
 
-display:grid;
+}
 
+/* =========================================================
+MARKET INTELLIGENCE
+========================================================= */
+
+.intel-grid {
+
+```
+display: grid;
 
 grid-template-columns:
+    repeat(2, 1fr);
 
-repeat(2,1fr);
-
-
-
-gap:15px;
-
+gap: 15px;
+```
 
 }
-
-
-
-
 
 .intel-grid div,
-.risk-grid div{
+.risk-grid div {
 
+```
+padding: 18px;
+
+border-radius: 15px;
 
 background:
 
-rgba(255,255,255,.06);
+    rgba(255, 255, 255, 0.06);
 
+border:
 
+    1px solid
+    rgba(255, 255, 255, 0.05);
 
-padding:18px;
+transition:
 
-
-border-radius:15px;
-
+    background 0.25s ease,
+    border-color 0.25s ease;
+```
 
 }
 
+.intel-grid div:hover,
+.risk-grid div:hover {
 
+```
+background:
 
+    rgba(0, 245, 255, 0.05);
 
+border-color:
+
+    rgba(0, 245, 255, 0.15);
+```
+
+}
 
 .intel-grid span,
-.risk-grid span{
+.risk-grid span {
 
+```
+display: block;
 
-display:block;
+margin-bottom: 8px;
 
+color: #aaaaaa;
 
-color:#aaa;
-
-
-margin-bottom:8px;
-
+font-size: 13px;
+```
 
 }
-
-
-
 
 .intel-grid b,
-.risk-grid b{
+.risk-grid b {
 
+```
+color: #00f5ff;
 
-color:#00f5ff;
+font-size: 19px;
 
-
-font-size:20px;
-
+word-break: break-word;
+```
 
 }
 
+/* =========================================================
+RISK MANAGEMENT
+========================================================= */
 
+.risk-grid {
 
-
-
-
-
-
-
-/* ===============================
-   RISK MANAGEMENT
-   =============================== */
-
-
-.risk-grid{
-
-
-display:grid;
-
+```
+display: grid;
 
 grid-template-columns:
+    repeat(4, 1fr);
 
-repeat(4,1fr);
-
-
-
-gap:15px;
-
+gap: 15px;
+```
 
 }
 
+.risk-grid b {
 
+```
+font-size: 18px;
+```
 
+}
 
+/* =========================================================
+VOICE PANEL
+========================================================= */
 
+.voice-panel {
 
+```
+grid-column: 1 / -1;
 
+margin-top: 0;
 
+padding: 20px;
 
-/* ===============================
-   VOICE PANEL
-   =============================== */
+text-align: center;
 
-
-.voice-panel{
-
-
-margin-top:25px;
-
-
-padding:20px;
-
-
-text-align:center;
-
-
-border-radius:20px;
-
+border-radius: 20px;
 
 background:
 
+    rgba(255, 255, 255, 0.08);
 
-rgba(255,255,255,.08);
+border:
 
+    1px solid
+    rgba(255, 255, 255, 0.12);
 
+backdrop-filter: blur(20px);
 
-backdrop-filter:
+-webkit-backdrop-filter: blur(20px);
 
-blur(20px);
+color: #00f5ff;
 
+box-shadow:
 
-
-color:#00f5ff;
-
-
-}
-
-
-
-
-
-
-
-
-
-/* ===============================
-   RESPONSIVE
-   =============================== */
-
-
-
-@media(max-width:900px){
-
-
-.risk-grid{
-
-
-grid-template-columns:
-
-repeat(2,1fr);
-
+    inset 0 0 25px
+    rgba(0, 245, 255, 0.03);
+```
 
 }
 
+#voiceText {
 
+```
+font-size: 14px;
 
-.indicator-grid{
-
-
-grid-template-columns:
-
-repeat(2,1fr);
-
+letter-spacing: 0.4px;
+```
 
 }
 
+/* =========================================================
+TABLET
+========================================================= */
 
+@media (max-width: 1100px) {
 
+```
+.dashboard {
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 }
 
 
+.price-card,
+.scanner-card,
+.result-card,
+.indicators-card,
+.intelligence-card,
+.risk-card,
+.voice-panel {
 
-
-
-@media(max-width:700px){
-
-
-
-.top-header{
-
-
-flex-direction:column;
-
-
-gap:20px;
-
-
+    min-width: 0;
 }
 
 
+.indicator-grid {
 
-.stats{
-
-
-grid-template-columns:1fr;
-
-
+    grid-template-columns:
+        repeat(3, 1fr);
 }
 
 
+.risk-grid {
 
-.risk-grid{
-
-
-grid-template-columns:1fr;
-
+    grid-template-columns:
+        repeat(2, 1fr);
+}
+```
 
 }
 
+/* =========================================================
+TABLET / SMALL SCREEN
+========================================================= */
 
+@media (max-width: 900px) {
 
-.indicator-grid{
+```
+.app {
 
-
-grid-template-columns:1fr;
-
-
+    padding: 20px;
 }
 
 
+.top-header {
 
-#btcPrice{
-
-
-font-size:35px;
-
-
+    align-items: flex-start;
 }
 
 
-    }
+.header-left h1 {
+
+    font-size: 28px;
+}
+
+
+.indicator-grid {
+
+    grid-template-columns:
+        repeat(2, 1fr);
+}
+
+
+.risk-grid {
+
+    grid-template-columns:
+        repeat(2, 1fr);
+}
+```
+
+}
+
+/* =========================================================
+MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+```
+.app {
+
+    padding: 15px;
+}
+
+
+.top-header {
+
+    flex-direction: column;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.header-left h1 {
+
+    font-size: 24px;
+
+    letter-spacing: 2px;
+}
+
+
+.header-left p {
+
+    font-size: 13px;
+}
+
+
+.status {
+
+    width: 100%;
+
+    justify-content: center;
+}
+
+
+.dashboard {
+
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+}
+
+
+.glass-card {
+
+    padding: 22px;
+
+    border-radius: 20px;
+}
+
+
+#btcPrice {
+
+    font-size: 35px;
+}
+
+
+.price-card,
+.scanner-card,
+.result-card {
+
+    min-height: auto;
+}
+
+
+.scanner-circle {
+
+    width: 155px;
+
+    height: 155px;
+}
+
+
+#scanTimer {
+
+    font-size: 26px;
+}
+
+
+#scanBtn {
+
+    width: 100%;
+
+    padding: 14px 25px;
+}
+
+
+.stats {
+
+    grid-template-columns: 1fr;
+}
+
+
+.indicator-grid {
+
+    grid-template-columns: 1fr;
+}
+
+
+.intel-grid {
+
+    grid-template-columns: 1fr;
+}
+
+
+.risk-grid {
+
+    grid-template-columns: 1fr;
+}
+
+
+.voice-panel {
+
+    margin-top: 0;
+}
+```
+
+}
+
+/* =========================================================
+VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+```
+.app {
+
+    padding: 10px;
+}
+
+
+.header-left h1 {
+
+    font-size: 21px;
+
+    letter-spacing: 1.5px;
+}
+
+
+.glass-card {
+
+    padding: 18px;
+}
+
+
+#btcPrice {
+
+    font-size: 31px;
+}
+
+
+#signal {
+
+    font-size: 38px;
+}
+
+
+.scanner-circle {
+
+    width: 140px;
+
+    height: 140px;
+}
+```
+
+}
+
+/* =========================================================
+REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+```
+*,
+*::before,
+*::after {
+
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+}
+```
+
+   }
