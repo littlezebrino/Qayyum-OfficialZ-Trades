@@ -1,3 +1,4 @@
+```css
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    CSS PART 1
@@ -52,10 +53,6 @@ body {
 
 }
 
-
-/* ===============================
-   BACKGROUND LIGHT
-   =============================== */
 
 body::before {
 
@@ -235,9 +232,6 @@ body::before {
     backdrop-filter:
         blur(25px);
 
-    -webkit-backdrop-filter:
-        blur(25px);
-
     box-shadow:
 
         0 20px 50px
@@ -246,8 +240,7 @@ body::before {
         inset 0 0 30px
         rgba(255,255,255,.05);
 
-    transition:
-        .3s;
+    transition: .3s;
 
 }
 
@@ -289,8 +282,6 @@ body::before {
 
     margin: 20px 0;
 
-    line-height: 1.1;
-
 }
 
 
@@ -300,24 +291,13 @@ body::before {
 
     color: #00ff88;
 
-    font-weight: 600;
-
-}
-
-
-#priceTime {
-
-    color: #999;
-
-    font-size: 14px;
-
-    margin-top: 6px;
+    min-height: 24px;
 
 }
 
 
 /* ===============================
-   PRICE CHART
+   LIVE PRICE CHART
    =============================== */
 
 .price-chart {
@@ -339,13 +319,11 @@ body::before {
 
     height: 100% !important;
 
-    display: block;
-
 }
 
 
 /* ===============================
-   SCANNER CARD
+   SCANNER
    =============================== */
 
 .scanner-card {
@@ -484,9 +462,12 @@ body::before {
     color: #aaa;
 
 }
+```
 
 
 
+
+```css id="4nq7ws"
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    CSS PART 2 FINAL
@@ -494,7 +475,7 @@ body::before {
 
 
 /* ===============================
-   SIGNAL
+   SIGNAL / FINAL ANALYSIS
    =============================== */
 
 .signal-box {
@@ -524,21 +505,6 @@ body::before {
 }
 
 
-#signalTime {
-
-    text-align: center;
-
-    color: #999;
-
-    margin-bottom: 20px;
-
-}
-
-
-/* ===============================
-   STATS
-   =============================== */
-
 .stats {
 
     display: grid;
@@ -562,6 +528,8 @@ body::before {
 
     text-align: center;
 
+    min-width: 0;
+
 }
 
 
@@ -576,67 +544,13 @@ body::before {
 
 .stats strong {
 
-    color: #00f5ff;
-
-    font-size: 20px;
-
-}
-
-
-/* ===============================
-   INDICATORS
-   =============================== */
-
-.indicator-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 15px;
-
-}
-
-
-.indicator {
-
-    background:
-        rgba(0,0,0,.25);
-
-    padding: 20px;
-
-    border-radius: 18px;
-
-    transition: .25s;
-
-}
-
-
-.indicator:hover {
-
-    background:
-        rgba(0,245,255,.08);
-
-}
-
-
-.indicator span {
-
     display: block;
 
-    color: #aaa;
-
-    margin-bottom: 10px;
-
-}
-
-
-.indicator b {
-
-    font-size: 20px;
-
     color: #00f5ff;
+
+    font-size: 18px;
+
+    overflow-wrap: anywhere;
 
 }
 
@@ -666,6 +580,8 @@ body::before {
 
     border-radius: 15px;
 
+    min-width: 0;
+
 }
 
 
@@ -682,9 +598,135 @@ body::before {
 
 .intel-grid b {
 
+    display: block;
+
     color: #00f5ff;
 
     font-size: 20px;
+
+    overflow-wrap: anywhere;
+
+}
+
+
+/* ===============================
+   INTELLIGENCE SUB STATUS
+   =============================== */
+
+.intel-grid small {
+
+    display: block;
+
+    margin-top: 7px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+
+}
+
+
+/* ===============================
+   LIQUIDITY MAGNET
+   =============================== */
+
+#liquidityMagnet {
+
+    color: #00f5ff;
+
+    font-size: 19px;
+
+}
+
+
+/* ===============================
+   VOLATILITY STATUS
+   =============================== */
+
+#volatilityState {
+
+    color: #aaa;
+
+}
+
+
+/* ===============================
+   VOLUME STATUS
+   =============================== */
+
+#volumeValue {
+
+    color: #00f5ff;
+
+}
+
+
+#volumeState {
+
+    color: #aaa;
+
+}
+
+
+/* ===============================
+   MARKET STRUCTURE
+   =============================== */
+
+#marketStructure {
+
+    color: #00f5ff;
+
+}
+
+
+/* ===============================
+   TRADE MANAGEMENT
+   =============================== */
+
+.risk-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.risk-grid div {
+
+    background:
+        rgba(255,255,255,.06);
+
+    padding: 18px;
+
+    border-radius: 15px;
+
+    min-width: 0;
+
+}
+
+
+.risk-grid span {
+
+    display: block;
+
+    color: #aaa;
+
+    margin-bottom: 8px;
+
+}
+
+
+.risk-grid b {
+
+    color: #00f5ff;
+
+    font-size: 20px;
+
+    overflow-wrap: anywhere;
 
 }
 
@@ -695,10 +737,7 @@ body::before {
 
 .voice-panel {
 
-    grid-column:
-        1 / -1;
-
-    margin-top: 0;
+    margin-top: 25px;
 
     padding: 20px;
 
@@ -712,33 +751,25 @@ body::before {
     backdrop-filter:
         blur(20px);
 
-    -webkit-backdrop-filter:
-        blur(20px);
-
     color: #00f5ff;
 
 }
 
 
-/* ===============================
-   SIGNAL COLOUR HELPERS
-   =============================== */
+#voiceText {
 
-#signal {
-
-    transition:
-        color .3s,
-        text-shadow .3s;
+    min-height: 20px;
 
 }
 
 
-#confidence,
-#momentum,
-#liquidity {
+/* ===============================
+   CHART SMOOTHING
+   =============================== */
 
-    transition:
-        color .3s;
+.price-chart canvas {
+
+    display: block;
 
 }
 
@@ -749,7 +780,7 @@ body::before {
 
 @media(max-width: 900px) {
 
-    .indicator-grid {
+    .risk-grid {
 
         grid-template-columns:
             repeat(2, 1fr);
@@ -760,13 +791,6 @@ body::before {
 
 
 @media(max-width: 700px) {
-
-    .app {
-
-        padding: 15px;
-
-    }
-
 
     .top-header {
 
@@ -779,43 +803,6 @@ body::before {
     }
 
 
-    .header-left h1 {
-
-        font-size: 27px;
-
-        letter-spacing: 2px;
-
-    }
-
-
-    .status {
-
-        align-self: stretch;
-
-        justify-content: center;
-
-    }
-
-
-    .dashboard {
-
-        grid-template-columns:
-            1fr;
-
-        gap: 18px;
-
-    }
-
-
-    .glass-card {
-
-        padding: 22px;
-
-        border-radius: 20px;
-
-    }
-
-
     .stats {
 
         grid-template-columns:
@@ -824,7 +811,7 @@ body::before {
     }
 
 
-    .indicator-grid {
+    .risk-grid {
 
         grid-template-columns:
             1fr;
@@ -847,18 +834,16 @@ body::before {
     }
 
 
-    .scanner-circle {
+    .glass-card {
 
-        width: 160px;
-
-        height: 160px;
+        padding: 22px;
 
     }
 
 
     #signal {
 
-        font-size: 40px;
+        font-size: 38px;
 
     }
 
@@ -866,14 +851,32 @@ body::before {
 
 
 /* ===============================
-   SMALL MOBILE
+   VERY SMALL SCREENS
    =============================== */
 
 @media(max-width: 400px) {
 
+    .app {
+
+        padding: 15px;
+
+    }
+
+
+    .glass-card {
+
+        padding: 18px;
+
+        border-radius: 20px;
+
+    }
+
+
     .header-left h1 {
 
-        font-size: 23px;
+        font-size: 26px;
+
+        letter-spacing: 2px;
 
     }
 
@@ -894,14 +897,5 @@ body::before {
 
     }
 
-
-    .scanner-circle {
-
-        width: 140px;
-
-        height: 140px;
-
-    }
-
 }
-
+```
