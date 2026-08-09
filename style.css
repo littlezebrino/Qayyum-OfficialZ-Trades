@@ -1,7 +1,6 @@
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    CSS PART 1
-   BASE + HEADER + DASHBOARD + CARDS
    ================================================== */
 
 
@@ -13,7 +12,6 @@
 
     margin: 0;
     padding: 0;
-
     box-sizing: border-box;
 
     font-family:
@@ -56,7 +54,7 @@ body {
 
 
 /* ===============================
-   BACKGROUND EFFECT
+   BACKGROUND LIGHT
    =============================== */
 
 body::before {
@@ -130,6 +128,8 @@ body::before {
 
     -webkit-background-clip: text;
 
+    background-clip: text;
+
     color: transparent;
 
 }
@@ -157,16 +157,13 @@ body::before {
     border-radius: 50px;
 
     background:
-
         rgba(255,255,255,.08);
 
     border:
-
         1px solid
         rgba(255,255,255,.15);
 
     backdrop-filter:
-
         blur(20px);
 
     display: flex;
@@ -189,7 +186,6 @@ body::before {
     background: #00ff88;
 
     box-shadow:
-
         0 0 15px #00ff88;
 
 }
@@ -204,7 +200,6 @@ body::before {
     display: grid;
 
     grid-template-columns:
-
         repeat(
             auto-fit,
             minmax(320px, 1fr)
@@ -224,19 +219,13 @@ body::before {
     background:
 
         linear-gradient(
-
             145deg,
-
             rgba(255,255,255,.12),
-
             rgba(255,255,255,.03)
-
         );
 
     border:
-
         1px solid
-
         rgba(255,255,255,.18);
 
     border-radius: 25px;
@@ -244,7 +233,9 @@ body::before {
     padding: 30px;
 
     backdrop-filter:
+        blur(25px);
 
+    -webkit-backdrop-filter:
         blur(25px);
 
     box-shadow:
@@ -255,7 +246,8 @@ body::before {
         inset 0 0 30px
         rgba(255,255,255,.05);
 
-    transition: .3s;
+    transition:
+        .3s;
 
 }
 
@@ -297,6 +289,8 @@ body::before {
 
     margin: 20px 0;
 
+    line-height: 1.1;
+
 }
 
 
@@ -305,6 +299,8 @@ body::before {
     font-size: 20px;
 
     color: #00ff88;
+
+    font-weight: 600;
 
 }
 
@@ -315,11 +311,13 @@ body::before {
 
     font-size: 14px;
 
+    margin-top: 6px;
+
 }
 
 
 /* ===============================
-   CHART
+   PRICE CHART
    =============================== */
 
 .price-chart {
@@ -330,6 +328,8 @@ body::before {
 
     margin-top: 20px;
 
+    position: relative;
+
 }
 
 
@@ -339,100 +339,13 @@ body::before {
 
     height: 100% !important;
 
-}
-
-
-/* ===============================
-   COMMON TEXT
-   =============================== */
-
-.glass-card span {
-
-    letter-spacing: .3px;
-
-}
-
-
-.glass-card b,
-.glass-card strong {
-
-    font-weight: 600;
+    display: block;
 
 }
 
 
 /* ===============================
    SCANNER CARD
-   =============================== */
-
-.scanner-card {
-
-    text-align: center;
-
-}
-
-
-/* ===============================
-   RESULT CARD
-   =============================== */
-
-.result-card {
-
-    min-height: 250px;
-
-}
-
-
-/* ===============================
-   INTELLIGENCE / EVIDENCE
-   =============================== */
-
-.intelligence-card,
-.evidence-card {
-
-    width: 100%;
-
-}
-
-
-/* ===============================
-   VOICE PANEL
-   =============================== */
-
-.voice-panel {
-
-    grid-column: 1 / -1;
-
-    margin-top: 0;
-
-    padding: 20px;
-
-    text-align: center;
-
-    border-radius: 20px;
-
-    background:
-
-        rgba(255,255,255,.08);
-
-    backdrop-filter:
-
-        blur(20px);
-
-    color: #00f5ff;
-
-  }
-
-
-
-/* ==================================================
-   BTC QUANTUM SCANNER PRO
-   CSS PART 2 FINAL
-   ================================================== */
-
-
-/* ===============================
-   SCANNER
    =============================== */
 
 .scanner-card {
@@ -461,25 +374,18 @@ body::before {
     background:
 
         radial-gradient(
-
             circle,
-
             rgba(0,245,255,.35),
-
             transparent 65%
-
         );
 
     border:
-
         2px solid #00f5ff;
 
     box-shadow:
-
         0 0 40px #00f5ff;
 
     animation:
-
         pulse 2s infinite;
 
 }
@@ -524,7 +430,8 @@ body::before {
 
     margin-top: 15px;
 
-    padding: 15px 45px;
+    padding:
+        15px 45px;
 
     border: none;
 
@@ -533,13 +440,9 @@ body::before {
     background:
 
         linear-gradient(
-
             90deg,
-
             #00f5ff,
-
             #0077ff
-
         );
 
     color: white;
@@ -555,10 +458,10 @@ body::before {
 
 #scanBtn:hover {
 
-    transform: scale(1.08);
+    transform:
+        scale(1.08);
 
     box-shadow:
-
         0 0 30px #00f5ff;
 
 }
@@ -581,6 +484,13 @@ body::before {
     color: #aaa;
 
 }
+
+
+
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   CSS PART 2 FINAL
+   ================================================== */
 
 
 /* ===============================
@@ -611,52 +521,6 @@ body::before {
 
     color: #ffd166;
 
-    transition:
-
-        color .3s,
-
-        text-shadow .3s;
-
-}
-
-
-/* ===============================
-   SIGNAL COLORS
-   =============================== */
-
-#signal.long {
-
-    color: #00ff88;
-
-    text-shadow:
-
-        0 0 20px
-        rgba(0,255,136,.5);
-
-}
-
-
-#signal.short {
-
-    color: #ff4d6d;
-
-    text-shadow:
-
-        0 0 20px
-        rgba(255,77,109,.5);
-
-}
-
-
-#signal.wait {
-
-    color: #ffd166;
-
-    text-shadow:
-
-        0 0 20px
-        rgba(255,209,102,.35);
-
 }
 
 
@@ -680,7 +544,6 @@ body::before {
     display: grid;
 
     grid-template-columns:
-
         repeat(3, 1fr);
 
     gap: 15px;
@@ -691,7 +554,6 @@ body::before {
 .stats div {
 
     background:
-
         rgba(255,255,255,.06);
 
     padding: 18px;
@@ -730,7 +592,6 @@ body::before {
     display: grid;
 
     grid-template-columns:
-
         repeat(3, 1fr);
 
     gap: 15px;
@@ -741,7 +602,6 @@ body::before {
 .indicator {
 
     background:
-
         rgba(0,0,0,.25);
 
     padding: 20px;
@@ -756,10 +616,7 @@ body::before {
 .indicator:hover {
 
     background:
-
-        rgba(0,0,0,.35);
-
-    transform: translateY(-2px);
+        rgba(0,245,255,.08);
 
 }
 
@@ -785,7 +642,7 @@ body::before {
 
 
 /* ===============================
-   INTELLIGENCE
+   MARKET INTELLIGENCE
    =============================== */
 
 .intel-grid {
@@ -793,7 +650,6 @@ body::before {
     display: grid;
 
     grid-template-columns:
-
         repeat(2, 1fr);
 
     gap: 15px;
@@ -804,14 +660,11 @@ body::before {
 .intel-grid div {
 
     background:
-
         rgba(255,255,255,.06);
 
     padding: 18px;
 
     border-radius: 15px;
-
-    min-width: 0;
 
 }
 
@@ -833,66 +686,6 @@ body::before {
 
     font-size: 20px;
 
-    display: block;
-
-    word-break: break-word;
-
-}
-
-
-/* ===============================
-   MARKET EVIDENCE
-   =============================== */
-
-.evidence-card {
-
-    grid-column: 1 / -1;
-
-}
-
-
-.evidence-card .intel-grid {
-
-    grid-template-columns:
-
-        repeat(4, 1fr);
-
-}
-
-
-.evidence-card .intel-grid div {
-
-    text-align: center;
-
-}
-
-
-.evidence-card .intel-grid b {
-
-    font-size: 17px;
-
-}
-
-
-/* ===============================
-   LIQUIDITY MAGNET
-   =============================== */
-
-#liquidityMagnet {
-
-    color: #00f5ff;
-
-}
-
-
-/* ===============================
-   MARKET STRENGTH
-   =============================== */
-
-#marketStrength {
-
-    color: #00f5ff;
-
 }
 
 
@@ -902,7 +695,8 @@ body::before {
 
 .voice-panel {
 
-    grid-column: 1 / -1;
+    grid-column:
+        1 / -1;
 
     margin-top: 0;
 
@@ -913,11 +707,12 @@ body::before {
     border-radius: 20px;
 
     background:
-
         rgba(255,255,255,.08);
 
     backdrop-filter:
+        blur(20px);
 
+    -webkit-backdrop-filter:
         blur(20px);
 
     color: #00f5ff;
@@ -926,37 +721,37 @@ body::before {
 
 
 /* ===============================
-   RESPONSIVE
+   SIGNAL COLOUR HELPERS
    =============================== */
 
-@media (max-width: 1000px) {
+#signal {
 
-    .evidence-card .intel-grid {
-
-        grid-template-columns:
-
-            repeat(2, 1fr);
-
-    }
+    transition:
+        color .3s,
+        text-shadow .3s;
 
 }
 
 
-@media (max-width: 900px) {
+#confidence,
+#momentum,
+#liquidity {
 
-    .risk-grid {
+    transition:
+        color .3s;
 
-        grid-template-columns:
+}
 
-            repeat(2, 1fr);
 
-    }
+/* ===============================
+   RESPONSIVE
+   =============================== */
 
+@media(max-width: 900px) {
 
     .indicator-grid {
 
         grid-template-columns:
-
             repeat(2, 1fr);
 
     }
@@ -964,7 +759,14 @@ body::before {
 }
 
 
-@media (max-width: 700px) {
+@media(max-width: 700px) {
+
+    .app {
+
+        padding: 15px;
+
+    }
+
 
     .top-header {
 
@@ -973,6 +775,15 @@ body::before {
         gap: 20px;
 
         align-items: flex-start;
+
+    }
+
+
+    .header-left h1 {
+
+        font-size: 27px;
+
+        letter-spacing: 2px;
 
     }
 
@@ -986,37 +797,45 @@ body::before {
     }
 
 
-    .stats {
+    .dashboard {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
+
+        gap: 18px;
 
     }
 
 
-    .risk-grid {
+    .glass-card {
 
-        grid-template-columns: 1fr;
+        padding: 22px;
+
+        border-radius: 20px;
+
+    }
+
+
+    .stats {
+
+        grid-template-columns:
+            1fr;
 
     }
 
 
     .indicator-grid {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
 
     }
 
 
     .intel-grid {
 
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .evidence-card .intel-grid {
-
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
 
     }
 
@@ -1028,36 +847,40 @@ body::before {
     }
 
 
-    #signal {
+    .scanner-circle {
 
-        font-size: 38px;
+        width: 160px;
+
+        height: 160px;
 
     }
 
 
-    .glass-card {
+    #signal {
 
-        padding: 22px;
+        font-size: 40px;
 
     }
 
 }
 
 
-@media (max-width: 420px) {
+/* ===============================
+   SMALL MOBILE
+   =============================== */
 
-    .app {
+@media(max-width: 400px) {
 
-        padding: 15px;
+    .header-left h1 {
+
+        font-size: 23px;
 
     }
 
 
-    .scanner-circle {
+    #btcPrice {
 
-        width: 150px;
-
-        height: 150px;
+        font-size: 30px;
 
     }
 
@@ -1066,9 +889,19 @@ body::before {
 
         width: 100%;
 
-        padding: 14px 20px;
+        padding:
+            14px 20px;
 
     }
 
-  }
+
+    .scanner-circle {
+
+        width: 140px;
+
+        height: 140px;
+
+    }
+
+}
 
