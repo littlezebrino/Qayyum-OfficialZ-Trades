@@ -1,1551 +1,1074 @@
-/* =========================================================
-BTC QUANTUM SCANNER PRO
-CSS PART 1
-CORE + HEADER + DASHBOARD + PRICE
-========================================================= */
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   CSS PART 1
+   BASE + HEADER + DASHBOARD + CARDS
+   ================================================== */
 
-/* =========================================================
-RESET
-========================================================= */
+
+/* ===============================
+   RESET
+   =============================== */
 
 * {
 
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 
-  box-sizing: border-box;
+    box-sizing: border-box;
 
-  font-family:
-  "Inter",
-  "Segoe UI",
-  Arial,
-  sans-serif;
-  }
+    font-family:
+        "Inter",
+        "Segoe UI",
+        sans-serif;
 
-/* =========================================================
-BODY
-========================================================= */
+}
+
+
+/* ===============================
+   BODY
+   =============================== */
 
 body {
 
-```
-min-height: 100vh;
+    min-height: 100vh;
 
-color: #ffffff;
+    background:
 
-background:
+        radial-gradient(
+            circle at top left,
+            #14213d,
+            transparent 35%
+        ),
 
-    radial-gradient(
-        circle at top left,
-        #14213d 0%,
-        transparent 35%
-    ),
+        radial-gradient(
+            circle at bottom right,
+            #003049,
+            transparent 40%
+        ),
 
-    radial-gradient(
-        circle at bottom right,
-        #003049 0%,
-        transparent 40%
-    ),
+        #050816;
 
-    #050816;
+    color: white;
 
-overflow-x: hidden;
-```
+    overflow-x: hidden;
 
 }
 
-/* =========================================================
-BACKGROUND LIGHT LAYER
-========================================================= */
+
+/* ===============================
+   BACKGROUND EFFECT
+   =============================== */
 
 body::before {
 
-```
-content: "";
+    content: "";
 
-position: fixed;
+    position: fixed;
 
-inset: 0;
+    inset: 0;
 
-pointer-events: none;
+    background:
 
-z-index: -1;
+        linear-gradient(
+            120deg,
+            rgba(255,255,255,0.05),
+            transparent
+        );
 
-background:
-
-    linear-gradient(
-        120deg,
-        rgba(255, 255, 255, 0.05),
-        transparent 45%
-    );
-```
+    pointer-events: none;
 
 }
 
-/* =========================================================
-APP CONTAINER
-========================================================= */
+
+/* ===============================
+   APP CONTAINER
+   =============================== */
 
 .app {
 
-```
-width: 100%;
+    width: 100%;
 
-max-width: 1400px;
+    max-width: 1400px;
 
-margin: 0 auto;
+    margin: auto;
 
-padding: 25px;
-```
+    padding: 25px;
 
 }
 
-/* =========================================================
-HEADER
-========================================================= */
+
+/* ===============================
+   HEADER
+   =============================== */
 
 .top-header {
 
-```
-display: flex;
+    display: flex;
 
-justify-content: space-between;
+    justify-content: space-between;
 
-align-items: center;
+    align-items: center;
 
-gap: 25px;
-
-margin-bottom: 30px;
-```
+    margin-bottom: 30px;
 
 }
 
-/* =========================================================
-HEADER TITLE
-========================================================= */
 
 .header-left h1 {
 
-```
-font-size: 34px;
+    font-size: 34px;
 
-line-height: 1.15;
+    letter-spacing: 3px;
 
-letter-spacing: 3px;
+    background:
 
-font-weight: 800;
+        linear-gradient(
+            90deg,
+            #00f5ff,
+            #ffffff
+        );
 
-background:
+    -webkit-background-clip: text;
 
-    linear-gradient(
-        90deg,
-        #00f5ff,
-        #ffffff
-    );
-
--webkit-background-clip: text;
-
-background-clip: text;
-
-color: transparent;
-```
+    color: transparent;
 
 }
+
 
 .header-left p {
 
-```
-margin-top: 8px;
+    margin-top: 8px;
 
-color: #9ca3af;
+    color: #9ca3af;
 
-font-size: 15px;
-
-letter-spacing: 0.4px;
-```
+    font-size: 15px;
 
 }
 
-/* =========================================================
-LIVE STATUS
-========================================================= */
+
+/* ===============================
+   LIVE STATUS
+   =============================== */
 
 .status {
 
-```
-display: flex;
+    padding: 12px 22px;
 
-align-items: center;
+    border-radius: 50px;
 
-gap: 10px;
+    background:
 
-padding: 12px 22px;
+        rgba(255,255,255,.08);
 
-border-radius: 50px;
+    border:
 
-background:
+        1px solid
+        rgba(255,255,255,.15);
 
-    rgba(255, 255, 255, 0.08);
+    backdrop-filter:
 
-border:
+        blur(20px);
 
-    1px solid
-    rgba(255, 255, 255, 0.15);
+    display: flex;
 
-backdrop-filter: blur(20px);
+    align-items: center;
 
--webkit-backdrop-filter: blur(20px);
-
-white-space: nowrap;
-
-font-size: 13px;
-
-font-weight: 700;
-
-letter-spacing: 1px;
-```
+    gap: 10px;
 
 }
 
-/* =========================================================
-LIVE DOT
-========================================================= */
 
 .dot {
 
-```
-width: 10px;
+    width: 10px;
 
-height: 10px;
+    height: 10px;
 
-flex-shrink: 0;
+    border-radius: 50%;
 
-border-radius: 50%;
+    background: #00ff88;
 
-background: #00ff88;
+    box-shadow:
 
-box-shadow:
-
-    0 0 8px #00ff88,
-    0 0 18px #00ff88;
-
-animation:
-    livePulse 1.8s infinite ease-in-out;
-```
+        0 0 15px #00ff88;
 
 }
 
-@keyframes livePulse {
 
-```
-0%,
-100% {
-
-    opacity: 1;
-
-    transform: scale(1);
-
-}
-
-50% {
-
-    opacity: 0.55;
-
-    transform: scale(0.82);
-
-}
-```
-
-}
-
-/* =========================================================
-DASHBOARD GRID
-========================================================= */
+/* ===============================
+   DASHBOARD GRID
+   =============================== */
 
 .dashboard {
 
-```
-display: grid;
+    display: grid;
 
-grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(320px, 1fr)
-    );
+    grid-template-columns:
 
-gap: 25px;
-```
+        repeat(
+            auto-fit,
+            minmax(320px, 1fr)
+        );
+
+    gap: 25px;
 
 }
 
-/* =========================================================
-GLASS CARD
-========================================================= */
+
+/* ===============================
+   GLASS CARD
+   =============================== */
 
 .glass-card {
 
-```
-position: relative;
+    background:
 
-overflow: hidden;
+        linear-gradient(
 
-padding: 30px;
+            145deg,
 
-border-radius: 25px;
+            rgba(255,255,255,.12),
 
-background:
+            rgba(255,255,255,.03)
 
-    linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.12),
-        rgba(255, 255, 255, 0.03)
-    );
+        );
 
-border:
+    border:
 
-    1px solid
-    rgba(255, 255, 255, 0.18);
+        1px solid
 
-backdrop-filter: blur(25px);
+        rgba(255,255,255,.18);
 
--webkit-backdrop-filter: blur(25px);
+    border-radius: 25px;
 
-box-shadow:
+    padding: 30px;
 
-    0 20px 50px
-    rgba(0, 0, 0, 0.4),
+    backdrop-filter:
 
-    inset 0 0 30px
-    rgba(255, 255, 255, 0.05);
+        blur(25px);
 
-transition:
+    box-shadow:
 
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-```
+        0 20px 50px
+        rgba(0,0,0,.4),
+
+        inset 0 0 30px
+        rgba(255,255,255,.05);
+
+    transition: .3s;
 
 }
 
-/* =========================================================
-CARD LIGHT EFFECT
-========================================================= */
-
-.glass-card::before {
-
-```
-content: "";
-
-position: absolute;
-
-top: -100px;
-
-right: -100px;
-
-width: 220px;
-
-height: 220px;
-
-border-radius: 50%;
-
-background:
-
-    radial-gradient(
-        circle,
-        rgba(0, 245, 255, 0.08),
-        transparent 70%
-    );
-
-pointer-events: none;
-```
-
-}
-
-/* =========================================================
-CARD HOVER
-========================================================= */
 
 .glass-card:hover {
 
-```
-transform: translateY(-5px);
+    transform:
+        translateY(-5px);
 
-border-color:
+    box-shadow:
 
-    rgba(0, 245, 255, 0.25);
-
-box-shadow:
-
-    0 25px 60px
-    rgba(0, 245, 255, 0.15),
-
-    inset 0 0 30px
-    rgba(255, 255, 255, 0.05);
-```
+        0 25px 60px
+        rgba(0,245,255,.15);
 
 }
 
-/* =========================================================
-CARD HEADINGS
-========================================================= */
 
 .glass-card h2,
 .glass-card h3 {
 
-```
-position: relative;
+    margin-bottom: 20px;
 
-margin-bottom: 20px;
-
-letter-spacing: 1px;
-
-z-index: 1;
-```
+    letter-spacing: 1px;
 
 }
 
-.glass-card h2 {
 
-```
-font-size: 21px;
-```
-
-}
-
-.glass-card h3 {
-
-```
-font-size: 17px;
-
-color: #d9faff;
-```
-
-}
-
-/* =========================================================
-PRICE CARD
-========================================================= */
-
-.price-card {
-
-```
-min-height: 390px;
-```
-
-}
-
-/* =========================================================
-BTC PRICE
-========================================================= */
+/* ===============================
+   PRICE CARD
+   =============================== */
 
 #btcPrice {
 
-```
-margin: 20px 0 8px;
+    font-size: 45px;
 
-font-size: 45px;
+    font-weight: 700;
 
-line-height: 1;
+    color: #00f5ff;
 
-font-weight: 800;
-
-letter-spacing: -1px;
-
-color: #00f5ff;
-
-text-shadow:
-
-    0 0 20px
-    rgba(0, 245, 255, 0.25);
-```
+    margin: 20px 0;
 
 }
 
-/* =========================================================
-PRICE CHANGE
-========================================================= */
 
 .price-change {
 
-```
-font-size: 20px;
+    font-size: 20px;
 
-font-weight: 700;
-
-color: #00ff88;
-
-transition: color 0.2s ease;
-```
+    color: #00ff88;
 
 }
 
-/* =========================================================
-PRICE TIME
-========================================================= */
 
 #priceTime {
 
-```
-margin-top: 8px;
+    color: #999;
 
-color: #999999;
-
-font-size: 13px;
-```
+    font-size: 14px;
 
 }
 
-/* =========================================================
-PRICE CHART CONTAINER
-========================================================= */
+
+/* ===============================
+   CHART
+   =============================== */
 
 .price-chart {
 
-```
-width: 100%;
+    width: 100%;
 
-height: 200px;
+    height: 200px;
 
-margin-top: 20px;
-
-position: relative;
-```
+    margin-top: 20px;
 
 }
 
-/* =========================================================
-CHART CANVAS
-========================================================= */
 
 #priceChart {
 
-```
-width: 100% !important;
+    width: 100% !important;
 
-height: 100% !important;
-
-display: block;
-```
+    height: 100% !important;
 
 }
 
-/* =========================================================
-INITIAL SIGNAL COLORS
-========================================================= */
 
-#signal {
+/* ===============================
+   COMMON TEXT
+   =============================== */
 
-```
-transition:
+.glass-card span {
 
-    color 0.3s ease,
-    text-shadow 0.3s ease;
-```
+    letter-spacing: .3px;
 
 }
 
-#confidence,
-#momentum,
-#liquidity {
 
-```
-transition:
+.glass-card b,
+.glass-card strong {
 
-    color 0.3s ease;
-```
+    font-weight: 600;
 
 }
 
-/* =========================================================
-BUTTON BASE SAFETY
-========================================================= */
 
-button {
-
-```
-font-family: inherit;
-```
-
-}
-
-/* =========================================================
-SELECTION
-========================================================= */
-
-::selection {
-
-```
-color: #ffffff;
-
-background: #0077ff;
-```
-
-}
-
-/* =========================================================
-SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-
-```
-width: 8px;
-```
-
-}
-
-::-webkit-scrollbar-track {
-
-```
-background: #050816;
-```
-
-}
-
-::-webkit-scrollbar-thumb {
-
-```
-background:
-
-    linear-gradient(
-        #00f5ff,
-        #0077ff
-    );
-
-border-radius: 10px;
-```
-
-}
-
-::-webkit-scrollbar-thumb:hover {
-
-```
-background: #00f5ff;
-```
-
-   }
-
-
-
-
-/* =========================================================
-BTC QUANTUM SCANNER PRO
-CSS PART 2
-SCANNER + SIGNAL + INDICATORS + INTELLIGENCE
-
-* RISK + VOICE + RESPONSIVE
-  ========================================================= */
-
-/* =========================================================
-SCANNER CARD
-========================================================= */
+/* ===============================
+   SCANNER CARD
+   =============================== */
 
 .scanner-card {
 
-```
-text-align: center;
-
-min-height: 390px;
-```
+    text-align: center;
 
 }
 
-/* =========================================================
-SCANNER CIRCLE
-========================================================= */
+
+/* ===============================
+   RESULT CARD
+   =============================== */
+
+.result-card {
+
+    min-height: 250px;
+
+}
+
+
+/* ===============================
+   INTELLIGENCE / EVIDENCE
+   =============================== */
+
+.intelligence-card,
+.evidence-card {
+
+    width: 100%;
+
+}
+
+
+/* ===============================
+   VOICE PANEL
+   =============================== */
+
+.voice-panel {
+
+    grid-column: 1 / -1;
+
+    margin-top: 0;
+
+    padding: 20px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background:
+
+        rgba(255,255,255,.08);
+
+    backdrop-filter:
+
+        blur(20px);
+
+    color: #00f5ff;
+
+  }
+
+
+
+/* ==================================================
+   BTC QUANTUM SCANNER PRO
+   CSS PART 2 FINAL
+   ================================================== */
+
+
+/* ===============================
+   SCANNER
+   =============================== */
+
+.scanner-card {
+
+    text-align: center;
+
+}
+
 
 .scanner-circle {
 
-```
-width: 180px;
+    width: 180px;
 
-height: 180px;
+    height: 180px;
 
-margin: 20px auto;
+    margin: 20px auto;
 
-display: flex;
+    border-radius: 50%;
 
-justify-content: center;
+    display: flex;
 
-align-items: center;
+    justify-content: center;
 
-border-radius: 50%;
+    align-items: center;
 
-background:
+    background:
 
-    radial-gradient(
-        circle,
-        rgba(0, 245, 255, 0.35),
-        rgba(0, 245, 255, 0.08) 45%,
-        transparent 70%
-    );
+        radial-gradient(
 
-border:
+            circle,
 
-    2px solid #00f5ff;
+            rgba(0,245,255,.35),
 
-box-shadow:
+            transparent 65%
 
-    0 0 20px
-    rgba(0, 245, 255, 0.65),
+        );
 
-    inset 0 0 30px
-    rgba(0, 245, 255, 0.15);
+    border:
 
-animation:
-
-    scannerPulse 2s infinite ease-in-out;
-```
-
-}
-
-@keyframes scannerPulse {
-
-```
-0% {
-
-    transform: scale(1);
+        2px solid #00f5ff;
 
     box-shadow:
 
-        0 0 20px
-        rgba(0, 245, 255, 0.55),
+        0 0 40px #00f5ff;
 
-        inset 0 0 20px
-        rgba(0, 245, 255, 0.12);
-}
+    animation:
 
-50% {
-
-    transform: scale(1.035);
-
-    box-shadow:
-
-        0 0 60px
-        rgba(0, 245, 255, 0.9),
-
-        inset 0 0 35px
-        rgba(0, 245, 255, 0.2);
-}
-
-100% {
-
-    transform: scale(1);
-
-    box-shadow:
-
-        0 0 20px
-        rgba(0, 245, 255, 0.55),
-
-        inset 0 0 20px
-        rgba(0, 245, 255, 0.12);
-}
-```
+        pulse 2s infinite;
 
 }
 
-/* =========================================================
-SCAN TIMER
-========================================================= */
+
+@keyframes pulse {
+
+    0% {
+
+        box-shadow:
+            0 0 20px #00f5ff;
+
+    }
+
+    50% {
+
+        box-shadow:
+            0 0 60px #00f5ff;
+
+    }
+
+    100% {
+
+        box-shadow:
+            0 0 20px #00f5ff;
+
+    }
+
+}
+
 
 #scanTimer {
 
-```
-font-size: 30px;
+    font-size: 30px;
 
-font-weight: 800;
-
-color: #ffffff;
-
-letter-spacing: 1px;
-
-text-shadow:
-
-    0 0 15px
-    rgba(0, 245, 255, 0.7);
-```
+    font-weight: bold;
 
 }
 
-/* =========================================================
-SCAN BUTTON
-========================================================= */
 
 #scanBtn {
 
-```
-margin-top: 15px;
+    margin-top: 15px;
 
-padding: 15px 45px;
+    padding: 15px 45px;
 
-border: none;
+    border: none;
 
-border-radius: 50px;
+    border-radius: 50px;
 
-background:
+    background:
 
-    linear-gradient(
-        90deg,
-        #00f5ff,
-        #0077ff
-    );
+        linear-gradient(
 
-color: #ffffff;
+            90deg,
 
-font-size: 18px;
+            #00f5ff,
 
-font-weight: 700;
+            #0077ff
 
-letter-spacing: 0.5px;
+        );
 
-cursor: pointer;
+    color: white;
 
-box-shadow:
+    font-size: 18px;
 
-    0 0 15px
-    rgba(0, 245, 255, 0.25);
+    cursor: pointer;
 
-transition:
-
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    opacity 0.25s ease;
-```
+    transition: .3s;
 
 }
+
 
 #scanBtn:hover {
 
-```
-transform: scale(1.08);
+    transform: scale(1.08);
 
-box-shadow:
+    box-shadow:
 
-    0 0 30px
-    rgba(0, 245, 255, 0.75);
-```
+        0 0 30px #00f5ff;
 
 }
 
-#scanBtn:active {
-
-```
-transform: scale(0.98);
-```
-
-}
 
 #scanBtn:disabled {
 
-```
-opacity: 0.5;
+    opacity: .5;
 
-cursor: not-allowed;
-
-transform: none;
-
-box-shadow: none;
-```
+    cursor: not-allowed;
 
 }
 
-/* =========================================================
-SCANNER STATUS
-========================================================= */
 
 #scanStatus,
 #engineStatus {
 
-```
-margin-top: 15px;
+    margin-top: 15px;
 
-color: #aaaaaa;
-
-font-size: 14px;
-
-transition: color 0.3s ease;
-```
+    color: #aaa;
 
 }
 
-#engineStatus {
 
-```
-color: #00f5ff;
-```
-
-}
-
-/* =========================================================
-FINAL SIGNAL
-========================================================= */
-
-.result-card {
-
-```
-min-height: 390px;
-```
-
-}
+/* ===============================
+   SIGNAL
+   =============================== */
 
 .signal-box {
 
-```
-margin: 20px 0;
+    text-align: center;
 
-text-align: center;
-```
+    margin: 20px 0;
 
 }
+
 
 .signal-box span {
 
-```
-color: #aaaaaa;
-
-font-size: 13px;
-
-letter-spacing: 1px;
-```
+    color: #aaa;
 
 }
+
 
 #signal {
 
-```
-margin-top: 10px;
+    font-size: 45px;
 
-font-size: 45px;
+    margin-top: 10px;
 
-font-weight: 900;
+    color: #ffd166;
 
-letter-spacing: 2px;
+    transition:
 
-color: #ffd166;
+        color .3s,
 
-text-shadow:
-
-    0 0 18px
-    rgba(255, 209, 102, 0.2);
-```
+        text-shadow .3s;
 
 }
 
-/* =========================================================
-SIGNAL TIME
-========================================================= */
+
+/* ===============================
+   SIGNAL COLORS
+   =============================== */
+
+#signal.long {
+
+    color: #00ff88;
+
+    text-shadow:
+
+        0 0 20px
+        rgba(0,255,136,.5);
+
+}
+
+
+#signal.short {
+
+    color: #ff4d6d;
+
+    text-shadow:
+
+        0 0 20px
+        rgba(255,77,109,.5);
+
+}
+
+
+#signal.wait {
+
+    color: #ffd166;
+
+    text-shadow:
+
+        0 0 20px
+        rgba(255,209,102,.35);
+
+}
+
 
 #signalTime {
 
-```
-margin-bottom: 20px;
+    text-align: center;
 
-text-align: center;
+    color: #999;
 
-color: #999999;
-
-font-size: 13px;
-```
+    margin-bottom: 20px;
 
 }
 
-/* =========================================================
-STATS
-========================================================= */
+
+/* ===============================
+   STATS
+   =============================== */
 
 .stats {
 
-```
-display: grid;
+    display: grid;
 
-grid-template-columns:
-    repeat(3, 1fr);
+    grid-template-columns:
 
-gap: 15px;
-```
+        repeat(3, 1fr);
+
+    gap: 15px;
 
 }
+
 
 .stats div {
 
-```
-padding: 18px;
+    background:
 
-border-radius: 15px;
+        rgba(255,255,255,.06);
 
-text-align: center;
+    padding: 18px;
 
-background:
+    border-radius: 15px;
 
-    rgba(255, 255, 255, 0.06);
-
-border:
-
-    1px solid
-    rgba(255, 255, 255, 0.05);
-```
+    text-align: center;
 
 }
+
 
 .stats p {
 
-```
-margin-bottom: 8px;
+    color: #aaa;
 
-color: #aaaaaa;
-
-font-size: 13px;
-```
+    margin-bottom: 8px;
 
 }
+
 
 .stats strong {
 
-```
-color: #00f5ff;
+    color: #00f5ff;
 
-font-size: 19px;
-```
+    font-size: 20px;
 
 }
 
-/* =========================================================
-INDICATORS
-========================================================= */
 
-.indicators-card {
-
-```
-min-height: 300px;
-```
-
-}
+/* ===============================
+   INDICATORS
+   =============================== */
 
 .indicator-grid {
 
-```
-display: grid;
+    display: grid;
 
-grid-template-columns:
-    repeat(3, 1fr);
+    grid-template-columns:
 
-gap: 15px;
-```
+        repeat(3, 1fr);
+
+    gap: 15px;
 
 }
+
 
 .indicator {
 
-```
-padding: 20px;
+    background:
 
-border-radius: 18px;
+        rgba(0,0,0,.25);
 
-background:
+    padding: 20px;
 
-    rgba(0, 0, 0, 0.25);
+    border-radius: 18px;
 
-border:
-
-    1px solid
-    rgba(255, 255, 255, 0.05);
-
-transition:
-
-    transform 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease;
-```
+    transition: .25s;
 
 }
+
 
 .indicator:hover {
 
-```
-transform: translateY(-3px);
+    background:
 
-background:
+        rgba(0,0,0,.35);
 
-    rgba(0, 245, 255, 0.06);
-
-border-color:
-
-    rgba(0, 245, 255, 0.18);
-```
+    transform: translateY(-2px);
 
 }
+
 
 .indicator span {
 
-```
-display: block;
+    display: block;
 
-margin-bottom: 10px;
+    color: #aaa;
 
-color: #aaaaaa;
-
-font-size: 13px;
-
-letter-spacing: 0.5px;
-```
+    margin-bottom: 10px;
 
 }
+
 
 .indicator b {
 
-```
-font-size: 20px;
+    font-size: 20px;
 
-color: #00f5ff;
-
-text-shadow:
-
-    0 0 10px
-    rgba(0, 245, 255, 0.25);
-```
+    color: #00f5ff;
 
 }
 
-/* =========================================================
-MARKET INTELLIGENCE
-========================================================= */
+
+/* ===============================
+   INTELLIGENCE
+   =============================== */
 
 .intel-grid {
 
-```
-display: grid;
-
-grid-template-columns:
-    repeat(2, 1fr);
-
-gap: 15px;
-```
-
-}
-
-.intel-grid div,
-.risk-grid div {
-
-```
-padding: 18px;
-
-border-radius: 15px;
-
-background:
-
-    rgba(255, 255, 255, 0.06);
-
-border:
-
-    1px solid
-    rgba(255, 255, 255, 0.05);
-
-transition:
-
-    background 0.25s ease,
-    border-color 0.25s ease;
-```
-
-}
-
-.intel-grid div:hover,
-.risk-grid div:hover {
-
-```
-background:
-
-    rgba(0, 245, 255, 0.05);
-
-border-color:
-
-    rgba(0, 245, 255, 0.15);
-```
-
-}
-
-.intel-grid span,
-.risk-grid span {
-
-```
-display: block;
-
-margin-bottom: 8px;
-
-color: #aaaaaa;
-
-font-size: 13px;
-```
-
-}
-
-.intel-grid b,
-.risk-grid b {
-
-```
-color: #00f5ff;
-
-font-size: 19px;
-
-word-break: break-word;
-```
-
-}
-
-/* =========================================================
-RISK MANAGEMENT
-========================================================= */
-
-.risk-grid {
-
-```
-display: grid;
-
-grid-template-columns:
-    repeat(4, 1fr);
-
-gap: 15px;
-```
-
-}
-
-.risk-grid b {
-
-```
-font-size: 18px;
-```
-
-}
-
-/* =========================================================
-VOICE PANEL
-========================================================= */
-
-.voice-panel {
-
-```
-grid-column: 1 / -1;
-
-margin-top: 0;
-
-padding: 20px;
-
-text-align: center;
-
-border-radius: 20px;
-
-background:
-
-    rgba(255, 255, 255, 0.08);
-
-border:
-
-    1px solid
-    rgba(255, 255, 255, 0.12);
-
-backdrop-filter: blur(20px);
-
--webkit-backdrop-filter: blur(20px);
-
-color: #00f5ff;
-
-box-shadow:
-
-    inset 0 0 25px
-    rgba(0, 245, 255, 0.03);
-```
-
-}
-
-#voiceText {
-
-```
-font-size: 14px;
-
-letter-spacing: 0.4px;
-```
-
-}
-
-/* =========================================================
-TABLET
-========================================================= */
-
-@media (max-width: 1100px) {
-
-```
-.dashboard {
+    display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+
+        repeat(2, 1fr);
+
+    gap: 15px;
+
 }
 
 
-.price-card,
-.scanner-card,
-.result-card,
-.indicators-card,
-.intelligence-card,
-.risk-card,
-.voice-panel {
+.intel-grid div {
+
+    background:
+
+        rgba(255,255,255,.06);
+
+    padding: 18px;
+
+    border-radius: 15px;
 
     min-width: 0;
+
 }
 
 
-.indicator-grid {
+.intel-grid span {
+
+    display: block;
+
+    color: #aaa;
+
+    margin-bottom: 8px;
+
+}
+
+
+.intel-grid b {
+
+    color: #00f5ff;
+
+    font-size: 20px;
+
+    display: block;
+
+    word-break: break-word;
+
+}
+
+
+/* ===============================
+   MARKET EVIDENCE
+   =============================== */
+
+.evidence-card {
+
+    grid-column: 1 / -1;
+
+}
+
+
+.evidence-card .intel-grid {
 
     grid-template-columns:
-        repeat(3, 1fr);
-}
 
-
-.risk-grid {
-
-    grid-template-columns:
-        repeat(2, 1fr);
-}
-```
+        repeat(4, 1fr);
 
 }
 
-/* =========================================================
-TABLET / SMALL SCREEN
-========================================================= */
+
+.evidence-card .intel-grid div {
+
+    text-align: center;
+
+}
+
+
+.evidence-card .intel-grid b {
+
+    font-size: 17px;
+
+}
+
+
+/* ===============================
+   LIQUIDITY MAGNET
+   =============================== */
+
+#liquidityMagnet {
+
+    color: #00f5ff;
+
+}
+
+
+/* ===============================
+   MARKET STRENGTH
+   =============================== */
+
+#marketStrength {
+
+    color: #00f5ff;
+
+}
+
+
+/* ===============================
+   VOICE PANEL
+   =============================== */
+
+.voice-panel {
+
+    grid-column: 1 / -1;
+
+    margin-top: 0;
+
+    padding: 20px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background:
+
+        rgba(255,255,255,.08);
+
+    backdrop-filter:
+
+        blur(20px);
+
+    color: #00f5ff;
+
+}
+
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+
+@media (max-width: 1000px) {
+
+    .evidence-card .intel-grid {
+
+        grid-template-columns:
+
+            repeat(2, 1fr);
+
+    }
+
+}
+
 
 @media (max-width: 900px) {
 
-```
-.app {
+    .risk-grid {
 
-    padding: 20px;
-}
+        grid-template-columns:
 
+            repeat(2, 1fr);
 
-.top-header {
-
-    align-items: flex-start;
-}
+    }
 
 
-.header-left h1 {
+    .indicator-grid {
 
-    font-size: 28px;
-}
+        grid-template-columns:
 
+            repeat(2, 1fr);
 
-.indicator-grid {
-
-    grid-template-columns:
-        repeat(2, 1fr);
-}
-
-
-.risk-grid {
-
-    grid-template-columns:
-        repeat(2, 1fr);
-}
-```
+    }
 
 }
 
-/* =========================================================
-MOBILE
-========================================================= */
 
 @media (max-width: 700px) {
 
-```
-.app {
+    .top-header {
 
-    padding: 15px;
-}
+        flex-direction: column;
 
+        gap: 20px;
 
-.top-header {
+        align-items: flex-start;
 
-    flex-direction: column;
-
-    gap: 20px;
-
-    margin-bottom: 20px;
-}
+    }
 
 
-.header-left h1 {
+    .status {
 
-    font-size: 24px;
+        align-self: stretch;
 
-    letter-spacing: 2px;
-}
+        justify-content: center;
 
-
-.header-left p {
-
-    font-size: 13px;
-}
+    }
 
 
-.status {
+    .stats {
 
-    width: 100%;
+        grid-template-columns: 1fr;
 
-    justify-content: center;
-}
-
-
-.dashboard {
-
-    grid-template-columns: 1fr;
-
-    gap: 18px;
-}
+    }
 
 
-.glass-card {
+    .risk-grid {
 
-    padding: 22px;
+        grid-template-columns: 1fr;
 
-    border-radius: 20px;
-}
-
-
-#btcPrice {
-
-    font-size: 35px;
-}
+    }
 
 
-.price-card,
-.scanner-card,
-.result-card {
+    .indicator-grid {
 
-    min-height: auto;
-}
+        grid-template-columns: 1fr;
 
-
-.scanner-circle {
-
-    width: 155px;
-
-    height: 155px;
-}
+    }
 
 
-#scanTimer {
+    .intel-grid {
 
-    font-size: 26px;
-}
+        grid-template-columns: 1fr;
 
-
-#scanBtn {
-
-    width: 100%;
-
-    padding: 14px 25px;
-}
+    }
 
 
-.stats {
+    .evidence-card .intel-grid {
 
-    grid-template-columns: 1fr;
-}
+        grid-template-columns: 1fr;
 
-
-.indicator-grid {
-
-    grid-template-columns: 1fr;
-}
+    }
 
 
-.intel-grid {
+    #btcPrice {
 
-    grid-template-columns: 1fr;
-}
+        font-size: 35px;
 
-
-.risk-grid {
-
-    grid-template-columns: 1fr;
-}
+    }
 
 
-.voice-panel {
+    #signal {
 
-    margin-top: 0;
-}
-```
+        font-size: 38px;
+
+    }
+
+
+    .glass-card {
+
+        padding: 22px;
+
+    }
 
 }
 
-/* =========================================================
-VERY SMALL MOBILE
-========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 420px) {
 
-```
-.app {
+    .app {
 
-    padding: 10px;
-}
+        padding: 15px;
+
+    }
 
 
-.header-left h1 {
+    .scanner-circle {
 
-    font-size: 21px;
+        width: 150px;
 
-    letter-spacing: 1.5px;
-}
+        height: 150px;
 
-
-.glass-card {
-
-    padding: 18px;
-}
+    }
 
 
-#btcPrice {
+    #scanBtn {
 
-    font-size: 31px;
-}
+        width: 100%;
 
+        padding: 14px 20px;
 
-#signal {
+    }
 
-    font-size: 38px;
-}
+  }
 
-
-.scanner-circle {
-
-    width: 140px;
-
-    height: 140px;
-}
-```
-
-}
-
-/* =========================================================
-REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-```
-*,
-*::before,
-*::after {
-
-    animation-duration: 0.01ms !important;
-
-    animation-iteration-count: 1 !important;
-
-    scroll-behavior: auto !important;
-
-    transition-duration: 0.01ms !important;
-}
-```
-
-   }
