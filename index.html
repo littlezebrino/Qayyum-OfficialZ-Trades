@@ -1,18 +1,16 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>BTC Quantum Scanner Pro</title>
+    <title>BTC Quantum Scanner Pro</title>
 
-<link rel="stylesheet"
-      href="style.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -23,381 +21,317 @@
 <div class="app">
 
 
-<!-- =========================
-     HEADER
-     ========================= -->
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-<header class="top-header">
-
-    <div class="header-left">
-
-        <h1>
-            BTC QUANTUM SCANNER
-        </h1>
-
-        <p>
-            Real-Time Crypto Market Intelligence Engine
-        </p>
-
-    </div>
+    <header class="top-header">
 
 
-    <div class="status"
-         id="marketStatus">
+        <div class="header-left">
 
-        <span class="dot"></span>
-
-        <span id="marketState">
-            CONNECTING
-        </span>
-
-    </div>
-
-</header>
-
-
-
-<!-- =========================
-     DASHBOARD
-     ========================= -->
-
-<main class="dashboard">
-
-
-<!-- =========================
-     PRICE CARD
-     ========================= -->
-
-<section class="glass-card price-card">
-
-    <h3>
-        BTC / USDT
-    </h3>
-
-
-    <div id="btcPrice">
-        $0.00
-    </div>
-
-
-    <!-- LIVE 24H CHANGE -->
-
-    <div id="priceChange"
-         class="price-change">
-        0.00%
-    </div>
-
-
-    <!-- SIMPLE MOVING LIVE PRICE CHART -->
-
-    <div class="price-chart">
-
-        <canvas id="priceChart"></canvas>
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================
-     SCANNER CARD
-     ========================= -->
-
-<section class="glass-card scanner-card">
-
-    <h2>
-        MARKET SCANNER
-    </h2>
-
-
-    <div class="scanner-circle">
-
-        <div id="scanTimer">
-            READY
-        </div>
-
-    </div>
-
-
-    <button id="scanBtn">
-        SCAN NOW
-    </button>
-
-
-    <p id="scanStatus">
-        Waiting for analysis...
-    </p>
-
-
-    <p id="engineStatus">
-        Engine Initializing...
-    </p>
-
-</section>
-
-
-
-<!-- =========================
-     FINAL ANALYSIS
-     ========================= -->
-
-<section class="glass-card result-card">
-
-    <h2>
-        FINAL ANALYSIS
-    </h2>
-
-
-    <div class="signal-box">
-
-        <span>
-            MARKET BIAS
-        </span>
-
-
-        <h1 id="signal">
-            WAIT
-        </h1>
-
-    </div>
-
-
-    <div class="stats">
-
-
-        <div>
+            <h1>
+                BTC QUANTUM SCANNER
+            </h1>
 
             <p>
-                Confidence
+                Real-Time Crypto Market Intelligence Engine
             </p>
 
-            <strong id="confidence">
-                0%
-            </strong>
+        </div>
+
+
+        <div class="status" id="marketStatus">
+
+            <span class="dot"></span>
+
+            <span id="marketState">
+                CONNECTING
+            </span>
 
         </div>
 
 
-        <div>
+    </header>
 
-            <p>
-                Momentum
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+    <main class="dashboard">
+
+
+        <!-- =========================
+             BTC PRICE + LINE CHART
+        ========================== -->
+
+        <section class="glass-card price-card">
+
+
+            <h3>
+                BTC / USDT
+            </h3>
+
+
+            <div id="btcPrice">
+                $0.00
+            </div>
+
+
+            <div id="priceChange"
+                 class="price-change">
+                0.00%
+            </div>
+
+
+            <div id="priceTime">
+                Live Market Price
+            </div>
+
+
+            <!-- SIMPLE MOVING LINE CHART -->
+
+            <div class="price-chart">
+
+                <canvas id="priceChart"></canvas>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =========================
+             MARKET SCANNER
+        ========================== -->
+
+        <section class="glass-card scanner-card">
+
+
+            <h2>
+                MARKET SCANNER
+            </h2>
+
+
+            <div class="scanner-circle">
+
+                <div id="scanTimer">
+                    READY
+                </div>
+
+            </div>
+
+
+            <button id="scanBtn">
+                SCAN NOW
+            </button>
+
+
+            <p id="scanStatus">
+                Waiting for analysis...
             </p>
 
-            <strong id="momentum">
-                Neutral
-            </strong>
 
-        </div>
-
-
-        <div>
-
-            <p>
-                Liquidity Magnet
+            <p id="engineStatus">
+                Engine Initializing...
             </p>
 
-            <strong id="liquidity">
-                Searching...
-            </strong>
+
+        </section>
+
+
+        <!-- =========================
+             FINAL ANALYSIS
+        ========================== -->
+
+        <section class="glass-card result-card">
+
+
+            <h2>
+                FINAL ANALYSIS
+            </h2>
+
+
+            <div class="signal-box">
+
+
+                <span>
+                    MARKET BIAS
+                </span>
+
+
+                <h1 id="signal">
+                    WAIT
+                </h1>
+
+
+            </div>
+
+
+            <!-- Intentionally empty.
+                 No live timestamp here. -->
+
+
+            <div class="stats">
+
+
+                <div>
+
+                    <p>
+                        Confidence
+                    </p>
+
+                    <strong id="confidence">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Momentum
+                    </p>
+
+                    <strong id="momentum">
+                        Neutral
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Liquidity Magnet
+                    </p>
+
+                    <strong id="liquidity">
+                        Searching...
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+
+
+
+                  <!-- =========================
+             MARKET INTELLIGENCE
+        ========================== -->
+
+        <section class="glass-card intelligence-card">
+
+            <h2>
+                MARKET INTELLIGENCE
+            </h2>
+
+
+            <div class="intel-grid">
+
+
+                <!-- TREND -->
+
+                <div>
+
+                    <span>
+                        Trend
+                    </span>
+
+                    <b id="trend">
+                        --
+                    </b>
+
+                </div>
+
+
+                <!-- STRUCTURE -->
+
+                <div>
+
+                    <span>
+                        Structure
+                    </span>
+
+                    <b id="structure">
+                        --
+                    </b>
+
+                </div>
+
+
+                <!-- VOLUME -->
+
+                <div>
+
+                    <span>
+                        Volume
+                    </span>
+
+                    <b id="marketVolume">
+                        --
+                    </b>
+
+                </div>
+
+
+                <!-- VOLATILITY -->
+
+                <div>
+
+                    <span>
+                        Volatility
+                    </span>
+
+                    <b id="marketVolatility">
+                        --
+                    </b>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             VOICE PANEL
+        ========================== -->
+
+        <div class="voice-panel">
+
+            <p id="voiceText">
+                Voice system ready
+            </p>
 
         </div>
 
 
-    </div>
+    </main>
 
-</section>
-```
 
+    <!-- =========================
+         CHART LIBRARY
+    ========================== -->
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        ```html id="q8m2kd"
-<!-- =========================
-     MARKET INTELLIGENCE
-     ========================= -->
 
-<section class="glass-card intelligence-card">
+    <!-- =========================
+         MAIN JAVASCRIPT
+    ========================== -->
 
-    <h2>
-        MARKET INTELLIGENCE
-    </h2>
-
-
-    <div class="intel-grid">
-
-
-        <!-- LIQUIDITY MAGNET -->
-
-        <div>
-
-            <span>
-                Liquidity Magnet
-            </span>
-
-            <b id="liquidityMagnet">
-                Searching...
-            </b>
-
-        </div>
-
-
-        <!-- VOLATILITY -->
-
-        <div>
-
-            <span>
-                Volatility
-            </span>
-
-            <b id="volatility">
-                --
-            </b>
-
-            <small id="volatilityState">
-                Collecting...
-            </small>
-
-        </div>
-
-
-        <!-- VOLUME -->
-
-        <div>
-
-            <span>
-                Volume
-            </span>
-
-            <b id="volumeValue">
-                --
-            </b>
-
-            <small id="volumeState">
-                Collecting...
-            </small>
-
-        </div>
-
-
-        <!-- TREND / STRUCTURE -->
-
-        <div>
-
-            <span>
-                Market Structure
-            </span>
-
-            <b id="marketStructure">
-                --
-            </b>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================
-     TRADE MANAGEMENT
-     ========================= -->
-
-<section class="glass-card risk-card">
-
-    <h2>
-        TRADE MANAGEMENT
-    </h2>
-
-
-    <div class="risk-grid">
-
-
-        <div>
-
-            <span>
-                Entry
-            </span>
-
-            <b id="entry">
-                --
-            </b>
-
-        </div>
-
-
-        <div>
-
-            <span>
-                Stop Loss
-            </span>
-
-            <b id="stopLoss">
-                --
-            </b>
-
-        </div>
-
-
-        <div>
-
-            <span>
-                Target
-            </span>
-
-            <b id="target">
-                --
-            </b>
-
-        </div>
-
-
-        <div>
-
-            <span>
-                Risk Reward
-            </span>
-
-            <b id="riskReward">
-                --
-            </b>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================
-     VOICE PANEL
-     ========================= -->
-
-<div class="voice-panel">
-
-    <p id="voiceText">
-        Voice system ready
-    </p>
-
-</div>
-
-
-
-</main>
-
-
-
-<!-- =========================
-     SCRIPTS
-     ========================= -->
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 
 </div>
@@ -406,5 +340,5 @@
 </body>
 
 </html>
-```
-    
+
+          
