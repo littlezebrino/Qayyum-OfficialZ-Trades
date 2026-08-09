@@ -1,7 +1,7 @@
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    JAVASCRIPT PART 1
-   REAL-TIME MARKET DATA + MOVING LINE CHART
+   REAL MARKET DATA + LIVE CHART ENGINE
    ================================================== */
 
 
@@ -15,14 +15,46 @@ const btcPrice =
 const priceChange =
     document.getElementById("priceChange");
 
-const marketState =
-    document.getElementById("marketState");
-
 const priceTime =
     document.getElementById("priceTime");
 
-const priceCanvas =
-    document.getElementById("priceChart");
+const marketState =
+    document.getElementById("marketState");
+
+const scanBtn =
+    document.getElementById("scanBtn");
+
+const marketStatus =
+    document.getElementById("marketStatus");
+
+
+/* ===============================
+   HIDE BACKGROUND-ONLY SECTIONS
+   =============================== */
+
+/*
+   Indicators calculations will still run
+   in JavaScript, but the visual card stays
+   hidden as requested.
+
+   Trade Management is also hidden because
+   TP/SL is not part of this scanner.
+*/
+
+const indicatorCard =
+    document.querySelector(".indicators-card");
+
+if (indicatorCard) {
+    indicatorCard.style.display = "none";
+}
+
+
+const riskCard =
+    document.querySelector(".risk-card");
+
+if (riskCard) {
+    riskCard.style.display = "none";
+}
 
 
 /* ===============================
@@ -33,76 +65,161 @@ let candles = [];
 
 let closes = [];
 
+let opens = [];
+
 let highs = [];
 
 let lows = [];
 
 let volumes = [];
 
+let timestamps = [];
+
+
 let market = {
 
     price: 0,
 
+    previousPrice: 0,
+
     volume: 0,
 
-    change: 0,
+    change24h: 0,
 
-    changePercent: 0
+    change24hPercent: 0,
+
+    high24h: 0,
+
+    low24h: 0,
+
+    quoteVolume24h: 0,
+
+    lastUpdate: 0
 
 };
 
 
 /* ===============================
-   DATA SETTINGS
+   ENGINE STATE
    =============================== */
 
-const SYMBOL = "BTCUSDT";
+let dataReady = false;
 
-const INTERVAL = "1m";
+let socket = null;
 
-const HISTORY_LIMIT = 500;
+let tickerSocket = null;
+
+let reconnectTimer = null;
+
+let tickerReconnectTimer = null;
+
+let chart = null;
 
 
 /* ===============================
-   NUMBER FORMAT
+   BINANCE ENDPOINTS
    =============================== */
 
-function formatPrice(value) {
+const BINANCE_API =
+    "https://api.binance.com";
 
-    if (!Number.isFinite(value)) {
-        return "$0.00";
-    }
 
-    return "$" + value.toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    );
+const KLINE_URL =
+    BINANCE_API +
+    "/api/v3/klines" +
+    "?symbol=BTCUSDT" +
+    "&interval=1m" +
+    "&limit=500";
+
+
+const TICKER_URL =
+    BINANCE_API +
+    "/api/v3/ticker/24hr" +
+    "?symbol=BTCUSDT";
+
+
+/* ===============================
+   NUMBER SAFETY
+   =============================== */
+
+function safeNumber(value) {
+
+    const number =
+        Number(value);
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+
 }
 
 
 /* ===============================
-   UPDATE PRICE UI
+   PRICE FORMAT
    =============================== */
 
-function updatePriceUI() {
+function formatPrice(value) {
 
-    if (!Number.isFinite(market.price)) {
-        return;
+    const number =
+        safeNumber(value);
+
+    if (!number) {
+        return "$0.00";
     }
 
-    btcPrice.textContent =
-        formatPrice(market.price);
+    return "$" +
+        number.toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 
+}
+
+
+/* ===============================
+   VOLUME FORMAT
+   =============================== */
+
+function formatVolume(value) {
+
+    const number =
+        safeNumber(value);
+
+    if (number >= 1000) {
+
+        return (
+            number / 1000
+        ).toFixed(2) + "K BTC";
+
+    }
+
+    return (
+        number.toFixed(2) +
+        " BTC"
+    );
+
+}
+
+
+/* ===============================
+   24H CHANGE DISPLAY
+   =============================== */
+
+function update24HourDisplay() {
 
     const change =
-        Number(market.changePercent);
+        market.change24hPercent;
 
 
     priceChange.textContent =
-        (change >= 0 ? "+" : "") +
+        (
+            change >= 0
+                ? "+"
+                : ""
+        ) +
         change.toFixed(2) +
         "%";
 
@@ -127,11 +244,39 @@ function updatePriceUI() {
             "#ffd166";
 
     }
+
 }
 
 
 /* ===============================
-   HISTORICAL KLINES
+   PRICE DISPLAY
+   =============================== */
+
+function updatePriceDisplay() {
+
+    btcPrice.textContent =
+        formatPrice(
+            market.price
+        );
+
+
+    update24HourDisplay();
+
+
+    if (
+        market.lastUpdate
+    ) {
+
+        priceTime.textContent =
+            "LIVE";
+
+    }
+
+}
+
+
+/* ===============================
+   HISTORY LOADER
    =============================== */
 
 async function loadHistory() {
@@ -144,7 +289,10 @@ async function loadHistory() {
 
         const response =
             await fetch(
-                `https://api.binance.com/api/v3/klines?symbol=${SYMBOL}&interval=${INTERVAL}&limit=${HISTORY_LIMIT}`
+                KLINE_URL,
+                {
+                    cache: "no-store"
+                }
             );
 
 
@@ -161,9 +309,27 @@ async function loadHistory() {
             await response.json();
 
 
+        if (
+            !Array.isArray(data) ||
+            data.length === 0
+        ) {
+
+            throw new Error(
+                "No candle data received"
+            );
+
+        }
+
+
+        /*
+         * Reset arrays before loading.
+         */
+
         candles = [];
 
         closes = [];
+
+        opens = [];
 
         highs = [];
 
@@ -171,63 +337,126 @@ async function loadHistory() {
 
         volumes = [];
 
-
-        data.forEach(item => {
-
-            const candle = {
-
-                time: Number(item[0]),
-
-                open: Number(item[1]),
-
-                high: Number(item[2]),
-
-                low: Number(item[3]),
-
-                close: Number(item[4]),
-
-                volume: Number(item[5])
-
-            };
+        timestamps = [];
 
 
-            candles.push(candle);
+        data.forEach(
+            item => {
 
-            closes.push(candle.close);
+                const candle = {
 
-            highs.push(candle.high);
+                    time:
+                        safeNumber(item[0]),
 
-            lows.push(candle.low);
+                    open:
+                        safeNumber(item[1]),
 
-            volumes.push(candle.volume);
+                    high:
+                        safeNumber(item[2]),
 
-        });
+                    low:
+                        safeNumber(item[3]),
+
+                    close:
+                        safeNumber(item[4]),
+
+                    volume:
+                        safeNumber(item[5])
+
+                };
 
 
-        if (closes.length === 0) {
+                candles.push(
+                    candle
+                );
 
-            throw new Error(
-                "No BTC market data received"
-            );
 
-        }
+                opens.push(
+                    candle.open
+                );
+
+
+                highs.push(
+                    candle.high
+                );
+
+
+                lows.push(
+                    candle.low
+                );
+
+
+                closes.push(
+                    candle.close
+                );
+
+
+                volumes.push(
+                    candle.volume
+                );
+
+
+                timestamps.push(
+                    candle.time
+                );
+
+            }
+        );
+
+
+        /*
+         * Set initial market price.
+         */
+
+        const last =
+            candles[
+                candles.length - 1
+            ];
 
 
         market.price =
-            closes[closes.length - 1];
+            last.close;
 
 
-        updatePriceUI();
+        market.previousPrice =
+            last.open;
+
+
+        market.volume =
+            last.volume;
+
+
+        market.lastUpdate =
+            Date.now();
+
+
+        dataReady = true;
+
+
+        updatePriceDisplay();
 
         createChart();
 
 
         marketState.textContent =
-            "LIVE";
+            "DATA READY";
 
 
-        priceTime.textContent =
-            "Live Market Price";
+        /*
+         * Get 24H ticker immediately.
+         */
+
+        await load24HourTicker();
+
+
+        /*
+         * Start live streams after
+         * historical data is ready.
+         */
+
+        connectKlineSocket();
+
+        connectTickerSocket();
 
 
     }
@@ -243,30 +472,36 @@ async function loadHistory() {
         marketState.textContent =
             "DATA ERROR";
 
+
         priceTime.textContent =
-            "Waiting for market data...";
+            "Unable to load market data";
+
     }
+
 }
 
 
 /* ===============================
-   24 HOUR TICKER
+   24H TICKER
    =============================== */
 
-async function load24HourChange() {
+async function load24HourTicker() {
 
     try {
 
         const response =
             await fetch(
-                `https://api.binance.com/api/v3/ticker/24hr?symbol=${SYMBOL}`
+                TICKER_URL,
+                {
+                    cache: "no-store"
+                }
             );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "24H ticker request failed"
+                "24H ticker failed"
             );
 
         }
@@ -276,23 +511,53 @@ async function load24HourChange() {
             await response.json();
 
 
-        market.change =
-            Number(data.priceChange);
+        market.change24hPercent =
+            safeNumber(
+                data.priceChangePercent
+            );
 
 
-        market.changePercent =
-            Number(data.priceChangePercent);
+        market.change24h =
+            safeNumber(
+                data.priceChange
+            );
 
 
-        if (Number.isFinite(Number(data.lastPrice))) {
+        market.high24h =
+            safeNumber(
+                data.highPrice
+            );
+
+
+        market.low24h =
+            safeNumber(
+                data.lowPrice
+            );
+
+
+        market.quoteVolume24h =
+            safeNumber(
+                data.quoteVolume
+            );
+
+
+        if (
+            safeNumber(data.lastPrice) > 0
+        ) {
 
             market.price =
-                Number(data.lastPrice);
+                safeNumber(
+                    data.lastPrice
+                );
 
         }
 
 
-        updatePriceUI();
+        market.lastUpdate =
+            Date.now();
+
+
+        updatePriceDisplay();
 
     }
 
@@ -304,327 +569,477 @@ async function load24HourChange() {
         );
 
     }
+
 }
 
 
 /* ===============================
-   BINANCE WEBSOCKET
+   LIVE KLINE WEBSOCKET
    =============================== */
 
-let socket = null;
+function connectKlineSocket() {
 
-let reconnectTimer = null;
+    if (socket) {
 
+        try {
+            socket.close();
+        }
 
-function connectSocket() {
-
-    if (
-        socket &&
-        (
-            socket.readyState === WebSocket.OPEN ||
-            socket.readyState === WebSocket.CONNECTING
-        )
-    ) {
-
-        return;
+        catch (error) {
+            console.warn(error);
+        }
 
     }
-
-
-    marketState.textContent =
-        "CONNECTING";
 
 
     socket =
         new WebSocket(
-            "wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/btcusdt@kline_1m"
+            "wss://stream.binance.com:9443/ws/btcusdt@kline_1m"
         );
 
 
-    socket.onopen = () => {
+    socket.onopen =
+        () => {
 
-        marketState.textContent =
-            "LIVE";
+            marketState.textContent =
+                "LIVE";
 
-        console.log(
-            "BTC WebSocket connected"
-        );
+            engineLiveState();
 
-    };
-
-
-    socket.onmessage = event => {
-
-        try {
-
-            const packet =
-                JSON.parse(event.data);
+        };
 
 
-            const data =
-                packet.data;
+    socket.onmessage =
+        event => {
+
+            try {
+
+                const payload =
+                    JSON.parse(
+                        event.data
+                    );
 
 
-            if (!data) {
-                return;
-            }
+                if (!payload.k) {
+                    return;
+                }
 
-
-            /* =========================
-               24H TICKER
-            ========================= */
-
-            if (data.e === "24hrTicker") {
-
-                market.price =
-                    Number(data.c);
-
-                market.change =
-                    Number(data.p);
-
-                market.changePercent =
-                    Number(data.P);
-
-                market.volume =
-                    Number(data.v);
-
-                updatePriceUI();
-
-            }
-
-
-            /* =========================
-               LIVE 1M CANDLE
-            ========================= */
-
-            if (data.e === "kline") {
 
                 updateLiveCandle(
-                    data.k
+                    payload.k
                 );
 
             }
 
-        }
+            catch (error) {
 
-        catch (error) {
+                console.error(
+                    "Kline parse error:",
+                    error
+                );
+
+            }
+
+        };
+
+
+    socket.onerror =
+        error => {
 
             console.error(
-                "WebSocket message error:",
+                "Kline WebSocket error:",
                 error
             );
 
-        }
+            marketState.textContent =
+                "RECONNECTING";
 
-    };
-
-
-    socket.onerror = error => {
-
-        console.error(
-            "WebSocket error:",
-            error
-        );
-
-        marketState.textContent =
-            "RECONNECTING";
-
-    };
+        };
 
 
-    socket.onclose = () => {
+    socket.onclose =
+        () => {
 
-        marketState.textContent =
-            "RECONNECTING";
-
-
-        clearTimeout(
-            reconnectTimer
-        );
+            marketState.textContent =
+                "RECONNECTING";
 
 
-        reconnectTimer =
-            setTimeout(
-                connectSocket,
-                3000
+            clearTimeout(
+                reconnectTimer
             );
 
-    };
+
+            reconnectTimer =
+                setTimeout(
+                    connectKlineSocket,
+                    3000
+                );
+
+        };
 
 }
 
 
 /* ===============================
-   UPDATE LIVE CANDLE
+   LIVE 24H WEBSOCKET
    =============================== */
 
-function updateLiveCandle(data) {
+function connectTickerSocket() {
 
-    if (!data) {
-        return;
-    }
+    if (tickerSocket) {
 
+        try {
+            tickerSocket.close();
+        }
 
-    const candleTime =
-        Number(data.t);
-
-    const close =
-        Number(data.c);
-
-    const high =
-        Number(data.h);
-
-    const low =
-        Number(data.l);
-
-    const volume =
-        Number(data.v);
-
-
-    market.price =
-        close;
-
-    market.volume =
-        volume;
-
-
-    updatePriceUI();
-
-
-    if (candles.length === 0) {
-
-        return;
+        catch (error) {
+            console.warn(error);
+        }
 
     }
 
 
-    const last =
-        candles[candles.length - 1];
-
-
-    /* =========================
-       SAME CANDLE
-    ========================= */
-
-    if (
-        Number(last.time) === candleTime
-    ) {
-
-        last.close = close;
-
-        last.high = high;
-
-        last.low = low;
-
-        last.volume = volume;
-
-
-        closes[
-            closes.length - 1
-        ] = close;
-
-
-        highs[
-            highs.length - 1
-        ] = high;
-
-
-        lows[
-            lows.length - 1
-        ] = low;
-
-
-        volumes[
-            volumes.length - 1
-        ] = volume;
-
-
-        updateChartLastPoint(
-            close
+    tickerSocket =
+        new WebSocket(
+            "wss://stream.binance.com:9443/ws/btcusdt@ticker"
         );
 
-    }
+
+    tickerSocket.onmessage =
+        event => {
+
+            try {
+
+                const data =
+                    JSON.parse(
+                        event.data
+                    );
 
 
-    /* =========================
-       NEW CANDLE
-    ========================= */
+                /*
+                 * Binance 24H ticker:
+                 *
+                 * c = last price
+                 * p = price change
+                 * P = percentage change
+                 * h = 24H high
+                 * l = 24H low
+                 * v = base volume
+                 * q = quote volume
+                 */
 
-    else if (
-        candleTime > Number(last.time)
-    ) {
+                market.price =
+                    safeNumber(data.c);
 
-        const newCandle = {
 
-            time: candleTime,
+                market.change24h =
+                    safeNumber(data.p);
 
-            open: Number(data.o),
 
-            high: high,
+                market.change24hPercent =
+                    safeNumber(data.P);
 
-            low: low,
 
-            close: close,
+                market.high24h =
+                    safeNumber(data.h);
 
-            volume: volume
+
+                market.low24h =
+                    safeNumber(data.l);
+
+
+                market.volume24h =
+                    safeNumber(data.v);
+
+
+                market.quoteVolume24h =
+                    safeNumber(data.q);
+
+
+                market.lastUpdate =
+                    Date.now();
+
+
+                updatePriceDisplay();
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Ticker parse error:",
+                    error
+                );
+
+            }
 
         };
 
 
-        candles.push(newCandle);
+    tickerSocket.onerror =
+        error => {
 
-        closes.push(close);
+            console.error(
+                "Ticker WebSocket error:",
+                error
+            );
 
-        highs.push(high);
-
-        lows.push(low);
-
-        volumes.push(volume);
+        };
 
 
-        /* Keep memory controlled */
+    tickerSocket.onclose =
+        () => {
 
-        if (candles.length > 500) {
+            clearTimeout(
+                tickerReconnectTimer
+            );
+
+
+            tickerReconnectTimer =
+                setTimeout(
+                    connectTickerSocket,
+                    3000
+                );
+
+        };
+
+}
+
+
+/* ===============================
+   UPDATE CURRENT CANDLE
+   =============================== */
+
+function updateLiveCandle(data) {
+
+    const openTime =
+        safeNumber(
+            data.t
+        );
+
+
+    const open =
+        safeNumber(
+            data.o
+        );
+
+
+    const high =
+        safeNumber(
+            data.h
+        );
+
+
+    const low =
+        safeNumber(
+            data.l
+        );
+
+
+    const close =
+        safeNumber(
+            data.c
+        );
+
+
+    const volume =
+        safeNumber(
+            data.v
+        );
+
+
+    if (!close) {
+        return;
+    }
+
+
+    const lastIndex =
+        candles.length - 1;
+
+
+    /*
+     * If Binance has moved to a new
+     * 1-minute candle, create a new one.
+     */
+
+    if (
+        lastIndex < 0 ||
+        candles[lastIndex].time !==
+        openTime
+    ) {
+
+        const newCandle = {
+
+            time:
+                openTime,
+
+            open:
+                open,
+
+            high:
+                high,
+
+            low:
+                low,
+
+            close:
+                close,
+
+            volume:
+                volume
+
+        };
+
+
+        candles.push(
+            newCandle
+        );
+
+
+        opens.push(
+            open
+        );
+
+
+        highs.push(
+            high
+        );
+
+
+        lows.push(
+            low
+        );
+
+
+        closes.push(
+            close
+        );
+
+
+        volumes.push(
+            volume
+        );
+
+
+        timestamps.push(
+            openTime
+        );
+
+
+        /*
+         * Keep memory controlled.
+         */
+
+        if (
+            candles.length > 600
+        ) {
 
             candles.shift();
 
-            closes.shift();
+            opens.shift();
 
             highs.shift();
 
             lows.shift();
 
+            closes.shift();
+
             volumes.shift();
+
+            timestamps.shift();
 
         }
 
+    }
 
-        addChartPoint(close);
+    else {
+
+        /*
+         * Update the current live candle.
+         */
+
+        candles[lastIndex].open =
+            open;
+
+        candles[lastIndex].high =
+            high;
+
+        candles[lastIndex].low =
+            low;
+
+        candles[lastIndex].close =
+            close;
+
+        candles[lastIndex].volume =
+            volume;
+
+
+        opens[lastIndex] =
+            open;
+
+        highs[lastIndex] =
+            high;
+
+        lows[lastIndex] =
+            low;
+
+        closes[lastIndex] =
+            close;
+
+        volumes[lastIndex] =
+            volume;
 
     }
 
 
-    priceTime.textContent =
-        "Live Market Price";
+    market.previousPrice =
+        market.price;
+
+
+    market.price =
+        close;
+
+
+    market.volume =
+        volume;
+
+
+    market.lastUpdate =
+        Date.now();
+
+
+    updatePriceDisplay();
+
+
+    updateChart(
+        close
+    );
+
 }
 
 
 /* ===============================
-   CHART
+   MOVING LINE CHART
    =============================== */
-
-let chart = null;
-
 
 function createChart() {
 
-    if (!priceCanvas) {
+    const canvas =
+        document.getElementById(
+            "priceChart"
+        );
+
+
+    if (!canvas) {
         return;
     }
 
 
     const ctx =
-        priceCanvas.getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
 
 
     if (chart) {
@@ -636,8 +1051,13 @@ function createChart() {
     }
 
 
+    /*
+     * Use the latest 150 points so
+     * the chart remains smooth.
+     */
+
     const chartData =
-        closes.slice(-120);
+        closes.slice(-150);
 
 
     const labels =
@@ -655,15 +1075,18 @@ function createChart() {
 
                 data: {
 
-                    labels: labels,
+                    labels:
+                        labels,
 
                     datasets: [
 
                         {
 
-                            label: "BTC",
+                            label:
+                                "BTC/USDT",
 
-                            data: chartData,
+                            data:
+                                chartData,
 
                             borderColor:
                                 "#00f5ff",
@@ -671,15 +1094,20 @@ function createChart() {
                             backgroundColor:
                                 "rgba(0,245,255,0.08)",
 
-                            borderWidth: 2,
+                            borderWidth:
+                                2,
 
-                            tension: 0.35,
+                            tension:
+                                0.35,
 
-                            pointRadius: 0,
+                            pointRadius:
+                                0,
 
-                            pointHoverRadius: 0,
+                            pointHoverRadius:
+                                0,
 
-                            fill: true
+                            fill:
+                                true
 
                         }
 
@@ -690,17 +1118,23 @@ function createChart() {
 
                 options: {
 
-                    responsive: true,
+                    responsive:
+                        true,
 
-                    maintainAspectRatio: false,
+                    maintainAspectRatio:
+                        false,
 
-                    animation: false,
+                    animation:
+                        false,
+
 
                     interaction: {
 
-                        intersect: false,
+                        intersect:
+                            false,
 
-                        mode: "index"
+                        mode:
+                            "index"
 
                     },
 
@@ -709,13 +1143,15 @@ function createChart() {
 
                         legend: {
 
-                            display: false
+                            display:
+                                false
 
                         },
 
                         tooltip: {
 
-                            enabled: false
+                            enabled:
+                                false
 
                         }
 
@@ -726,26 +1162,18 @@ function createChart() {
 
                         x: {
 
-                            display: false
+                            display:
+                                false
 
                         },
 
                         y: {
 
-                            display: false,
+                            display:
+                                false,
 
-                            beginAtZero: false
-
-                        }
-
-                    },
-
-
-                    elements: {
-
-                        line: {
-
-                            capBezierPoints: true
+                            grace:
+                                "2%"
 
                         }
 
@@ -755,106 +1183,140 @@ function createChart() {
 
             }
         );
+
 }
 
 
 /* ===============================
-   UPDATE LAST CHART POINT
+   UPDATE CHART
    =============================== */
 
-function updateChartLastPoint(price) {
+function updateChart(price) {
 
     if (!chart) {
         return;
     }
 
 
-    const data =
-        chart.data.datasets[0].data;
+    const dataset =
+        chart.data.datasets[0];
 
 
-    if (data.length === 0) {
-
-        data.push(price);
-
-    }
-
-    else {
-
-        data[data.length - 1] =
-            price;
-
-    }
-
-
-    chart.update("none");
-}
-
-
-/* ===============================
-   ADD NEW CHART POINT
-   =============================== */
-
-function addChartPoint(price) {
-
-    if (!chart) {
-
-        createChart();
-
-        return;
-
-    }
-
-
-    chart.data.datasets[0].data.push(
-        price
+    dataset.data.push(
+        safeNumber(price)
     );
 
-    chart.data.labels.push("");
+
+    chart.data.labels.push(
+        ""
+    );
 
 
-    const maxPoints = 120;
+    /*
+     * Keep the chart moving smoothly.
+     */
+
+    const MAX_POINTS = 150;
 
 
     while (
-        chart.data.datasets[0].data.length >
-        maxPoints
+        dataset.data.length >
+        MAX_POINTS
     ) {
 
-        chart.data.datasets[0].data.shift();
+        dataset.data.shift();
 
         chart.data.labels.shift();
 
     }
 
 
-    chart.update("none");
+    chart.update(
+        "none"
+    );
+
 }
 
 
 /* ===============================
-   PERIODIC 24H REFRESH
+   LIVE ENGINE STATUS
    =============================== */
 
-setInterval(
-    load24HourChange,
-    30000
-);
+function engineLiveState() {
+
+    const engine =
+        document.getElementById(
+            "engineStatus"
+        );
+
+
+    if (!engine) {
+        return;
+    }
+
+
+    if (
+        dataReady
+    ) {
+
+        engine.textContent =
+            "Engine Ready";
+
+    }
+
+}
 
 
 /* ===============================
-   START MARKET ENGINE
+   DATA HEALTH CHECK
    =============================== */
 
-(async function startMarketEngine() {
+function hasEnoughMarketData() {
 
-    await loadHistory();
+    return (
+        candles.length >= 200 &&
+        closes.length >= 200 &&
+        highs.length >= 200 &&
+        lows.length >= 200 &&
+        volumes.length >= 200
+    );
 
-    await load24HourChange();
+}
 
-    connectSocket();
 
-})();
+/* ===============================
+   CURRENT PRICE HELPER
+   =============================== */
+
+function getCurrentPrice() {
+
+    return safeNumber(
+        market.price
+    );
+
+}
+
+
+/* ===============================
+   INITIAL START
+   =============================== */
+
+loadHistory();
+
+
+/* ===============================
+   PERIODIC 24H FALLBACK
+   =============================== */
+
+setInterval(
+    () => {
+
+        load24HourTicker();
+
+    },
+    30000
+);
+
 
 
 
@@ -868,35 +1330,55 @@ setInterval(
 
 
 /* ===============================
-   INDICATOR SETTINGS
+   INDICATOR STATE
    =============================== */
 
-const RSI_PERIOD = 14;
+let indicatorState = {
 
-const EMA_FAST = 20;
+    rsi: 50,
 
-const EMA_SLOW = 50;
+    ema20: 0,
 
-const EMA_TREND = 200;
+    ema50: 0,
 
-const MACD_FAST = 12;
+    ema200: 0,
 
-const MACD_SLOW = 26;
+    macd: 0,
 
-const MACD_SIGNAL = 9;
+    macdSignal: 0,
 
-const ATR_PERIOD = 14;
+    macdHistogram: 0,
+
+    vwap: 0,
+
+    atr: 0,
+
+    atrPercent: 0,
+
+    volatilityPercent: 0,
+
+    volatilityState: "WAITING",
+
+    volume: 0,
+
+    averageVolume: 0,
+
+    volumeRatio: 1,
+
+    volumeState: "WAITING"
+
+};
 
 
 /* ===============================
-   SAFE DATA CHECK
+   BASIC ARRAY CHECK
    =============================== */
 
-function hasEnoughData(period = 50) {
+function validNumber(value) {
 
     return (
-        Array.isArray(closes) &&
-        closes.length >= period
+        typeof value === "number" &&
+        Number.isFinite(value)
     );
 
 }
@@ -916,21 +1398,19 @@ function calculateSMA(
         values.length < period
     ) {
 
-        return null;
+        return 0;
 
     }
 
 
-    const slice =
-        values.slice(
-            values.length - period
-        );
+    const recent =
+        values.slice(-period);
 
 
     const sum =
-        slice.reduce(
+        recent.reduce(
             (total, value) =>
-                total + Number(value),
+                total + safeNumber(value),
             0
         );
 
@@ -941,7 +1421,7 @@ function calculateSMA(
 
 
 /* ===============================
-   PROPER EMA
+   EMA
    =============================== */
 
 function calculateEMA(
@@ -954,27 +1434,29 @@ function calculateEMA(
         values.length < period
     ) {
 
-        return null;
+        return 0;
 
     }
 
 
-    const multiplier =
-        2 / (period + 1);
-
+    /*
+     * Start with SMA rather than the
+     * first candle. This gives a much
+     * more stable EMA.
+     */
 
     let ema =
         calculateSMA(
-            values.slice(0, period),
+            values.slice(
+                0,
+                period
+            ),
             period
         );
 
 
-    if (!Number.isFinite(ema)) {
-
-        return null;
-
-    }
+    const multiplier =
+        2 / (period + 1);
 
 
     for (
@@ -984,7 +1466,9 @@ function calculateEMA(
     ) {
 
         const price =
-            Number(values[i]);
+            safeNumber(
+                values[i]
+            );
 
 
         ema =
@@ -1003,29 +1487,123 @@ function calculateEMA(
 
 
 /* ===============================
-   WILDER RSI
+   EMA SERIES
    =============================== */
 
-function calculateRSI(
-    period = RSI_PERIOD
+function calculateEMASeries(
+    period,
+    values = closes
 ) {
 
     if (
-        !Array.isArray(closes) ||
-        closes.length <= period
+        !Array.isArray(values) ||
+        values.length < period
     ) {
 
-        return null;
+        return [];
 
     }
 
 
-    let gain = 0;
+    let ema =
+        calculateSMA(
+            values.slice(
+                0,
+                period
+            ),
+            period
+        );
 
-    let loss = 0;
+
+    const multiplier =
+        2 / (period + 1);
 
 
-    /* Initial Wilder averages */
+    const result = [];
+
+
+    /*
+     * Fill the initial period so
+     * indexes remain aligned.
+     */
+
+    for (
+        let i = 0;
+        i < period - 1;
+        i++
+    ) {
+
+        result.push(
+            null
+        );
+
+    }
+
+
+    result.push(
+        ema
+    );
+
+
+    for (
+        let i = period;
+        i < values.length;
+        i++
+    ) {
+
+        const price =
+            safeNumber(
+                values[i]
+            );
+
+
+        ema =
+            (
+                price - ema
+            ) *
+            multiplier +
+            ema;
+
+
+        result.push(
+            ema
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ===============================
+   WILDER RSI
+   =============================== */
+
+function calculateRSI(
+    period = 14,
+    values = closes
+) {
+
+    if (
+        !Array.isArray(values) ||
+        values.length <= period
+    ) {
+
+        return 50;
+
+    }
+
+
+    /*
+     * Initial Wilder averages.
+     */
+
+    let gainSum = 0;
+
+    let lossSum = 0;
+
 
     for (
         let i = 1;
@@ -1034,105 +1612,135 @@ function calculateRSI(
     ) {
 
         const change =
-            Number(closes[i]) -
-            Number(closes[i - 1]);
+            safeNumber(
+                values[i]
+            ) -
+            safeNumber(
+                values[i - 1]
+            );
 
 
         if (change > 0) {
 
-            gain += change;
+            gainSum += change;
 
         }
 
         else {
 
-            loss += Math.abs(change);
+            lossSum +=
+                Math.abs(change);
 
         }
 
     }
 
 
-    let avgGain =
-        gain / period;
-
-    let avgLoss =
-        loss / period;
+    let averageGain =
+        gainSum / period;
 
 
-    /* Continue Wilder smoothing */
+    let averageLoss =
+        lossSum / period;
+
+
+    /*
+     * Continue Wilder smoothing
+     * through the remaining candles.
+     */
 
     for (
         let i = period + 1;
-        i < closes.length;
+        i < values.length;
         i++
     ) {
 
         const change =
-            Number(closes[i]) -
-            Number(closes[i - 1]);
+            safeNumber(
+                values[i]
+            ) -
+            safeNumber(
+                values[i - 1]
+            );
 
 
-        const currentGain =
+        const gain =
             change > 0
                 ? change
                 : 0;
 
 
-        const currentLoss =
+        const loss =
             change < 0
                 ? Math.abs(change)
                 : 0;
 
 
-        avgGain =
+        averageGain =
             (
-                (avgGain * (period - 1)) +
-                currentGain
+                averageGain *
+                (period - 1) +
+                gain
             ) / period;
 
 
-        avgLoss =
+        averageLoss =
             (
-                (avgLoss * (period - 1)) +
-                currentLoss
+                averageLoss *
+                (period - 1) +
+                loss
             ) / period;
 
     }
 
 
-    /* Prevent RSI from jumping to 100 */
+    /*
+     * Avoid forcing RSI to 100.
+     * A zero loss does not automatically
+     * mean we should blindly use 100.
+     */
 
-    if (avgGain === 0 && avgLoss === 0) {
+    if (
+        averageGain === 0 &&
+        averageLoss === 0
+    ) {
 
         return 50;
 
     }
 
 
-    if (avgLoss === 0) {
+    if (
+        averageLoss === 0
+    ) {
 
         return 99;
 
     }
 
 
-    if (avgGain === 0) {
+    if (
+        averageGain === 0
+    ) {
 
         return 1;
 
     }
 
 
-    const rs =
-        avgGain / avgLoss;
+    const relativeStrength =
+        averageGain /
+        averageLoss;
 
 
     const rsi =
         100 -
         (
             100 /
-            (1 + rs)
+            (
+                1 +
+                relativeStrength
+            )
         );
 
 
@@ -1151,73 +1759,40 @@ function calculateRSI(
    MACD
    =============================== */
 
-function calculateMACD() {
+function calculateMACDData() {
 
     if (
-        closes.length <
-        MACD_SLOW + MACD_SIGNAL
+        closes.length < 50
     ) {
 
         return {
 
-            value: null,
+            macd: 0,
 
-            signal: null,
+            signal: 0,
 
-            histogram: null
+            histogram: 0
 
         };
 
     }
 
 
-    const fastMultiplier =
-        2 / (MACD_FAST + 1);
-
-
-    const slowMultiplier =
-        2 / (MACD_SLOW + 1);
-
-
-    let fastEMA =
-        calculateSMA(
-            closes.slice(
-                0,
-                MACD_FAST
-            ),
-            MACD_FAST
+    const ema12Series =
+        calculateEMASeries(
+            12,
+            closes
         );
 
 
-    let slowEMA =
-        calculateSMA(
-            closes.slice(
-                0,
-                MACD_SLOW
-            ),
-            MACD_SLOW
+    const ema26Series =
+        calculateEMASeries(
+            26,
+            closes
         );
 
 
-    if (
-        !Number.isFinite(fastEMA) ||
-        !Number.isFinite(slowEMA)
-    ) {
-
-        return {
-
-            value: null,
-
-            signal: null,
-
-            histogram: null
-
-        };
-
-    }
-
-
-    const macdValues = [];
+    const macdSeries = [];
 
 
     for (
@@ -1226,53 +1801,35 @@ function calculateMACD() {
         i++
     ) {
 
-        const price =
-            Number(closes[i]);
+        if (
+            ema12Series[i] === null ||
+            ema26Series[i] === null
+        ) {
 
-
-        if (i >= MACD_FAST) {
-
-            fastEMA =
-                (
-                    price - fastEMA
-                ) *
-                fastMultiplier +
-                fastEMA;
+            continue;
 
         }
 
 
-        if (i >= MACD_SLOW) {
-
-            slowEMA =
-                (
-                    price - slowEMA
-                ) *
-                slowMultiplier +
-                slowEMA;
-
-
-            macdValues.push(
-                fastEMA - slowEMA
-            );
-
-        }
+        macdSeries.push(
+            ema12Series[i] -
+            ema26Series[i]
+        );
 
     }
 
 
     if (
-        macdValues.length <
-        MACD_SIGNAL
+        macdSeries.length < 9
     ) {
 
         return {
 
-            value: null,
+            macd: 0,
 
-            signal: null,
+            signal: 0,
 
-            histogram: null
+            histogram: 0
 
         };
 
@@ -1281,27 +1838,47 @@ function calculateMACD() {
 
     const signal =
         calculateEMA(
-            MACD_SIGNAL,
-            macdValues
+            9,
+            macdSeries
         );
 
 
-    const value =
-        macdValues[
-            macdValues.length - 1
+    const macd =
+        macdSeries[
+            macdSeries.length - 1
         ];
+
+
+    const histogram =
+        macd - signal;
 
 
     return {
 
-        value: value,
+        macd,
 
-        signal: signal,
+        signal,
 
-        histogram:
-            value - signal
+        histogram
 
     };
+
+}
+
+
+/* ===============================
+   TYPICAL PRICE
+   =============================== */
+
+function getTypicalPrice(
+    candle
+) {
+
+    return (
+        safeNumber(candle.high) +
+        safeNumber(candle.low) +
+        safeNumber(candle.close)
+    ) / 3;
 
 }
 
@@ -1310,16 +1887,23 @@ function calculateMACD() {
    VWAP
    =============================== */
 
-function calculateVWAP() {
+function calculateVWAP(
+    lookback = 200
+) {
 
     if (
-        !Array.isArray(candles) ||
         candles.length === 0
     ) {
 
-        return null;
+        return 0;
 
     }
+
+
+    const recent =
+        candles.slice(
+            -lookback
+        );
 
 
     let totalVolume = 0;
@@ -1327,40 +1911,19 @@ function calculateVWAP() {
     let totalValue = 0;
 
 
-    candles.forEach(
+    recent.forEach(
         candle => {
 
-            const high =
-                Number(candle.high);
-
-            const low =
-                Number(candle.low);
-
-            const close =
-                Number(candle.close);
-
             const volume =
-                Number(candle.volume);
-
-
-            if (
-                !Number.isFinite(high) ||
-                !Number.isFinite(low) ||
-                !Number.isFinite(close) ||
-                !Number.isFinite(volume)
-            ) {
-
-                return;
-
-            }
+                safeNumber(
+                    candle.volume
+                );
 
 
             const typicalPrice =
-                (
-                    high +
-                    low +
-                    close
-                ) / 3;
+                getTypicalPrice(
+                    candle
+                );
 
 
             totalValue +=
@@ -1375,9 +1938,11 @@ function calculateVWAP() {
     );
 
 
-    if (totalVolume === 0) {
+    if (
+        totalVolume <= 0
+    ) {
 
-        return null;
+        return 0;
 
     }
 
@@ -1391,31 +1956,95 @@ function calculateVWAP() {
 
 
 /* ===============================
-   ATR
+   TRUE RANGE
    =============================== */
 
-function calculateATR(
-    period = ATR_PERIOD
+function calculateTrueRange(
+    index
 ) {
 
     if (
-        !Array.isArray(candles) ||
-        candles.length <= period
+        index <= 0 ||
+        index >= candles.length
     ) {
 
-        return null;
+        return 0;
 
     }
 
 
-    const trueRanges = [];
+    const current =
+        candles[index];
+
+
+    const previous =
+        candles[index - 1];
+
+
+    const high =
+        safeNumber(
+            current.high
+        );
+
+
+    const low =
+        safeNumber(
+            current.low
+        );
+
+
+    const previousClose =
+        safeNumber(
+            previous.close
+        );
+
+
+    return Math.max(
+
+        high - low,
+
+        Math.abs(
+            high -
+            previousClose
+        ),
+
+        Math.abs(
+            low -
+            previousClose
+        )
+
+    );
+
+}
+
+
+/* ===============================
+   WILDER ATR
+   =============================== */
+
+function calculateATR(
+    period = 14
+) {
+
+    if (
+        candles.length <= period
+    ) {
+
+        return 0;
+
+    }
 
 
     const start =
         Math.max(
             1,
-            candles.length - period
+            candles.length -
+            period -
+            100
         );
+
+
+    const trueRanges = [];
 
 
     for (
@@ -1424,59 +2053,273 @@ function calculateATR(
         i++
     ) {
 
-        const current =
-            candles[i];
-
-        const previous =
-            candles[i - 1];
-
-
-        const high =
-            Number(current.high);
-
-        const low =
-            Number(current.low);
-
-        const previousClose =
-            Number(previous.close);
-
-
-        const range =
-            Math.max(
-
-                high - low,
-
-                Math.abs(
-                    high - previousClose
-                ),
-
-                Math.abs(
-                    low - previousClose
-                )
-
-            );
-
-
-        trueRanges.push(range);
+        trueRanges.push(
+            calculateTrueRange(i)
+        );
 
     }
 
 
-    if (trueRanges.length === 0) {
+    if (
+        trueRanges.length <
+        period
+    ) {
 
-        return null;
+        return 0;
+
+    }
+
+
+    /*
+     * Initial ATR.
+     */
+
+    let atr =
+        trueRanges
+            .slice(
+                0,
+                period
+            )
+            .reduce(
+                (
+                    total,
+                    value
+                ) =>
+                    total + value,
+                0
+            ) /
+        period;
+
+
+    /*
+     * Wilder smoothing.
+     */
+
+    for (
+        let i = period;
+        i < trueRanges.length;
+        i++
+    ) {
+
+        atr =
+            (
+                atr *
+                (period - 1) +
+                trueRanges[i]
+            ) / period;
+
+    }
+
+
+    return atr;
+
+}
+
+
+/* ===============================
+   ATR PERCENTAGE
+   =============================== */
+
+function calculateATRPercent() {
+
+    const price =
+        getCurrentPrice();
+
+
+    const atr =
+        calculateATR(14);
+
+
+    if (
+        price <= 0 ||
+        atr <= 0
+    ) {
+
+        return 0;
 
     }
 
 
     return (
-        trueRanges.reduce(
-            (sum, value) =>
-                sum + value,
+        atr /
+        price
+    ) * 100;
+
+}
+
+
+/* ===============================
+   REALIZED VOLATILITY
+   =============================== */
+
+function calculateVolatilityPercent(
+    period = 20
+) {
+
+    if (
+        closes.length <
+        period + 1
+    ) {
+
+        return 0;
+
+    }
+
+
+    const recent =
+        closes.slice(
+            -(period + 1)
+        );
+
+
+    const returns = [];
+
+
+    for (
+        let i = 1;
+        i < recent.length;
+        i++
+    ) {
+
+        const previous =
+            safeNumber(
+                recent[i - 1]
+            );
+
+
+        const current =
+            safeNumber(
+                recent[i]
+            );
+
+
+        if (
+            previous <= 0 ||
+            current <= 0
+        ) {
+
+            continue;
+
+        }
+
+
+        const percentageReturn =
+            (
+                (
+                    current -
+                    previous
+                ) /
+                previous
+            ) * 100;
+
+
+        returns.push(
+            percentageReturn
+        );
+
+    }
+
+
+    if (
+        returns.length < 2
+    ) {
+
+        return 0;
+
+    }
+
+
+    const mean =
+        returns.reduce(
+            (
+                total,
+                value
+            ) =>
+                total + value,
             0
         ) /
-        trueRanges.length
+        returns.length;
+
+
+    const variance =
+        returns.reduce(
+            (
+                total,
+                value
+            ) =>
+                total +
+                Math.pow(
+                    value - mean,
+                    2
+                ),
+            0
+        ) /
+        returns.length;
+
+
+    /*
+     * Approximate 20-minute realized
+     * volatility as percentage.
+     */
+
+    return Math.sqrt(
+        variance
     );
+
+}
+
+
+/* ===============================
+   VOLATILITY CLASSIFICATION
+   =============================== */
+
+function classifyVolatility(
+    atrPercent,
+    realizedPercent
+) {
+
+    /*
+     * ATR is the primary market
+     * movement measurement.
+     *
+     * Realized volatility confirms it.
+     */
+
+    if (
+        atrPercent <= 0
+    ) {
+
+        return "WAITING";
+
+    }
+
+
+    const combined =
+        (
+            atrPercent +
+            realizedPercent
+        ) / 2;
+
+
+    if (
+        combined < 0.12
+    ) {
+
+        return "LOW";
+
+    }
+
+
+    if (
+        combined >= 0.35
+    ) {
+
+        return "HIGH";
+
+    }
+
+
+    return "NORMAL";
 
 }
 
@@ -1485,76 +2328,120 @@ function calculateATR(
    VOLUME ANALYSIS
    =============================== */
 
-function getVolumeAnalysis() {
+function analyzeVolume(
+    period = 20
+) {
 
     if (
-        !Array.isArray(volumes) ||
-        volumes.length < 20
+        volumes.length <
+        period + 1
     ) {
 
         return {
 
-            value: 0,
+            current: 0,
 
             average: 0,
 
-            status: "COLLECTING"
+            ratio: 1,
+
+            state: "WAITING"
 
         };
 
     }
 
 
-    const recent =
-        volumes.slice(-20);
-
-
-    const average =
-        recent.reduce(
-            (sum, value) =>
-                sum + Number(value),
-            0
-        ) / recent.length;
-
-
     const current =
-        Number(
+        safeNumber(
             volumes[
                 volumes.length - 1
             ]
         );
 
 
-    let status =
+    /*
+     * Don't include the current candle
+     * when calculating its comparison
+     * average.
+     */
+
+    const previousVolumes =
+        volumes.slice(
+            -(period + 1),
+            -1
+        );
+
+
+    const average =
+        previousVolumes.reduce(
+            (
+                total,
+                value
+            ) =>
+                total +
+                safeNumber(value),
+            0
+        ) /
+        previousVolumes.length;
+
+
+    if (
+        average <= 0
+    ) {
+
+        return {
+
+            current,
+
+            average: 0,
+
+            ratio: 1,
+
+            state: "NORMAL"
+
+        };
+
+    }
+
+
+    const ratio =
+        current /
+        average;
+
+
+    let state =
         "NORMAL";
 
 
     if (
-        current >
-        average * 1.5
+        ratio >= 1.5
     ) {
 
-        status = "HIGH";
+        state =
+            "HIGH";
 
     }
 
     else if (
-        current <
-        average * 0.7
+        ratio <= 0.7
     ) {
 
-        status = "LOW";
+        state =
+            "LOW";
 
     }
 
 
     return {
 
-        value: current,
+        current,
 
-        average: average,
+        average,
 
-        status: status
+        ratio,
+
+        state
 
     };
 
@@ -1562,86 +2449,226 @@ function getVolumeAnalysis() {
 
 
 /* ===============================
-   VOLATILITY
+   MOMENTUM
    =============================== */
 
-function getVolatilityAnalysis() {
+function calculateMomentum() {
 
     if (
-        !Array.isArray(closes) ||
         closes.length < 20
     ) {
 
         return {
 
-            value: 0,
+            direction:
+                "NEUTRAL",
 
-            percent: 0,
-
-            status: "COLLECTING"
+            strength:
+                0
 
         };
 
     }
 
 
-    const recent =
-        closes.slice(-20);
+    const current =
+        closes[
+            closes.length - 1
+        ];
 
 
-    const high =
-        Math.max(...recent);
+    const previous =
+        closes[
+            closes.length - 11
+        ];
 
 
-    const low =
-        Math.min(...recent);
+    if (
+        previous <= 0
+    ) {
 
+        return {
 
-    const value =
-        high - low;
+            direction:
+                "NEUTRAL",
 
+            strength:
+                0
 
-    const currentPrice =
-        Number(
-            market.price
-        );
-
-
-    const percent =
-        currentPrice > 0
-            ? (
-                value /
-                currentPrice
-            ) * 100
-            : 0;
-
-
-    let status =
-        "NORMAL";
-
-
-    if (percent >= 2) {
-
-        status = "HIGH";
+        };
 
     }
 
-    else if (percent <= 0.7) {
 
-        status = "LOW";
+    const change =
+        (
+            (
+                current -
+                previous
+            ) /
+            previous
+        ) * 100;
+
+
+    const strength =
+        Math.min(
+            100,
+            Math.abs(change) * 20
+        );
+
+
+    if (
+        change > 0.08
+    ) {
+
+        return {
+
+            direction:
+                "BULLISH",
+
+            strength
+
+        };
+
+    }
+
+
+    if (
+        change < -0.08
+    ) {
+
+        return {
+
+            direction:
+                "BEARISH",
+
+            strength
+
+        };
 
     }
 
 
     return {
 
-        value: value,
+        direction:
+            "NEUTRAL",
 
-        percent: percent,
-
-        status: status
+        strength
 
     };
+
+}
+
+
+/* ===============================
+   UPDATE INDICATOR STATE
+   =============================== */
+
+function updateIndicatorState() {
+
+    if (
+        !hasEnoughMarketData()
+    ) {
+
+        return false;
+
+    }
+
+
+    const rsi =
+        calculateRSI(14);
+
+
+    const ema20 =
+        calculateEMA(20);
+
+
+    const ema50 =
+        calculateEMA(50);
+
+
+    const ema200 =
+        calculateEMA(200);
+
+
+    const macdData =
+        calculateMACDData();
+
+
+    const vwap =
+        calculateVWAP(200);
+
+
+    const atr =
+        calculateATR(14);
+
+
+    const atrPercent =
+        calculateATRPercent();
+
+
+    const realizedVolatility =
+        calculateVolatilityPercent(20);
+
+
+    const volatilityState =
+        classifyVolatility(
+            atrPercent,
+            realizedVolatility
+        );
+
+
+    const volumeData =
+        analyzeVolume(20);
+
+
+    indicatorState = {
+
+        rsi,
+
+        ema20,
+
+        ema50,
+
+        ema200,
+
+        macd:
+            macdData.macd,
+
+        macdSignal:
+            macdData.signal,
+
+        macdHistogram:
+            macdData.histogram,
+
+        vwap,
+
+        atr,
+
+        atrPercent,
+
+        volatilityPercent:
+            realizedVolatility,
+
+        volatilityState,
+
+        volume:
+            volumeData.current,
+
+        averageVolume:
+            volumeData.average,
+
+        volumeRatio:
+            volumeData.ratio,
+
+        volumeState:
+            volumeData.state
+
+    };
+
+
+    return true;
 
 }
 
@@ -1652,67 +2679,58 @@ function getVolatilityAnalysis() {
 
 function getIndicatorSnapshot() {
 
-    const rsi =
-        calculateRSI();
-
-
-    const ema20 =
-        calculateEMA(
-            EMA_FAST
-        );
-
-
-    const ema50 =
-        calculateEMA(
-            EMA_SLOW
-        );
-
-
-    const ema200 =
-        calculateEMA(
-            EMA_TREND
-        );
-
-
-    const macd =
-        calculateMACD();
-
-
-    const vwap =
-        calculateVWAP();
-
-
-    const atr =
-        calculateATR();
-
-
-    const volume =
-        getVolumeAnalysis();
-
-
-    const volatility =
-        getVolatilityAnalysis();
+    updateIndicatorState();
 
 
     return {
 
-        rsi,
+        rsi:
+            indicatorState.rsi,
 
-        ema20,
+        ema20:
+            indicatorState.ema20,
 
-        ema50,
+        ema50:
+            indicatorState.ema50,
 
-        ema200,
+        ema200:
+            indicatorState.ema200,
 
-        macd,
+        macd:
+            indicatorState.macd,
 
-        vwap,
+        macdSignal:
+            indicatorState.macdSignal,
 
-        atr,
+        macdHistogram:
+            indicatorState.macdHistogram,
 
-        volume,
+        vwap:
+            indicatorState.vwap,
 
-        volatility
+        atr:
+            indicatorState.atr,
+
+        atrPercent:
+            indicatorState.atrPercent,
+
+        volatilityPercent:
+            indicatorState.volatilityPercent,
+
+        volatilityState:
+            indicatorState.volatilityState,
+
+        volume:
+            indicatorState.volume,
+
+        averageVolume:
+            indicatorState.averageVolume,
+
+        volumeRatio:
+            indicatorState.volumeRatio,
+
+        volumeState:
+            indicatorState.volumeState
 
     };
 
@@ -1723,30 +2741,21 @@ function getIndicatorSnapshot() {
    BACKGROUND UPDATE
    =============================== */
 
-let latestIndicators = null;
-
-
-function updateBackgroundIndicators() {
-
-    if (
-        closes.length < 50
-    ) {
-
-        return;
-
-    }
-
-
-    latestIndicators =
-        getIndicatorSnapshot();
-
-}
-
-
 setInterval(
-    updateBackgroundIndicators,
+    () => {
+
+        if (
+            hasEnoughMarketData()
+        ) {
+
+            updateIndicatorState();
+
+        }
+
+    },
     3000
 );
+
 
 
 
@@ -1767,549 +2776,122 @@ const trendBox =
 const structureBox =
     document.getElementById("structure");
 
-const marketVolumeBox =
-    document.getElementById("marketVolume");
+const liquidityZoneBox =
+    document.getElementById("liquidityZone");
 
-const marketVolatilityBox =
-    document.getElementById("marketVolatility");
-
-
-/* ===============================
-   LIQUIDITY SETTINGS
-   =============================== */
-
-const MIN_MAGNET_DISTANCE = 300;
-
-const PREFERRED_MAGNET_DISTANCE = 400;
-
-const MAX_MAGNET_DISTANCE = 1500;
-
-const LIQUIDITY_LOOKBACK = 120;
+const marketConditionBox =
+    document.getElementById("marketCondition");
 
 
 /* ===============================
-   BASIC PRICE HELPERS
+   INTELLIGENCE STATE
    =============================== */
 
-function getCurrentPrice() {
+let intelligenceState = {
 
-    const price =
-        Number(market.price);
+    trend: "WAITING",
 
-    return Number.isFinite(price)
-        ? price
-        : 0;
+    structure: "WAITING",
+
+    structureDirection: "NONE",
+
+    rangeHigh: 0,
+
+    rangeLow: 0,
+
+    rangeSize: 0,
+
+    liquidityMagnet: 0,
+
+    liquiditySide: "WAITING",
+
+    liquidityDistance: 0,
+
+    liquidityStrength: 0,
+
+    marketCondition: "WAITING",
+
+    volatility: "WAITING",
+
+    volume: "WAITING"
+
+};
+
+
+/* ===============================
+   HELPER
+   =============================== */
+
+function getRecentCandles(
+    count = 100
+) {
+
+    return candles.slice(
+        -count
+    );
 
 }
 
 
 /* ===============================
-   RECENT SWING LEVELS
+   PRICE RANGE
    =============================== */
 
-function getLiquidityLevels() {
+function getMarketRange(
+    count = 100
+) {
+
+    const recent =
+        getRecentCandles(count);
+
 
     if (
-        !Array.isArray(candles) ||
-        candles.length < 10
+        recent.length < 10
     ) {
 
         return {
 
-            highs: [],
+            high: 0,
 
-            lows: []
+            low: 0,
+
+            size: 0
 
         };
 
     }
 
 
-    const recent =
-        candles.slice(
-            -LIQUIDITY_LOOKBACK
-        );
-
-
-    const highs = [];
-
-    const lows = [];
-
-
-    /*
-     * Find local swing highs/lows.
-     * These are actual candle-derived
-     * market levels, not random prices.
-     */
-
-    for (
-        let i = 2;
-        i < recent.length - 2;
-        i++
-    ) {
-
-        const current =
-            recent[i];
-
-
-        const high =
-            Number(current.high);
-
-        const low =
-            Number(current.low);
-
-
-        const leftHigh =
-            Number(recent[i - 1].high);
-
-        const rightHigh =
-            Number(recent[i + 1].high);
-
-        const leftLow =
-            Number(recent[i - 1].low);
-
-        const rightLow =
-            Number(recent[i + 1].low);
-
-
-        if (
-            high >= leftHigh &&
-            high >= rightHigh
-        ) {
-
-            highs.push(high);
-
-        }
-
-
-        if (
-            low <= leftLow &&
-            low <= rightLow
-        ) {
-
-            lows.push(low);
-
-        }
-
-    }
-
-
-    /*
-     * Also include recent extreme levels.
-     */
-
-    const recentHigh =
+    const high =
         Math.max(
             ...recent.map(
                 candle =>
-                    Number(candle.high)
+                    safeNumber(
+                        candle.high
+                    )
             )
         );
 
 
-    const recentLow =
+    const low =
         Math.min(
             ...recent.map(
                 candle =>
-                    Number(candle.low)
+                    safeNumber(
+                        candle.low
+                    )
             )
         );
-
-
-    if (Number.isFinite(recentHigh)) {
-
-        highs.push(recentHigh);
-
-    }
-
-
-    if (Number.isFinite(recentLow)) {
-
-        lows.push(recentLow);
-
-    }
 
 
     return {
 
-        highs: [
-            ...new Set(
-                highs
-                    .filter(Number.isFinite)
-                    .map(
-                        value =>
-                            Number(
-                                value.toFixed(2)
-                            )
-                    )
-            )
-        ],
+        high,
 
-        lows: [
-            ...new Set(
-                lows
-                    .filter(Number.isFinite)
-                    .map(
-                        value =>
-                            Number(
-                                value.toFixed(2)
-                            )
-                    )
-            )
-        ]
+        low,
 
-    };
-
-}
-
-
-/* ===============================
-   CLUSTER SIMILAR LEVELS
-   =============================== */
-
-function clusterLiquidityLevels(
-    levels
-) {
-
-    if (!levels.length) {
-
-        return [];
-
-    }
-
-
-    const sorted =
-        [...levels].sort(
-            (a, b) => a - b
-        );
-
-
-    const clusters = [];
-
-    let currentCluster = [
-        sorted[0]
-    ];
-
-
-    /*
-     * BTC levels close to each other
-     * are treated as one liquidity zone.
-     */
-
-    for (
-        let i = 1;
-        i < sorted.length;
-        i++
-    ) {
-
-        const previous =
-            currentCluster[
-                currentCluster.length - 1
-            ];
-
-
-        const current =
-            sorted[i];
-
-
-        if (
-            Math.abs(
-                current - previous
-            ) <= 80
-        ) {
-
-            currentCluster.push(
-                current
-            );
-
-        }
-
-        else {
-
-            clusters.push(
-                currentCluster
-            );
-
-            currentCluster = [
-                current
-            ];
-
-        }
-
-    }
-
-
-    clusters.push(
-        currentCluster
-    );
-
-
-    return clusters.map(
-        cluster => {
-
-            const average =
-                cluster.reduce(
-                    (sum, value) =>
-                        sum + value,
-                    0
-                ) / cluster.length;
-
-
-            return {
-
-                price:
-                    Number(
-                        average.toFixed(2)
-                    ),
-
-                strength:
-                    cluster.length
-
-            };
-
-        }
-    );
-
-}
-
-
-/* ===============================
-   LIQUIDITY MAGNET
-   =============================== */
-
-function findLiquidityMagnet(
-    direction
-) {
-
-    const price =
-        getCurrentPrice();
-
-
-    if (
-        !price ||
-        candles.length < 20
-    ) {
-
-        return {
-
-            price: null,
-
-            distance: 0,
-
-            side: "NONE",
-
-            strength: 0
-
-        };
-
-    }
-
-
-    const levels =
-        getLiquidityLevels();
-
-
-    let rawLevels;
-
-
-    /*
-     * LONG:
-     * look ABOVE current price.
-     *
-     * SHORT:
-     * look BELOW current price.
-     */
-
-    if (direction === "LONG") {
-
-        rawLevels =
-            levels.highs.filter(
-                level =>
-                    level >
-                    price +
-                    MIN_MAGNET_DISTANCE
-            );
-
-    }
-
-    else if (direction === "SHORT") {
-
-        rawLevels =
-            levels.lows.filter(
-                level =>
-                    level <
-                    price -
-                    MIN_MAGNET_DISTANCE
-            );
-
-    }
-
-    else {
-
-        /*
-         * WAIT has no directional magnet.
-         */
-
-        return {
-
-            price: null,
-
-            distance: 0,
-
-            side: "NONE",
-
-            strength: 0
-
-        };
-
-    }
-
-
-    const clusters =
-        clusterLiquidityLevels(
-            rawLevels
-        );
-
-
-    if (!clusters.length) {
-
-        return {
-
-            price: null,
-
-            distance: 0,
-
-            side: "NONE",
-
-            strength: 0
-
-        };
-
-    }
-
-
-    /*
-     * Score each candidate.
-     *
-     * Stronger swing cluster gets
-     * preference, while a reasonable
-     * distance is also preferred.
-     */
-
-    const candidates =
-        clusters
-            .map(level => {
-
-                const distance =
-                    Math.abs(
-                        level.price -
-                        price
-                    );
-
-
-                const distanceScore =
-                    Math.max(
-                        0,
-                        1 -
-                        Math.abs(
-                            distance -
-                            PREFERRED_MAGNET_DISTANCE
-                        ) /
-                        PREFERRED_MAGNET_DISTANCE
-                    );
-
-
-                const strengthScore =
-                    Math.min(
-                        level.strength,
-                        5
-                    ) / 5;
-
-
-                let score =
-                    (
-                        distanceScore * 0.55
-                    ) +
-                    (
-                        strengthScore * 0.45
-                    );
-
-
-                /*
-                 * Very distant levels are
-                 * still allowed but receive
-                 * lower preference.
-                 */
-
-                if (
-                    distance >
-                    MAX_MAGNET_DISTANCE
-                ) {
-
-                    score *= 0.35;
-
-                }
-
-
-                return {
-
-                    price:
-                        level.price,
-
-                    distance:
-                        distance,
-
-                    strength:
-                        level.strength,
-
-                    score:
-                        score
-
-                };
-
-            })
-            .sort(
-                (a, b) =>
-                    b.score - a.score
-            );
-
-
-    const selected =
-        candidates[0];
-
-
-    if (!selected) {
-
-        return {
-
-            price: null,
-
-            distance: 0,
-
-            side: "NONE",
-
-            strength: 0
-
-        };
-
-    }
-
-
-    return {
-
-        price:
-            selected.price,
-
-        distance:
-            selected.distance,
-
-        side:
-            direction === "LONG"
-                ? "UP"
-                : "DOWN",
-
-        strength:
-            selected.strength
+        size:
+            high - low
 
     };
 
@@ -2323,7 +2905,7 @@ function findLiquidityMagnet(
 function detectTrend() {
 
     if (
-        closes.length < 50
+        closes.length < 200
     ) {
 
         return "WAITING";
@@ -2336,16 +2918,22 @@ function detectTrend() {
 
 
     const ema20 =
-        calculateEMA(20);
+        indicatorState.ema20;
 
 
     const ema50 =
-        calculateEMA(50);
+        indicatorState.ema50;
+
+
+    const ema200 =
+        indicatorState.ema200;
 
 
     if (
-        !Number.isFinite(ema20) ||
-        !Number.isFinite(ema50)
+        !price ||
+        !ema20 ||
+        !ema50 ||
+        !ema200
     ) {
 
         return "WAITING";
@@ -2354,7 +2942,38 @@ function detectTrend() {
 
 
     /*
-     * Strong bullish structure.
+     * Strong bullish alignment.
+     */
+
+    if (
+        price > ema20 &&
+        ema20 > ema50 &&
+        ema50 > ema200
+    ) {
+
+        return "BULLISH";
+
+    }
+
+
+    /*
+     * Strong bearish alignment.
+     */
+
+    if (
+        price < ema20 &&
+        ema20 < ema50 &&
+        ema50 < ema200
+    ) {
+
+        return "BEARISH";
+
+    }
+
+
+    /*
+     * Check shorter structure even when
+     * 200 EMA alignment is mixed.
      */
 
     if (
@@ -2366,10 +2985,6 @@ function detectTrend() {
 
     }
 
-
-    /*
-     * Strong bearish structure.
-     */
 
     if (
         price < ema20 &&
@@ -2387,126 +3002,933 @@ function detectTrend() {
 
 
 /* ===============================
-   MARKET STRUCTURE
+   LOCAL SWING HIGH
    =============================== */
 
-function detectMarketStructure() {
+function isSwingHigh(
+    index,
+    left = 3,
+    right = 3
+) {
 
     if (
-        candles.length < 20
+        index < left ||
+        index >=
+            candles.length - right
     ) {
 
-        return "WAITING";
+        return false;
 
     }
+
+
+    const value =
+        safeNumber(
+            candles[index].high
+        );
+
+
+    for (
+        let i = 1;
+        i <= left;
+        i++
+    ) {
+
+        if (
+            value <=
+            safeNumber(
+                candles[index - i].high
+            )
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    for (
+        let i = 1;
+        i <= right;
+        i++
+    ) {
+
+        if (
+            value <
+            safeNumber(
+                candles[index + i].high
+            )
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    return true;
+
+}
+
+
+/* ===============================
+   LOCAL SWING LOW
+   =============================== */
+
+function isSwingLow(
+    index,
+    left = 3,
+    right = 3
+) {
+
+    if (
+        index < left ||
+        index >=
+            candles.length - right
+    ) {
+
+        return false;
+
+    }
+
+
+    const value =
+        safeNumber(
+            candles[index].low
+        );
+
+
+    for (
+        let i = 1;
+        i <= left;
+        i++
+    ) {
+
+        if (
+            value >=
+            safeNumber(
+                candles[index - i].low
+            )
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    for (
+        let i = 1;
+        i <= right;
+        i++
+    ) {
+
+        if (
+            value >
+            safeNumber(
+                candles[index + i].low
+            )
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    return true;
+
+}
+
+
+/* ===============================
+   COLLECT SWING LEVELS
+   =============================== */
+
+function collectSwingLevels(
+    lookback = 250
+) {
+
+    const start =
+        Math.max(
+            3,
+            candles.length -
+            lookback
+        );
+
+
+    const highsFound = [];
+
+    const lowsFound = [];
+
+
+    for (
+        let i = start;
+        i <
+            candles.length - 3;
+        i++
+    ) {
+
+        if (
+            isSwingHigh(i)
+        ) {
+
+            highsFound.push({
+
+                price:
+                    safeNumber(
+                        candles[i].high
+                    ),
+
+                index:
+                    i,
+
+                volume:
+                    safeNumber(
+                        candles[i].volume
+                    )
+
+            });
+
+        }
+
+
+        if (
+            isSwingLow(i)
+        ) {
+
+            lowsFound.push({
+
+                price:
+                    safeNumber(
+                        candles[i].low
+                    ),
+
+                index:
+                    i,
+
+                volume:
+                    safeNumber(
+                        candles[i].volume
+                    )
+
+            });
+
+        }
+
+    }
+
+
+    return {
+
+        highs:
+            highsFound,
+
+        lows:
+            lowsFound
+
+    };
+
+}
+
+
+/* ===============================
+   LIQUIDITY CLUSTERING
+   =============================== */
+
+function clusterLiquidityLevels(
+    levels,
+    tolerancePercent = 0.12
+) {
+
+    if (
+        !levels.length
+    ) {
+
+        return [];
+
+    }
+
+
+    const sorted =
+        [...levels].sort(
+            (a, b) =>
+                a.price -
+                b.price
+        );
+
+
+    const clusters = [];
+
+
+    sorted.forEach(
+        level => {
+
+            let matched = null;
+
+
+            for (
+                const cluster
+                of clusters
+            ) {
+
+                const averagePrice =
+                    cluster.price;
+
+
+                const distancePercent =
+                    Math.abs(
+                        level.price -
+                        averagePrice
+                    ) /
+                    averagePrice *
+                    100;
+
+
+                if (
+                    distancePercent <=
+                    tolerancePercent
+                ) {
+
+                    matched =
+                        cluster;
+
+                    break;
+
+                }
+
+            }
+
+
+            if (
+                matched
+            ) {
+
+                matched.levels.push(
+                    level
+                );
+
+
+                matched.price =
+                    matched.levels.reduce(
+                        (
+                            total,
+                            item
+                        ) =>
+                            total +
+                            item.price,
+                        0
+                    ) /
+                    matched.levels.length;
+
+
+                matched.volume +=
+                    level.volume;
+
+            }
+
+            else {
+
+                clusters.push({
+
+                    price:
+                        level.price,
+
+                    volume:
+                        level.volume,
+
+                    levels:
+                        [level]
+
+                });
+
+            }
+
+        }
+    );
+
+
+    return clusters;
+
+}
+
+
+/* ===============================
+   LIQUIDITY MAGNET
+   =============================== */
+
+function calculateLiquidityMagnet(
+    direction = "WAIT"
+) {
+
+    const price =
+        getCurrentPrice();
+
+
+    if (
+        price <= 0 ||
+        candles.length < 50
+    ) {
+
+        return {
+
+            price: 0,
+
+            side: "WAITING",
+
+            distance: 0,
+
+            strength: 0
+
+        };
+
+    }
+
+
+    const swings =
+        collectSwingLevels(
+            250
+        );
+
+
+    const highClusters =
+        clusterLiquidityLevels(
+            swings.highs
+        );
+
+
+    const lowClusters =
+        clusterLiquidityLevels(
+            swings.lows
+        );
+
+
+    /*
+     * Remove levels that are on the
+     * wrong side of the current price.
+     */
+
+    const upside =
+        highClusters
+            .filter(
+                level =>
+                    level.price >
+                    price
+            );
+
+
+    const downside =
+        lowClusters
+            .filter(
+                level =>
+                    level.price <
+                    price
+            );
+
+
+    /*
+     * Give repeated liquidity levels
+     * more importance.
+     */
+
+    function scoreLevel(
+        level
+    ) {
+
+        const distance =
+            Math.abs(
+                level.price -
+                price
+            );
+
+
+        const touches =
+            level.levels.length;
+
+
+        const volumeScore =
+            level.volume > 0
+                ? Math.min(
+                    3,
+                    level.volume /
+                    Math.max(
+                        1,
+                        indicatorState.averageVolume
+                    )
+                )
+                : 0;
+
+
+        /*
+         * A level is stronger when:
+         * - multiple swings formed there
+         * - volume was present
+         * - it is not immediately next
+         *   to current price
+         */
+
+        let score =
+            touches * 3 +
+            volumeScore;
+
+
+        /*
+         * Prefer meaningful distance for
+         * directional signals.
+         *
+         * This does NOT invent a price.
+         */
+
+        if (
+            distance >= 300
+        ) {
+
+            score += 5;
+
+        }
+
+        else if (
+            distance >= 200
+        ) {
+
+            score += 2;
+
+        }
+
+        else {
+
+            score -= 2;
+
+        }
+
+
+        return score;
+
+    }
+
+
+    let candidates = [];
+
+
+    if (
+        direction === "LONG"
+    ) {
+
+        candidates =
+            upside.map(
+                level => ({
+
+                    ...level,
+
+                    side:
+                        "UPSIDE",
+
+                    score:
+                        scoreLevel(
+                            level
+                        )
+
+                })
+            );
+
+    }
+
+    else if (
+        direction === "SHORT"
+    ) {
+
+        candidates =
+            downside.map(
+                level => ({
+
+                    ...level,
+
+                    side:
+                        "DOWNSIDE",
+
+                    score:
+                        scoreLevel(
+                            level
+                        )
+
+                })
+            );
+
+    }
+
+    else {
+
+        /*
+         * WAIT:
+         * consider both sides and select
+         * the strongest meaningful pool.
+         */
+
+        candidates =
+            [
+                ...upside.map(
+                    level => ({
+
+                        ...level,
+
+                        side:
+                            "UPSIDE",
+
+                        score:
+                            scoreLevel(
+                                level
+                            )
+
+                    })
+                ),
+
+                ...downside.map(
+                    level => ({
+
+                        ...level,
+
+                        side:
+                            "DOWNSIDE",
+
+                        score:
+                            scoreLevel(
+                                level
+                            )
+
+                    })
+                )
+
+            ];
+
+    }
+
+
+    /*
+     * If directional candidates exist,
+     * prefer the strongest valid level.
+     */
+
+    if (
+        candidates.length > 0
+    ) {
+
+        candidates.sort(
+            (a, b) =>
+                b.score -
+                a.score
+        );
+
+
+        const best =
+            candidates[0];
+
+
+        const distance =
+            Math.abs(
+                best.price -
+                price
+            );
+
+
+        return {
+
+            price:
+                best.price,
+
+            side:
+                best.side,
+
+            distance,
+
+            strength:
+                best.score
+
+        };
+
+    }
+
+
+    /*
+     * Fallback:
+     * use actual recent range boundary.
+     */
+
+    const range =
+        getMarketRange(
+            100
+        );
+
+
+    let fallbackPrice = 0;
+
+    let fallbackSide =
+        "RANGE";
+
+
+    if (
+        direction === "LONG"
+    ) {
+
+        fallbackPrice =
+            range.high;
+
+        fallbackSide =
+            "UPSIDE";
+
+    }
+
+    else if (
+        direction === "SHORT"
+    ) {
+
+        fallbackPrice =
+            range.low;
+
+        fallbackSide =
+            "DOWNSIDE";
+
+    }
+
+    else {
+
+        const highDistance =
+            Math.abs(
+                range.high -
+                price
+            );
+
+
+        const lowDistance =
+            Math.abs(
+                price -
+                range.low
+            );
+
+
+        if (
+            highDistance <
+            lowDistance
+        ) {
+
+            fallbackPrice =
+                range.high;
+
+            fallbackSide =
+                "UPSIDE";
+
+        }
+
+        else {
+
+            fallbackPrice =
+                range.low;
+
+            fallbackSide =
+                "DOWNSIDE";
+
+        }
+
+    }
+
+
+    return {
+
+        price:
+            fallbackPrice,
+
+        side:
+            fallbackSide,
+
+        distance:
+            Math.abs(
+                fallbackPrice -
+                price
+            ),
+
+        strength:
+            1
+
+    };
+
+}
+
+
+/* ===============================
+   BREAK OF STRUCTURE
+   =============================== */
+
+function detectStructure() {
+
+    if (
+        candles.length < 60
+    ) {
+
+        return {
+
+            label:
+                "WAITING",
+
+            direction:
+                "NONE",
+
+            rangeHigh:
+                0,
+
+            rangeLow:
+                0,
+
+            rangeSize:
+                0
+
+        };
+
+    }
+
+
+    const price =
+        getCurrentPrice();
 
 
     const recent =
-        candles.slice(-20);
-
-
-    const firstClose =
-        Number(
-            recent[0].close
+        candles.slice(
+            -60
         );
 
 
-    const lastClose =
-        Number(
-            recent[recent.length - 1].close
+    const previous =
+        recent.slice(
+            0,
+            -5
         );
 
 
-    const highs =
-        recent.map(
-            candle =>
-                Number(candle.high)
+    const high =
+        Math.max(
+            ...previous.map(
+                candle =>
+                    safeNumber(
+                        candle.high
+                    )
+            )
         );
 
 
-    const lows =
-        recent.map(
-            candle =>
-                Number(candle.low)
+    const low =
+        Math.min(
+            ...previous.map(
+                candle =>
+                    safeNumber(
+                        candle.low
+                    )
+            )
         );
 
 
-    const highest =
-        Math.max(...highs);
+    const rangeSize =
+        high - low;
 
 
-    const lowest =
-        Math.min(...lows);
+    let direction =
+        "NONE";
 
 
-    /*
-     * Breakout above recent structure.
-     */
-
-    if (
-        lastClose >= highest * 0.9995 &&
-        lastClose > firstClose
-    ) {
-
-        return "BULLISH BOS";
-
-    }
-
-
-    /*
-     * Breakdown below recent structure.
-     */
-
-    if (
-        lastClose <= lowest * 1.0005 &&
-        lastClose < firstClose
-    ) {
-
-        return "BEARISH BOS";
-
-    }
-
-
-    /*
-     * Direction based on recent movement.
-     */
-
-    const movement =
-        lastClose -
-        firstClose;
-
-
-    const movementPercent =
-        Math.abs(
-            movement /
-            firstClose
-        ) * 100;
+    let label =
+        "RANGE";
 
 
     if (
-        movementPercent < 0.25
+        price >
+        high
     ) {
 
-        return "RANGE";
+        direction =
+            "BULLISH";
+
+        label =
+            "BULLISH BOS";
+
+    }
+
+    else if (
+        price <
+        low
+    ) {
+
+        direction =
+            "BEARISH";
+
+        label =
+            "BEARISH BOS";
+
+    }
+
+    else {
+
+        /*
+         * Inside the structure range.
+         * Trend still gives directional context.
+         */
+
+        const trend =
+            detectTrend();
+
+
+        if (
+            trend === "BULLISH"
+        ) {
+
+            direction =
+                "BULLISH";
+
+            label =
+                "BULLISH RANGE";
+
+        }
+
+        else if (
+            trend === "BEARISH"
+        ) {
+
+            direction =
+                "BEARISH";
+
+            label =
+                "BEARISH RANGE";
+
+        }
+
+        else {
+
+            direction =
+                "NEUTRAL";
+
+            label =
+                "NEUTRAL RANGE";
+
+        }
 
     }
 
 
-    if (movement > 0) {
+    return {
 
-        return "BULLISH";
+        label,
 
-    }
+        direction,
 
+        rangeHigh:
+            high,
 
-    if (movement < 0) {
+        rangeLow:
+            low,
 
-        return "BEARISH";
+        rangeSize
 
-    }
-
-
-    return "RANGE";
+    };
 
 }
 
@@ -2517,19 +3939,36 @@ function detectMarketStructure() {
 
 function detectMarketCondition() {
 
-    const volatility =
-        getVolatilityAnalysis();
-
-
     const trend =
         detectTrend();
 
 
+    const atrPercent =
+        indicatorState.atrPercent;
+
+
+    const volatilityState =
+        indicatorState.volatilityState;
+
+
     if (
-        volatility.status === "HIGH"
+        trend === "WAITING"
     ) {
 
-        return "HIGH VOLATILITY";
+        return "WAITING FOR DATA";
+
+    }
+
+
+    if (
+        volatilityState === "HIGH"
+    ) {
+
+        return (
+            "HIGH VOLATILITY | " +
+            atrPercent.toFixed(2) +
+            "%"
+        );
 
     }
 
@@ -2538,76 +3977,56 @@ function detectMarketCondition() {
         trend === "SIDEWAYS"
     ) {
 
-        return "RANGE MARKET";
-
-    }
-
-
-    if (
-        trend === "WAITING"
-    ) {
-
-        return "COLLECTING DATA";
-
-    }
-
-
-    return "TRENDING MARKET";
-
-}
-
-
-/* ===============================
-   FORMAT VOLUME
-   =============================== */
-
-function formatVolume(value) {
-
-    if (!Number.isFinite(value)) {
-
-        return "--";
-
-    }
-
-
-    if (value >= 1000000) {
-
         return (
-            (value / 1000000)
-                .toFixed(2) +
-            "M BTC"
+            "RANGE MARKET | " +
+            volatilityState
         );
 
     }
 
 
-    if (value >= 1000) {
+    if (
+        trend === "BULLISH"
+    ) {
 
         return (
-            (value / 1000)
-                .toFixed(2) +
-            "K BTC"
+            "BULLISH TREND | " +
+            volatilityState
+        );
+
+    }
+
+
+    if (
+        trend === "BEARISH"
+    ) {
+
+        return (
+            "BEARISH TREND | " +
+            volatilityState
         );
 
     }
 
 
     return (
-        value.toFixed(2) +
-        " BTC"
+        "MIXED MARKET | " +
+        volatilityState
     );
 
 }
 
 
 /* ===============================
-   UPDATE INTELLIGENCE UI
+   INTELLIGENCE DISPLAY
    =============================== */
 
-function updateMarketIntelligence() {
+function updateMarketIntelligence(
+    preferredDirection = "WAIT"
+) {
 
     if (
-        closes.length < 50
+        !hasEnoughMarketData()
     ) {
 
         return;
@@ -2615,64 +4034,137 @@ function updateMarketIntelligence() {
     }
 
 
+    updateIndicatorState();
+
+
     const trend =
         detectTrend();
 
 
     const structure =
-        detectMarketStructure();
+        detectStructure();
 
 
-    const volume =
-        getVolumeAnalysis();
+    const magnet =
+        calculateLiquidityMagnet(
+            preferredDirection
+        );
 
 
-    const volatility =
-        getVolatilityAnalysis();
+    const condition =
+        detectMarketCondition();
 
+
+    const volumeState =
+        indicatorState.volumeState;
+
+
+    const atrPercent =
+        indicatorState.atrPercent;
+
+
+    const volatilityState =
+        indicatorState.volatilityState;
+
+
+    intelligenceState = {
+
+        trend,
+
+        structure:
+            structure.label,
+
+        structureDirection:
+            structure.direction,
+
+        rangeHigh:
+            structure.rangeHigh,
+
+        rangeLow:
+            structure.rangeLow,
+
+        rangeSize:
+            structure.rangeSize,
+
+        liquidityMagnet:
+            magnet.price,
+
+        liquiditySide:
+            magnet.side,
+
+        liquidityDistance:
+            magnet.distance,
+
+        liquidityStrength:
+            magnet.strength,
+
+        marketCondition:
+            condition,
+
+        volatility:
+            volatilityState,
+
+        volume:
+            volumeState
+
+    };
+
+
+    /*
+     * TREND
+     */
 
     trendBox.textContent =
         trend;
 
 
-    structureBox.textContent =
-        structure;
+    /*
+     * STRUCTURE
+     *
+     * Includes BOS/range + actual
+     * structure range.
+     */
+
+    if (
+        structure.rangeHigh > 0 &&
+        structure.rangeLow > 0
+    ) {
+
+        structureBox.textContent =
+            structure.label +
+            " | Range " +
+            formatPrice(
+                structure.rangeLow
+            ) +
+            " - " +
+            formatPrice(
+                structure.rangeHigh
+            );
+
+    }
+
+    else {
+
+        structureBox.textContent =
+            structure.label;
+
+    }
 
 
-    marketVolumeBox.textContent =
-        formatVolume(
-            volume.value
-        ) +
-        " • " +
-        volume.status;
+    /*
+     * LIQUIDITY MAGNET
+     *
+     * No "@"
+     * No "No clear"
+     */
 
+    if (
+        magnet.price > 0
+    ) {
 
-    marketVolatilityBox.textContent =
-        volatility.value.toFixed(2) +
-        " • " +
-        volatility.status;
-
-}
-
-
-/* ===============================
-   PERIODIC INTELLIGENCE UPDATE
-   =============================== */
-
-setInterval(
-    updateMarketIntelligence,
-    3000
-);
-
-
-/* ===============================
-   INITIAL UPDATE
-   =============================== */
-
-setTimeout(
-    updateMarketIntelligence,
-    2500
-);
+        const sideText =
+            magnet.side === "UPSIDE"
+     
 
 
 
@@ -2680,7 +4172,7 @@ setTimeout(
 /* ==================================================
    BTC QUANTUM SCANNER PRO
    JAVASCRIPT PART 4 FINAL
-   SCANNER + SIGNAL + LIQUIDITY + VOICE
+   FINAL SIGNAL + SCANNER ENGINE
    ================================================== */
 
 
@@ -2712,94 +4204,100 @@ const momentumBox =
 const liquidityBox =
     document.getElementById("liquidity");
 
+const signalTime =
+    document.getElementById("signalTime");
+
 const voiceText =
     document.getElementById("voiceText");
 
-
-/* ===============================
-   SCANNER SETTINGS
-   =============================== */
-
-const SCAN_SECONDS = 30;
-
-const MIN_DATA_FOR_SCAN = 100;
 
 let scanning = false;
 
 
 /* ===============================
-   SCORE LIMITS
+   SAFE UI HELPER
    =============================== */
 
-const MAX_SCORE = 100;
+function setText(
+    element,
+    value
+) {
 
+    if (element) {
 
-/* ===============================
-   SAFE SCORE
-   =============================== */
+        element.textContent =
+            value;
 
-function clampScore(value) {
-
-    return Math.max(
-        -MAX_SCORE,
-        Math.min(
-            MAX_SCORE,
-            value
-        )
-    );
+    }
 
 }
 
 
 /* ===============================
-   FINAL SCORING ENGINE
+   SIGNAL SCORING
    =============================== */
 
-function calculateScore() {
-
-    let score = 0;
-
-    const reasons = [];
-
-    const indicators =
-        getIndicatorSnapshot();
-
-
-    const trend =
-        detectTrend();
-
-
-    const structure =
-        detectMarketStructure();
-
+function calculateFinalScore() {
 
     const price =
         getCurrentPrice();
 
-
     if (
         !price ||
-        !indicators
+        !hasEnoughMarketData()
     ) {
 
         return {
 
             score: 0,
 
-            reasons: [
-                "Insufficient market data"
-            ]
+            confidence: 0,
+
+            signal: "WAIT",
+
+            momentum: "NEUTRAL",
+
+            reasons: []
 
         };
 
     }
 
 
-    /* =========================
-       TREND
-    ========================= */
+    updateIndicatorState();
 
-    if (trend === "BULLISH") {
+
+    const trend =
+        detectTrend();
+
+    const structure =
+        detectStructure();
+
+    const rsi =
+        indicatorState.rsi;
+
+    const macd =
+        indicatorState.macd;
+
+    const vwap =
+        indicatorState.vwap;
+
+    const atrPercent =
+        indicatorState.atrPercent;
+
+
+    let score = 0;
+
+    const reasons = [];
+
+
+    /* ===============================
+       TREND
+       =============================== */
+
+    if (
+        trend === "BULLISH"
+    ) {
 
         score += 25;
 
@@ -2809,7 +4307,9 @@ function calculateScore() {
 
     }
 
-    else if (trend === "BEARISH") {
+    else if (
+        trend === "BEARISH"
+    ) {
 
         score -= 25;
 
@@ -2820,325 +4320,277 @@ function calculateScore() {
     }
 
 
-    /* =========================
+    /* ===============================
        EMA STRUCTURE
-    ========================= */
+       =============================== */
 
     if (
-        Number.isFinite(
-            indicators.ema20
-        ) &&
-        Number.isFinite(
-            indicators.ema50
-        )
-    ) {
-
-        if (
-            price >
-            indicators.ema20 &&
-            indicators.ema20 >
-            indicators.ema50
-        ) {
-
-            score += 15;
-
-            reasons.push(
-                "EMA bullish alignment"
-            );
-
-        }
-
-        else if (
-            price <
-            indicators.ema20 &&
-            indicators.ema20 <
-            indicators.ema50
-        ) {
-
-            score -= 15;
-
-            reasons.push(
-                "EMA bearish alignment"
-            );
-
-        }
-
-    }
-
-
-    /* =========================
-       RSI
-    ========================= */
-
-    const rsi =
-        Number(indicators.rsi);
-
-
-    if (Number.isFinite(rsi)) {
-
-        /*
-         * Avoid treating RSI 70+ as
-         * an automatic short.
-         */
-
-        if (
-            rsi >= 52 &&
-            rsi <= 68
-        ) {
-
-            score += 10;
-
-            reasons.push(
-                "Positive RSI momentum"
-            );
-
-        }
-
-        else if (
-            rsi >= 32 &&
-            rsi <= 48
-        ) {
-
-            score -= 10;
-
-            reasons.push(
-                "Negative RSI momentum"
-            );
-
-        }
-
-        else if (rsi < 25) {
-
-            score += 8;
-
-            reasons.push(
-                "Deep oversold"
-            );
-
-        }
-
-        else if (rsi > 75) {
-
-            score -= 8;
-
-            reasons.push(
-                "Deep overbought"
-            );
-
-        }
-
-    }
-
-
-    /* =========================
-       MACD
-    ========================= */
-
-    if (
-        indicators.macd &&
-        Number.isFinite(
-            indicators.macd.histogram
-        )
-    ) {
-
-        const histogram =
-            indicators.macd.histogram;
-
-
-        if (histogram > 0) {
-
-            score += 15;
-
-            reasons.push(
-                "MACD bullish"
-            );
-
-        }
-
-        else if (histogram < 0) {
-
-            score -= 15;
-
-            reasons.push(
-                "MACD bearish"
-            );
-
-        }
-
-    }
-
-
-    /* =========================
-       VWAP
-    ========================= */
-
-    if (
-        Number.isFinite(
-            indicators.vwap
-        )
-    ) {
-
-        if (
-            price >
-            indicators.vwap
-        ) {
-
-            score += 10;
-
-            reasons.push(
-                "Price above VWAP"
-            );
-
-        }
-
-        else if (
-            price <
-            indicators.vwap
-        ) {
-
-            score -= 10;
-
-            reasons.push(
-                "Price below VWAP"
-            );
-
-        }
-
-    }
-
-
-    /* =========================
-       MARKET STRUCTURE
-    ========================= */
-
-    if (
-        structure ===
-        "BULLISH BOS"
+        indicatorState.ema20 >
+        indicatorState.ema50 &&
+        indicatorState.ema50 >
+        indicatorState.ema200
     ) {
 
         score += 15;
 
         reasons.push(
-            "Bullish structure break"
+            "EMA bullish alignment"
         );
 
     }
 
     else if (
-        structure ===
-        "BEARISH BOS"
+        indicatorState.ema20 <
+        indicatorState.ema50 &&
+        indicatorState.ema50 <
+        indicatorState.ema200
     ) {
 
         score -= 15;
 
         reasons.push(
-            "Bearish structure break"
+            "EMA bearish alignment"
+        );
+
+    }
+
+
+    /* ===============================
+       RSI
+       =============================== */
+
+    if (
+        rsi >= 50 &&
+        rsi <= 68
+    ) {
+
+        score += 8;
+
+        reasons.push(
+            "RSI supports upside"
         );
 
     }
 
     else if (
-        structure ===
-        "BULLISH"
+        rsi >= 32 &&
+        rsi < 50
     ) {
 
-        score += 5;
+        score -= 8;
+
+        reasons.push(
+            "RSI supports downside"
+        );
 
     }
 
     else if (
-        structure ===
+        rsi > 72
+    ) {
+
+        score -= 8;
+
+        reasons.push(
+            "RSI overbought"
+        );
+
+    }
+
+    else if (
+        rsi < 28
+    ) {
+
+        score += 8;
+
+        reasons.push(
+            "RSI oversold"
+        );
+
+    }
+
+
+    /* ===============================
+       MACD
+       =============================== */
+
+    if (
+        macd > 0
+    ) {
+
+        score += 12;
+
+        reasons.push(
+            "MACD positive"
+        );
+
+    }
+
+    else if (
+        macd < 0
+    ) {
+
+        score -= 12;
+
+        reasons.push(
+            "MACD negative"
+        );
+
+    }
+
+
+    /* ===============================
+       VWAP
+       =============================== */
+
+    if (
+        vwap > 0 &&
+        price > vwap
+    ) {
+
+        score += 8;
+
+        reasons.push(
+            "Price above VWAP"
+        );
+
+    }
+
+    else if (
+        vwap > 0 &&
+        price < vwap
+    ) {
+
+        score -= 8;
+
+        reasons.push(
+            "Price below VWAP"
+        );
+
+    }
+
+
+    /* ===============================
+       MARKET STRUCTURE
+       =============================== */
+
+    if (
+        structure.direction ===
+        "BULLISH"
+    ) {
+
+        score += 15;
+
+        reasons.push(
+            "Bullish structure"
+        );
+
+    }
+
+    else if (
+        structure.direction ===
         "BEARISH"
     ) {
 
-        score -= 5;
+        score -= 15;
+
+        reasons.push(
+            "Bearish structure"
+        );
 
     }
 
 
-    /* =========================
-       VOLUME CONFIRMATION
-    ========================= */
+    /* ===============================
+       MOMENTUM
+       =============================== */
+
+    let momentum =
+        "NEUTRAL";
+
 
     if (
-        indicators.volume &&
-        indicators.volume.status ===
-        "HIGH"
+        score >= 35
     ) {
 
-        /*
-         * High volume confirms the
-         * existing direction instead
-         * of blindly adding bullish points.
-         */
+        momentum =
+            "BUY PRESSURE";
 
-        if (score > 0) {
+    }
 
-            score += 8;
+    else if (
+        score <= -35
+    ) {
 
-            reasons.push(
-                "High volume confirms buyers"
-            );
-
-        }
-
-        else if (score < 0) {
-
-            score -= 8;
-
-            reasons.push(
-                "High volume confirms sellers"
-            );
-
-        }
+        momentum =
+            "SELL PRESSURE";
 
     }
 
 
-    return {
+    /* ===============================
+       VOLATILITY FILTER
+       =============================== */
 
-        score:
-            clampScore(score),
+    /*
+     * Extremely low volatility means
+     * the market has less directional
+     * energy. It does not automatically
+     * force LONG or SHORT.
+     */
 
-        reasons:
-            reasons
+    if (
+        atrPercent < 0.05
+    ) {
 
-    };
+        score *= 0.65;
 
-}
+        reasons.push(
+            "Low volatility"
+        );
 
-
-/* ===============================
-   SIGNAL GENERATION
-   =============================== */
-
-function generateSignal() {
-
-    const result =
-        calculateScore();
+    }
 
 
-    const score =
-        result.score;
+    /*
+     * Extremely high volatility reduces
+     * confidence rather than inventing
+     * a direction.
+     */
 
+    if (
+        atrPercent > 1.5
+    ) {
+
+        score *= 0.80;
+
+        reasons.push(
+            "High volatility"
+        );
+
+    }
+
+
+    /* ===============================
+       FINAL SIGNAL
+       =============================== */
 
     let signal =
         "WAIT";
 
 
-    /*
-     * Require stronger agreement
-     * before producing directional bias.
-     */
-
-    if (score >= 45) {
+    if (
+        score >= 35
+    ) {
 
         signal =
             "LONG";
 
     }
 
-    else if (score <= -45) {
+    else if (
+        score <= -35
+    ) {
 
         signal =
             "SHORT";
@@ -3146,22 +4598,29 @@ function generateSignal() {
     }
 
 
-    /*
-     * Confidence here is an internal
-     * signal-strength score, NOT a
-     * guaranteed probability of profit.
-     */
+    /* ===============================
+       CONFIDENCE
+       =============================== */
+
+    const absoluteScore =
+        Math.abs(score);
+
 
     let confidence;
 
 
-    if (signal === "WAIT") {
+    if (
+        signal === "WAIT"
+    ) {
 
         confidence =
             Math.min(
                 64,
-                50 +
-                Math.abs(score) * 0.35
+                Math.max(
+                    35,
+                    40 +
+                    absoluteScore
+                )
             );
 
     }
@@ -3171,11 +4630,11 @@ function generateSignal() {
         confidence =
             Math.min(
                 95,
-                55 +
-                (
-                    Math.abs(score) -
-                    45
-                ) * 0.75
+                Math.max(
+                    55,
+                    50 +
+                    absoluteScore * 0.8
+                )
             );
 
     }
@@ -3183,17 +4642,15 @@ function generateSignal() {
 
     return {
 
-        signal:
-            signal,
+        score,
 
-        confidence:
-            confidence,
+        confidence,
 
-        score:
-            score,
+        signal,
 
-        reasons:
-            result.reasons
+        momentum,
+
+        reasons
 
     };
 
@@ -3201,160 +4658,126 @@ function generateSignal() {
 
 
 /* ===============================
-   MOMENTUM TEXT
+   LIQUIDITY DIRECTION
    =============================== */
 
-function getMomentum(signal) {
-
-    const indicators =
-        getIndicatorSnapshot();
-
-
-    if (!indicators) {
-
-        return "NEUTRAL";
-
-    }
-
-
-    const rsi =
-        Number(indicators.rsi);
-
-
-    const macd =
-        indicators.macd;
-
-
-    if (
-        signal === "LONG"
-    ) {
-
-        if (
-            Number.isFinite(rsi) &&
-            rsi >= 60
-        ) {
-
-            return "STRONG BUY";
-
-        }
-
-        return "BUY PRESSURE";
-
-    }
-
-
-    if (
-        signal === "SHORT"
-    ) {
-
-        if (
-            Number.isFinite(rsi) &&
-            rsi <= 40
-        ) {
-
-            return "STRONG SELL";
-
-        }
-
-        return "SELL PRESSURE";
-
-    }
-
-
-    if (
-        macd &&
-        Number.isFinite(
-            macd.histogram
-        )
-    ) {
-
-        if (
-            Math.abs(
-                macd.histogram
-            ) < 1
-        ) {
-
-            return "NEUTRAL";
-
-        }
-
-    }
-
-
-    return "NEUTRAL";
-
-}
-
-
-/* ===============================
-   LIQUIDITY DISPLAY
-   =============================== */
-
-function getLiquidityDisplay(
+function getSignalLiquidity(
     signal
 ) {
 
-    if (
-        signal === "WAIT"
-    ) {
-
-        return "Waiting";
-
-    }
-
+    /*
+     * Important:
+     * WAIT also gets a real liquidity
+     * calculation.
+     */
 
     const magnet =
-        findLiquidityMagnet(
+        calculateLiquidityMagnet(
             signal
         );
 
 
     if (
         !magnet ||
-        !Number.isFinite(
-            magnet.price
-        )
+        !magnet.price
     ) {
 
-        return "No clear magnet";
+        return null;
 
     }
 
 
-    const distance =
-        Math.round(
-            magnet.distance
+    return magnet;
+
+}
+
+
+/* ===============================
+   DISPLAY LIQUIDITY
+   =============================== */
+
+function displayLiquidity(
+    magnet
+) {
+
+    if (
+        !magnet ||
+        !magnet.price
+    ) {
+
+        setText(
+            liquidityBox,
+            "CALCULATING"
         );
+
+        return;
+
+    }
+
+
+    let direction =
+        "RANGE";
+
+
+    if (
+        magnet.side ===
+        "UPSIDE"
+    ) {
+
+        direction =
+            "UPSIDE";
+
+    }
+
+    else if (
+        magnet.side ===
+        "DOWNSIDE"
+    ) {
+
+        direction =
+            "DOWNSIDE";
+
+    }
 
 
     /*
-     * No "@" symbol.
+     * No @ symbol.
      */
 
-    return (
-        "$" +
-        magnet.price.toLocaleString(
-            "en-US",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
+    setText(
+
+        liquidityBox,
+
+        "LIQUIDITY MAGNET " +
+        formatPrice(
+            magnet.price
         ) +
-        "  •  " +
-        distance +
-        " away"
+        " | " +
+        direction +
+        " | Δ " +
+        formatPrice(
+            magnet.distance
+        )
+
     );
 
 }
 
 
 /* ===============================
-   SIGNAL COLOUR
+   SIGNAL COLORS
    =============================== */
 
-function setSignalColour(
+function applySignalStyle(
     signal
 ) {
+
+    if (!signalBox) {
+
+        return;
+
+    }
+
 
     if (
         signal === "LONG"
@@ -3362,9 +4785,6 @@ function setSignalColour(
 
         signalBox.style.color =
             "#00ff88";
-
-        signalBox.style.textShadow =
-            "0 0 20px rgba(0,255,136,.35)";
 
     }
 
@@ -3375,18 +4795,12 @@ function setSignalColour(
         signalBox.style.color =
             "#ff4d6d";
 
-        signalBox.style.textShadow =
-            "0 0 20px rgba(255,77,109,.35)";
-
     }
 
     else {
 
         signalBox.style.color =
             "#ffd166";
-
-        signalBox.style.textShadow =
-            "0 0 20px rgba(255,209,102,.25)";
 
     }
 
@@ -3397,184 +4811,230 @@ function setSignalColour(
    VOICE
    =============================== */
 
-function speak(text) {
+function announceSignal(
+    signal
+) {
 
-    voiceText.textContent =
-        text;
+    let message;
 
 
     if (
-        "speechSynthesis" in window
+        signal === "LONG"
     ) {
 
-        window.speechSynthesis.cancel();
-
-
-        const message =
-            new SpeechSynthesisUtterance(
-                text
-            );
-
-
-        message.rate =
-            0.9;
-
-        message.pitch =
-            1;
-
-
-        window.speechSynthesis.speak(
-            message
-        );
+        message =
+            "Long opportunity detected";
 
     }
 
-}
+    else if (
+        signal === "SHORT"
+    ) {
+
+        message =
+            "Short opportunity detected";
+
+    }
+
+    else {
+
+        message =
+            "Market is neutral";
+
+    }
 
 
-/* ===============================
-   DISPLAY RESULT
-   =============================== */
-
-function displaySignal(data) {
-
-    const signal =
-        data.signal;
-
-
-    signalBox.textContent =
-        signal;
-
-
-    confidenceBox.textContent =
-        data.confidence.toFixed(0) +
-        "%";
-
-
-    momentumBox.textContent =
-        getMomentum(
-            signal
-        );
-
-
-    liquidityBox.textContent =
-        getLiquidityDisplay(
-            signal
-        );
-
-
-    setSignalColour(
-        signal
+    setText(
+        voiceText,
+        message
     );
 
 
-    /* =========================
-       VOICE
-    ========================= */
-
     if (
-        signal === "LONG"
+        typeof speechSynthesis !==
+        "undefined"
     ) {
 
-        speak(
-            "Long opportunity detected"
+        speechSynthesis.cancel();
+
+
+        const speech =
+            new SpeechSynthesisUtterance(
+                message
+            );
+
+
+        speech.rate =
+            0.9;
+
+
+        speech.pitch =
+            1;
+
+
+        speech.volume =
+            1;
+
+
+        speechSynthesis.speak(
+            speech
         );
 
     }
-
-    else if (
-        signal === "SHORT"
-    ) {
-
-        speak(
-            "Short opportunity detected"
-        );
-
-    }
-
-    else {
-
-        speak(
-            "Market is neutral"
-        );
-
-    }
-
-
-    /* =========================
-       STATUS
-    ========================= */
-
-    if (
-        signal === "LONG"
-    ) {
-
-        scanStatus.textContent =
-            "Bullish analysis complete";
-
-    }
-
-    else if (
-        signal === "SHORT"
-    ) {
-
-        scanStatus.textContent =
-            "Bearish analysis complete";
-
-    }
-
-    else {
-
-        scanStatus.textContent =
-            "No clear directional setup";
-
-    }
-
-
-    engineStatus.textContent =
-        "Engine Ready";
 
 }
 
 
 /* ===============================
-   SCAN BUTTON
+   FINAL RESULT DISPLAY
    =============================== */
 
-scanBtn.addEventListener(
-    "click",
-    startScan
-);
+function displayFinalResult(
+    result
+) {
 
-
-/* ===============================
-   START 30 SECOND SCAN
-   =============================== */
-
-function startScan() {
-
-    if (scanning) {
+    if (!result) {
 
         return;
 
     }
 
 
+    setText(
+        signalBox,
+        result.signal
+    );
+
+
+    setText(
+
+        confidenceBox,
+
+        result.confidence
+            .toFixed(0) +
+        "%"
+
+    );
+
+
+    setText(
+        momentumBox,
+        result.momentum
+    );
+
+
+    applySignalStyle(
+        result.signal
+    );
+
+
     /*
-     * Wait until enough historical
-     * data is available.
+     * Calculate liquidity after the
+     * direction has been established.
+     *
+     * WAIT still receives a magnet.
      */
 
+    const magnet =
+        getSignalLiquidity(
+            result.signal
+        );
+
+
+    displayLiquidity(
+        magnet
+    );
+
+
+    /*
+     * Keep this as analysis time,
+     * not a live clock.
+     */
+
+    setText(
+        signalTime,
+        "Analysis complete"
+    );
+
+
+    announceSignal(
+        result.signal
+    );
+
+
+    setText(
+        scanStatus,
+        "Analysis Complete"
+    );
+
+
+    setText(
+        engineStatus,
+        "Engine Ready"
+    );
+
+
+    /*
+     * Log reasons for debugging.
+     * Nothing extra is shown on the UI.
+     */
+
+    console.log(
+        "BTC Scanner Result:",
+        {
+
+            signal:
+                result.signal,
+
+            score:
+                result.score,
+
+            confidence:
+                result.confidence,
+
+            momentum:
+                result.momentum,
+
+            reasons:
+                result.reasons,
+
+            liquidity:
+                magnet
+
+        }
+    );
+
+}
+
+
+/* ===============================
+   SCAN PROCESS
+   =============================== */
+
+function startScan() {
+
     if (
-        closes.length <
-        MIN_DATA_FOR_SCAN
+        scanning
     ) {
 
-        scanStatus.textContent =
-            "Collecting more market data...";
+        return;
 
-        engineStatus.textContent =
-            "Engine warming up";
+    }
+
+
+    if (
+        !hasEnoughMarketData()
+    ) {
+
+        setText(
+            scanStatus,
+            "Collecting live market data..."
+        );
+
+        setText(
+            engineStatus,
+            "Waiting for market data"
+        );
 
         return;
 
@@ -3583,28 +5043,45 @@ function startScan() {
 
     scanning = true;
 
-    scanBtn.disabled = true;
+
+    if (scanBtn) {
+
+        scanBtn.disabled =
+            true;
+
+    }
 
 
-    let seconds =
-        SCAN_SECONDS;
+    let seconds = 30;
 
 
-    scanTimer.textContent =
-        seconds;
+    setText(
+        scanTimer,
+        seconds
+    );
 
 
-    scanStatus.textContent =
-        "Scanning market...";
+    setText(
+        scanStatus,
+        "Scanning market..."
+    );
 
 
-    engineStatus.textContent =
-        "Analysing price structure";
+    setText(
+        engineStatus,
+        "Multi-factor analysis running..."
+    );
 
 
     /*
-     * Countdown.
+     * Update intelligence during scan
+     * without changing the final signal.
      */
+
+    updateMarketIntelligence(
+        "WAIT"
+    );
+
 
     const timer =
         setInterval(
@@ -3612,8 +5089,11 @@ function startScan() {
 
                 seconds--;
 
-                scanTimer.textContent =
-                    seconds;
+
+                setText(
+                    scanTimer,
+                    seconds
+                );
 
 
                 if (
@@ -3625,7 +5105,50 @@ function startScan() {
                     );
 
 
-                    completeScan();
+                    /*
+                     * Re-read live market data
+                     * immediately before final
+                     * calculation.
+                     */
+
+                    updateIndicatorState();
+
+
+                    const result =
+                        calculateFinalScore();
+
+
+                    displayFinalResult(
+                        result
+                    );
+
+
+                    /*
+                     * Refresh intelligence using
+                     * the actual final direction.
+                     */
+
+                    updateMarketIntelligence(
+                        result.signal
+                    );
+
+
+                    setText(
+                        scanTimer,
+                        "READY"
+                    );
+
+
+                    if (scanBtn) {
+
+                        scanBtn.disabled =
+                            false;
+
+                    }
+
+
+                    scanning =
+                        false;
 
                 }
 
@@ -3637,94 +5160,72 @@ function startScan() {
 
 
 /* ===============================
-   COMPLETE SCAN
+   BUTTON CONNECTION
    =============================== */
 
-function completeScan() {
+if (scanBtn) {
 
-    try {
-
-        scanStatus.textContent =
-            "Finalising analysis...";
-
-
-        engineStatus.textContent =
-            "Calculating market bias";
-
-
-        /*
-         * Refresh latest data before
-         * making the final decision.
-         */
-
-        updateBackgroundIndicators();
-
-        updateMarketIntelligence();
-
-
-        const result =
-            generateSignal();
-
-
-        displaySignal(
-            result
-        );
-
-
-        scanTimer.textContent =
-            "READY";
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Scanner error:",
-            error
-        );
-
-
-        scanTimer.textContent =
-            "READY";
-
-
-        scanStatus.textContent =
-            "Analysis error — retry";
-
-
-        engineStatus.textContent =
-            "Engine Ready";
-
-    }
-
-
-    scanBtn.disabled =
-        false;
-
-    scanning =
-        false;
+    scanBtn.addEventListener(
+        "click",
+        startScan
+    );
 
 }
 
 
 /* ===============================
-   ENGINE STATUS
+   LIVE LIQUIDITY REFRESH
    =============================== */
 
 setInterval(
     () => {
 
         if (
-            !scanning &&
-            marketState.textContent ===
-            "LIVE"
+            !hasEnoughMarketData() ||
+            scanning
         ) {
 
-            engineStatus.textContent =
-                "Engine Ready";
+            return;
 
         }
+
+
+        /*
+         * If a previous signal exists,
+         * keep calculating its appropriate
+         * liquidity side.
+         */
+
+        const currentSignal =
+            signalBox
+                ? signalBox.textContent
+                : "WAIT";
+
+
+        const validSignal =
+            (
+                currentSignal === "LONG" ||
+                currentSignal === "SHORT" ||
+                currentSignal === "WAIT"
+            )
+                ? currentSignal
+                : "WAIT";
+
+
+        const magnet =
+            calculateLiquidityMagnet(
+                validSignal
+            );
+
+
+        displayLiquidity(
+            magnet
+        );
+
+
+        updateMarketIntelligence(
+            validSignal
+        );
 
     },
     5000
@@ -3732,24 +5233,17 @@ setInterval(
 
 
 /* ===============================
-   INITIAL STATE
+   ENGINE READY
    =============================== */
 
-signalBox.textContent =
-    "WAIT";
+if (
+    hasEnoughMarketData()
+) {
 
+    setText(
+        engineStatus,
+        "Engine Ready"
+    );
 
-confidenceBox.textContent =
-    "0%";
-
-
-momentumBox.textContent =
-    "Neutral";
-
-
-liquidityBox.textContent =
-    "Waiting";
-
-
-voiceText.textContent =
-    "Voice system ready";
+           }
+   
