@@ -30,13 +30,11 @@ body {
             #14213d,
             transparent 35%
         ),
-
         radial-gradient(
             circle at bottom right,
             #003049,
             transparent 40%
         ),
-
         #050816;
 
     color: white;
@@ -211,10 +209,8 @@ body::before {
     padding: 30px;
 
     box-shadow:
-
         0 20px 50px
         rgba(0, 0, 0, 0.4),
-
         inset 0 0 30px
         rgba(255, 255, 255, 0.05);
 }
@@ -230,7 +226,7 @@ body::before {
 
 
 /* ===============================
-   BTC PRICE
+   PRICE
    =============================== */
 
 #btcPrice {
@@ -366,8 +362,6 @@ body::before {
     cursor: not-allowed;
 
     transform: none;
-
-    box-shadow: none;
 }
 
 
@@ -583,5 +577,5 @@ body::before {
 
         height: 160px;
     }
-}
 
+   }
