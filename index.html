@@ -1,761 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Quantum Scanner</title>
 
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>BTC Quantum Scanner Pro</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-
 <div class="app">
 
+    <!-- Header -->
+    <header class="top-header">
+        <div>
+            <h1>BTC QUANT SCANNER</h1>
+            <p>Real-Time Market Intelligence Engine</p>
+        </div>
 
+        <div class="status">
+            <span class="dot"></span>
+            LIVE MARKET
+        </div>
+    </header>
 
-<!-- ========================= -->
-<!-- HEADER -->
-<!-- ========================= -->
 
+    <!-- Main Dashboard -->
 
-<header class="top-header">
+    <main class="dashboard">
 
 
-<div class="header-left">
+        <!-- Price Card -->
 
-<h1>
-BTC QUANTUM SCANNER
-</h1>
+        <section class="glass-card price-card">
 
+            <h3>BTC / USDT</h3>
 
-<p>
-Real-Time Crypto Market Intelligence Engine
-</p>
+            <div id="btcPrice">
+                $0.00
+            </div>
 
+            <div class="price-change" id="priceChange">
+                0.00%
+            </div>
 
-</div>
+            <!-- Live Price Chart -->
+            <div class="price-chart">
+                <canvas id="priceChart"></canvas>
+            </div>
 
+        </section>
 
 
-<div class="status" id="marketStatus">
 
-<span class="dot"></span>
+        <!-- Scanner -->
 
-<span id="marketState">
-CONNECTING
-</span>
+        <section class="glass-card scanner-card">
 
+            <h2>BTC MARKET SCANNER</h2>
 
-</div>
+            <div class="scanner-circle">
 
+                <div id="scanTimer">
+                    READY
+                </div>
 
-</header>
+            </div>
 
 
+            <button id="scanBtn">
+                SCAN NOW
+            </button>
 
 
+            <div id="scanStatus">
+                Waiting for analysis...
+            </div>
 
 
-<!-- ========================= -->
-<!-- DASHBOARD -->
-<!-- ========================= -->
+        </section>
 
 
-<main class="dashboard">
 
 
+        <!-- Signal Result -->
 
 
+        <section class="glass-card result-card">
 
+            <h2>FINAL ANALYSIS</h2>
 
-<!-- ========================= -->
-<!-- PRICE CARD -->
-<!-- ========================= -->
 
+            <div class="signal-box">
 
-<section class="glass-card price-card">
+                <span>MARKET BIAS</span>
 
+                <h1 id="signal">
+                    WAIT
+                </h1>
 
+            </div>
 
-<h3>
-BTC / USDT
-</h3>
 
 
+            <div class="stats">
 
-<div id="btcPrice">
-$0.00
-</div>
 
+                <div>
+                    <p>Confidence</p>
+                    <strong id="confidence">
+                        0%
+                    </strong>
+                </div>
 
 
+                <div>
+                    <p>Momentum</p>
+                    <strong id="momentum">
+                        Neutral
+                    </strong>
+                </div>
 
-<div id="priceChange" class="price-change">
-0.00%
-</div>
 
+                <div>
+                    <p>Liquidity Magnet</p>
+                    <strong id="liquidity">
+                        Searching...
+                    </strong>
+                </div>
 
 
-<div id="priceTime">
-Waiting for live data...
-</div>
 
+            </div>
 
 
+        </section>
 
-<div class="price-chart">
 
-<canvas id="priceChart"></canvas>
 
-</div>
 
+        <!-- Indicators -->
 
 
-</section>
+        <section class="glass-card indicators-card">
 
+            <h2>Market Intelligence</h2>
 
 
+            <div class="indicator-grid">
 
 
+                <div class="indicator">
+                    <span>RSI</span>
+                    <b id="rsi">--</b>
+                </div>
 
 
+                <div class="indicator">
+                    <span>EMA Trend</span>
+                    <b id="ema">--</b>
+                </div>
 
 
-<!-- ========================= -->
-<!-- SCANNER CARD -->
-<!-- ========================= -->
+                <div class="indicator">
+                    <span>Volume</span>
+                    <b id="volume">--</b>
+                </div>
 
 
-<section class="glass-card scanner-card">
+                <div class="indicator">
+                    <span>Volatility</span>
+                    <b id="volatility">--</b>
+                </div>
 
 
+            </div>
 
-<h2>
-MARKET SCANNER
-</h2>
 
+        </section>
 
 
 
-<div class="scanner-circle">
+    </main>
 
 
-<div id="scanTimer">
-READY
-</div>
 
+    <!-- Voice Result -->
 
-</div>
+    <div class="voice-panel">
 
+        <p id="voiceText">
+            Voice system ready
+        </p>
 
-
-
-<button id="scanBtn">
-
-SCAN NOW
-
-</button>
-
-
-
-<p id="scanStatus">
-
-Waiting for analysis...
-
-</p>
-
-
-
-<p id="engineStatus">
-
-Engine Initializing...
-
-</p>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- ========================= -->
-<!-- FINAL SIGNAL -->
-<!-- ========================= -->
-
-
-<section class="glass-card result-card">
-
-
-
-<h2>
-FINAL ANALYSIS
-</h2>
-
-
-
-
-<div class="signal-box">
-
-
-
-<span>
-MARKET BIAS
-</span>
-
-
-
-<h1 id="signal">
-WAIT
-</h1>
+    </div>
 
 
 
 </div>
 
-
-
-
-
-<div id="signalTime">
-
-No signal yet
-
-</div>
-
-
-
-
-
-<div class="stats">
-
-
-
-<div>
-
-<p>
-Confidence
-</p>
-
-<strong id="confidence">
-0%
-</strong>
-
-
-</div>
-
-
-
-
-
-<div>
-
-<p>
-Momentum
-</p>
-
-<strong id="momentum">
-Neutral
-</strong>
-
-
-</div>
-
-
-
-
-
-<div>
-
-<p>
-Liquidity
-</p>
-
-<strong id="liquidity">
-Searching...
-</strong>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-</section>
-
-
-
-<!-- ========================= -->
-<!-- INDICATORS CARD -->
-<!-- ========================= -->
-
-
-<section class="glass-card indicators-card">
-
-
-
-<h2>
-MARKET INDICATORS
-</h2>
-
-
-
-
-<div class="indicator-grid">
-
-
-
-
-
-<div class="indicator">
-
-<span>
-RSI
-</span>
-
-<b id="rsi">
---
-</b>
-
-</div>
-
-
-
-
-
-<div class="indicator">
-
-<span>
-EMA 20
-</span>
-
-<b id="ema20">
---
-</b>
-
-</div>
-
-
-
-
-
-<div class="indicator">
-
-<span>
-EMA 50
-</span>
-
-<b id="ema50">
---
-</b>
-
-</div>
-
-
-
-
-
-<div class="indicator">
-
-<span>
-EMA 200
-</span>
-
-<b id="ema200">
---
-</b>
-
-</div>
-
-
-
-
-
-
-<div class="indicator">
-
-<span>
-MACD
-</span>
-
-<b id="macd">
---
-</b>
-
-</div>
-
-
-
-
-
-
-<div class="indicator">
-
-<span>
-VWAP
-</span>
-
-<b id="vwap">
---
-</b>
-
-</div>
-
-
-
-
-
-
-<div class="indicator">
-
-<span>
-ATR
-</span>
-
-<b id="atr">
---
-</b>
-
-</div>
-
-
-
-
-
-
-<div class="indicator">
-
-<span>
-Volume
-</span>
-
-<b id="volume">
---
-</b>
-
-</div>
-
-
-
-
-
-
-<div class="indicator">
-
-<span>
-Volatility
-</span>
-
-<b id="volatility">
---
-</b>
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- ========================= -->
-<!-- MARKET INTELLIGENCE -->
-<!-- ========================= -->
-
-
-<section class="glass-card intelligence-card">
-
-
-
-<h2>
-MARKET INTELLIGENCE
-</h2>
-
-
-
-
-<div class="intel-grid">
-
-
-
-
-
-<div>
-
-<span>
-Trend
-</span>
-
-<b id="trend">
---
-</b>
-
-
-</div>
-
-
-
-
-
-<div>
-
-<span>
-Structure
-</span>
-
-<b id="structure">
---
-</b>
-
-
-</div>
-
-
-
-
-
-<div>
-
-<span>
-Liquidity Zone
-</span>
-
-<b id="liquidityZone">
---
-</b>
-
-
-</div>
-
-
-
-
-
-<div>
-
-<span>
-Market Condition
-</span>
-
-<b id="marketCondition">
---
-</b>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- ========================= -->
-<!-- RISK MANAGEMENT -->
-<!-- ========================= -->
-
-
-<section class="glass-card risk-card">
-
-
-
-<h2>
-TRADE MANAGEMENT
-</h2>
-
-
-
-
-<div class="risk-grid">
-
-
-
-
-
-<div>
-
-<span>
-Entry
-</span>
-
-<b id="entry">
---
-</b>
-
-
-</div>
-
-
-
-
-
-
-<div>
-
-<span>
-Stop Loss
-</span>
-
-<b id="stopLoss">
---
-</b>
-
-
-</div>
-
-
-
-
-
-
-<div>
-
-<span>
-Target
-</span>
-
-<b id="target">
---
-</b>
-
-
-</div>
-
-
-
-
-
-
-<div>
-
-<span>
-Risk Reward
-</span>
-
-<b id="riskReward">
---
-</b>
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- ========================= -->
-<!-- VOICE PANEL -->
-<!-- ========================= -->
-
-
-<div class="voice-panel">
-
-
-
-<p id="voiceText">
-
-Voice system ready
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-
-
-</main>
-
-
-
-
-
-
-
-
-
-<!-- ========================= -->
-<!-- SCRIPTS -->
-<!-- ========================= -->
-
-
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
+<!-- Main Script -->
 <script src="script.js"></script>
 
-
-
-
-
-</div>
-
-
 </body>
-
-    </html>
-
-
-    
+</html>
