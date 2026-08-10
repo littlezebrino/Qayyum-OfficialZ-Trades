@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTC Quantum Scanner</title>
+
+    <title>BTC Quant Scanner</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app">
-
     <!-- Header -->
+
     <header class="top-header">
+
         <div>
+
             <h1>BTC QUANT SCANNER</h1>
+
             <p>Real-Time Market Intelligence Engine</p>
+
         </div>
+
 
         <div class="status">
+
             <span class="dot"></span>
+
             LIVE MARKET
+
         </div>
+
     </header>
+
 
 
     <!-- Main Dashboard -->
@@ -37,17 +48,23 @@
 
             <h3>BTC / USDT</h3>
 
+
             <div id="btcPrice">
                 $0.00
             </div>
+
 
             <div class="price-change" id="priceChange">
                 0.00%
             </div>
 
+
             <!-- Live Price Chart -->
+
             <div class="price-chart">
+
                 <canvas id="priceChart"></canvas>
+
             </div>
 
         </section>
@@ -59,6 +76,7 @@
         <section class="glass-card scanner-card">
 
             <h2>BTC MARKET SCANNER</h2>
+
 
             <div class="scanner-circle">
 
@@ -78,14 +96,11 @@
                 Waiting for analysis...
             </div>
 
-
         </section>
 
 
 
-
         <!-- Signal Result -->
-
 
         <section class="glass-card result-card">
 
@@ -96,6 +111,7 @@
 
                 <span>MARKET BIAS</span>
 
+
                 <h1 id="signal">
                     WAIT
                 </h1>
@@ -103,45 +119,49 @@
             </div>
 
 
-
             <div class="stats">
 
 
                 <div>
+
                     <p>Confidence</p>
+
                     <strong id="confidence">
                         0%
                     </strong>
+
                 </div>
 
 
                 <div>
+
                     <p>Momentum</p>
+
                     <strong id="momentum">
                         Neutral
                     </strong>
+
                 </div>
 
 
                 <div>
+
                     <p>Liquidity Magnet</p>
+
                     <strong id="liquidity">
                         Searching...
                     </strong>
+
                 </div>
 
 
-
             </div>
-
 
         </section>
 
 
 
-
-        <!-- Indicators -->
-
+        <!-- Market Intelligence -->
 
         <section class="glass-card indicators-card">
 
@@ -152,34 +172,52 @@
 
 
                 <div class="indicator">
+
                     <span>RSI</span>
-                    <b id="rsi">--</b>
+
+                    <b id="rsi">
+                        --
+                    </b>
+
                 </div>
 
 
                 <div class="indicator">
+
                     <span>EMA Trend</span>
-                    <b id="ema">--</b>
+
+                    <b id="ema">
+                        --
+                    </b>
+
                 </div>
 
 
                 <div class="indicator">
+
                     <span>Volume</span>
-                    <b id="volume">--</b>
+
+                    <b id="volume">
+                        --
+                    </b>
+
                 </div>
 
 
                 <div class="indicator">
+
                     <span>Volatility</span>
-                    <b id="volatility">--</b>
+
+                    <b id="volatility">
+                        --
+                    </b>
+
                 </div>
 
 
             </div>
 
-
         </section>
-
 
 
     </main>
@@ -197,14 +235,75 @@
     </div>
 
 
+    <!-- Chart.js -->
 
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Scanner JavaScript -->
 
-<!-- Main Script -->
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
+
+</html>
+
+
+
+
+<!-- =========================================================
+     HTML PART 2
+     Dashboard continuation / closing structure
+     ========================================================= -->
+
+
+<!-- Additional Dashboard Content -->
+
+<section class="dashboard">
+
+
+    <!-- Market Status -->
+
+    <section class="glass-card market-status-card">
+
+        <h2>Market Status</h2>
+
+        <div class="market-status-content">
+
+            <div class="market-status-item">
+
+                <span>Market</span>
+
+                <strong id="marketStatus">
+                    LIVE
+                </strong>
+
+            </div>
+
+
+            <div class="market-status-item">
+
+                <span>Connection</span>
+
+                <strong id="connectionStatus">
+                    CONNECTING
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     End of Dashboard
+     ========================================================= -->
+
+
+</body>
+
 </html>
