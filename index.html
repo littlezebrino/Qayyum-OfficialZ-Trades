@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,327 +19,339 @@
 <body>
 
 
-<div class="app">
-
-
     <!-- =========================
-         HEADER
+         APP CONTAINER
     ========================== -->
 
-    <header class="top-header">
-
-
-        <div class="header-left">
-
-            <h1>
-                BTC QUANTUM SCANNER
-            </h1>
-
-            <p>
-                Real-Time Crypto Market Intelligence Engine
-            </p>
-
-        </div>
-
-
-        <div class="status" id="marketStatus">
-
-            <span class="dot"></span>
-
-            <span id="marketState">
-                CONNECTING
-            </span>
-
-        </div>
-
-
-    </header>
-
-
-    <!-- =========================
-         DASHBOARD
-    ========================== -->
-
-    <main class="dashboard">
+    <div class="app">
 
 
         <!-- =========================
-             BTC PRICE + LINE CHART
+             HEADER
         ========================== -->
 
-        <section class="glass-card price-card">
+        <header class="top-header">
 
+            <div class="header-left">
 
-            <h3>
-                BTC / USDT
-            </h3>
-
-
-            <div id="btcPrice">
-                $0.00
-            </div>
-
-
-            <div id="priceChange"
-                 class="price-change">
-                0.00%
-            </div>
-
-
-            <div id="priceTime">
-                Live Market Price
-            </div>
-
-
-            <!-- SIMPLE MOVING LINE CHART -->
-
-            <div class="price-chart">
-
-                <canvas id="priceChart"></canvas>
-
-            </div>
-
-
-        </section>
-
-
-        <!-- =========================
-             MARKET SCANNER
-        ========================== -->
-
-        <section class="glass-card scanner-card">
-
-
-            <h2>
-                MARKET SCANNER
-            </h2>
-
-
-            <div class="scanner-circle">
-
-                <div id="scanTimer">
-                    READY
-                </div>
-
-            </div>
-
-
-            <button id="scanBtn">
-                SCAN NOW
-            </button>
-
-
-            <p id="scanStatus">
-                Waiting for analysis...
-            </p>
-
-
-            <p id="engineStatus">
-                Engine Initializing...
-            </p>
-
-
-        </section>
-
-
-        <!-- =========================
-             FINAL ANALYSIS
-        ========================== -->
-
-        <section class="glass-card result-card">
-
-
-            <h2>
-                FINAL ANALYSIS
-            </h2>
-
-
-            <div class="signal-box">
-
-
-                <span>
-                    MARKET BIAS
-                </span>
-
-
-                <h1 id="signal">
-                    WAIT
+                <h1>
+                    BTC QUANTUM SCANNER
                 </h1>
 
+                <p>
+                    Real-Time Crypto Market Intelligence Engine
+                </p>
 
             </div>
 
 
-            <!-- Intentionally empty.
-                 No live timestamp here. -->
+            <!-- LIVE CONNECTION STATUS -->
 
+            <div class="status"
+                 id="marketStatus">
 
-            <div class="stats">
+                <span class="dot"></span>
 
-
-                <div>
-
-                    <p>
-                        Confidence
-                    </p>
-
-                    <strong id="confidence">
-                        0%
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <p>
-                        Momentum
-                    </p>
-
-                    <strong id="momentum">
-                        Neutral
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <p>
-                        Liquidity Magnet
-                    </p>
-
-                    <strong id="liquidity">
-                        Searching...
-                    </strong>
-
-                </div>
-
+                <span id="marketState">
+                    CONNECTING
+                </span>
 
             </div>
 
-
-        </section>
-
-
-
-
-
-
-                  <!-- =========================
-             MARKET INTELLIGENCE
-        ========================== -->
-
-        <section class="glass-card intelligence-card">
-
-            <h2>
-                MARKET INTELLIGENCE
-            </h2>
-
-
-            <div class="intel-grid">
-
-
-                <!-- TREND -->
-
-                <div>
-
-                    <span>
-                        Trend
-                    </span>
-
-                    <b id="trend">
-                        --
-                    </b>
-
-                </div>
-
-
-                <!-- STRUCTURE -->
-
-                <div>
-
-                    <span>
-                        Structure
-                    </span>
-
-                    <b id="structure">
-                        --
-                    </b>
-
-                </div>
-
-
-                <!-- VOLUME -->
-
-                <div>
-
-                    <span>
-                        Volume
-                    </span>
-
-                    <b id="marketVolume">
-                        --
-                    </b>
-
-                </div>
-
-
-                <!-- VOLATILITY -->
-
-                <div>
-
-                    <span>
-                        Volatility
-                    </span>
-
-                    <b id="marketVolatility">
-                        --
-                    </b>
-
-                </div>
-
-
-            </div>
-
-        </section>
+        </header>
 
 
         <!-- =========================
-             VOICE PANEL
+             DASHBOARD START
         ========================== -->
 
-        <div class="voice-panel">
+        <main class="dashboard">
 
-            <p id="voiceText">
-                Voice system ready
+
+            <!-- =========================
+                 BTC PRICE + LINE CHART
+            ========================== -->
+
+            <section class="glass-card price-card">
+
+
+                <h3>
+                    BTC / USDT
+                </h3>
+
+
+                <!-- LIVE BTC PRICE -->
+
+                <div id="btcPrice">
+                    $0.00
+                </div>
+
+
+                <!-- 24 HOUR PRICE CHANGE -->
+
+                <div id="priceChange"
+                     class="price-change">
+
+                    0.00%
+
+                </div>
+
+
+                <!-- LIVE PRICE STATUS -->
+
+                <div id="priceTime">
+                    Connecting to Binance...
+                </div>
+
+
+                <!-- =========================
+                     SIMPLE LIVE LINE CHART
+                ========================== -->
+
+                <div class="price-chart">
+
+                    <canvas id="priceChart"></canvas>
+
+                </div>
+
+
+            </section>
+
+
+
+
+
+        
+<!-- =========================
+     MARKET SCANNER
+========================== -->
+
+<section class="glass-card scanner-card">
+
+    <h2>
+        MARKET SCANNER
+    </h2>
+
+
+    <div class="scanner-circle">
+
+        <div id="scanTimer">
+            READY
+        </div>
+
+    </div>
+
+
+    <button id="scanBtn">
+        SCAN NOW
+    </button>
+
+
+    <p id="scanStatus">
+        Waiting for analysis...
+    </p>
+
+
+    <p id="engineStatus">
+        Engine Initializing...
+    </p>
+
+</section>
+
+
+
+<!-- =========================
+     FINAL ANALYSIS
+========================== -->
+
+<section class="glass-card result-card">
+
+    <h2>
+        FINAL ANALYSIS
+    </h2>
+
+
+    <div class="signal-box">
+
+        <span>
+            MARKET BIAS
+        </span>
+
+
+        <h1 id="signal">
+            WAIT
+        </h1>
+
+    </div>
+
+
+    <!-- =========================
+         SIGNAL STATS
+    ========================== -->
+
+    <div class="stats">
+
+
+        <div>
+
+            <p>
+                Confidence
             </p>
+
+            <strong id="confidence">
+                0%
+            </strong>
 
         </div>
 
 
-    </main>
+        <div>
+
+            <p>
+                Momentum
+            </p>
+
+            <strong id="momentum">
+                Neutral
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <p>
+                Liquidity Magnet
+            </p>
+
+            <strong id="liquidity">
+                Searching...
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     MARKET INTELLIGENCE
+========================== -->
+
+<section class="glass-card intelligence-card">
+
+    <h2>
+        MARKET INTELLIGENCE
+    </h2>
+
+
+    <div class="intel-grid">
+
+
+        <!-- TREND -->
+
+        <div>
+
+            <span>
+                Trend
+            </span>
+
+            <b id="trend">
+                --
+            </b>
+
+        </div>
+
+
+        <!-- STRUCTURE -->
+
+        <div>
+
+            <span>
+                Structure
+            </span>
+
+            <b id="structure">
+                --
+            </b>
+
+        </div>
+
+
+        <!-- VOLUME -->
+
+        <div>
+
+            <span>
+                Volume
+            </span>
+
+            <b id="marketVolume">
+                --
+            </b>
+
+        </div>
+
+
+        <!-- VOLATILITY -->
+
+        <div>
+
+            <span>
+                Volatility
+            </span>
+
+            <b id="marketVolatility">
+                --
+            </b>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     VOICE PANEL
+========================== -->
+
+<div class="voice-panel">
+
+    <p id="voiceText">
+        Voice system ready
+    </p>
+
+</div>
+
+
+        </main>
+
+
+    </div>
 
 
     <!-- =========================
-         CHART LIBRARY
-    ========================== -->
+         CHART.JS
+========================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     <!-- =========================
          MAIN JAVASCRIPT
-    ========================== -->
+========================== -->
 
     <script src="script.js"></script>
-
-
-</div>
 
 
 </body>
 
 </html>
 
-          
+
